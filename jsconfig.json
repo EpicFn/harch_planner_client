@@ -1,11 +1,10 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "useDefineForClassFields": true,
     "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": false,
+    "allowJs": true,
     "skipLibCheck": true,
-    "esModuleInterop": false,
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
@@ -15,7 +14,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
       "@apis/*": ["src/apis/*"],
       "@components/*": ["src/components/*"],
@@ -28,8 +27,5 @@
       "@icons/*": ["src/assets/icons/*"]
     }
   },
-  "include": ["src"],
-  "files": [],
-  "references": [],
-  "extends": "./jsconfig.paths.json"
+  "include": ["src"]
 }
