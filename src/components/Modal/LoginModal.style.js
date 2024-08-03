@@ -15,12 +15,28 @@ export const ModalOverlay = styled.div`
 
 export const ModalContainer = styled.div`
   background: white;
-  padding: 20px;
+  padding: 30px;
   border-radius: 8px;
-  width: 600px;
+  width: 650px;
+  height: 400px;
   max-width: 90%;
   position: relative;
   display: flex;
+`
+
+export const IconWrapper = styled.div`
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+`
+export const IconImage = styled.img`
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
 `
 
 export const CloseButton = styled.button`
@@ -28,14 +44,19 @@ export const CloseButton = styled.button`
   border: none;
   font-size: 30px;
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 35px;
+  right: 35px;
   cursor: pointer;
 `
 
 export const FormContainer = styled.div`
-  flex: 1;
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 0.3;
+  height: 100%;
+  padding: 2px 20px;
+  box-sizing: border-box;
 `
 
 export const ImageContainer = styled.div`
@@ -48,8 +69,8 @@ export const ImageContainer = styled.div`
 `
 
 export const Title = styled.h2`
-  margin-bottom: 20px;
   text-align: center;
+  margin-bottom: 0px;
 `
 
 export const Form = styled.form`
@@ -64,6 +85,7 @@ export const FormGroup = styled.div`
 export const Label = styled.label`
   margin-bottom: 5px;
   display: block;
+  font-weight: bold;
 `
 
 export const Input = styled.input`
