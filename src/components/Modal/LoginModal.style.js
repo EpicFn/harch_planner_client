@@ -73,6 +73,10 @@ export const Input = styled.input`
   margin-top: 5px;
   border-radius: 4px;
   border: 1px solid #ddd;
+
+  &:focus {
+    outline: none;
+  }
 `
 
 export const SubmitButton = styled.button`
