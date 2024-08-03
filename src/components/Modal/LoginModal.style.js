@@ -95,9 +95,11 @@ export const Input = styled.input`
   margin-top: 5px;
   border-radius: 4px;
   border: 1px solid #ddd;
+  background-color: white;
 
   &:focus {
     outline: none;
+    background-color: white;
   }
 `
 

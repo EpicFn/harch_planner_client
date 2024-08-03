@@ -22,11 +22,21 @@ import KakaoIcon from '@assets/kakao-icon.png'
 
 export default function LoginModal() {
   const { isModalOpen, closeModal } = loginModalStore()
-  const [inputValue, setInputValue] = useState('')
+  const [inputIdValue, setInputIdValue] = useState('')
+  const [inputPasswordValue, setInputPasswordValue] = useState('')
 
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value)
+  const handleIdInputChange = (e) => {
+    setInputIdValue(e.target.value)
   }
+
+  const handlePasswordInputChange = (e) => {
+    setInputPasswordValue(e.target.value)
+  }
+
+  useEffect(() => {
+    setInputIdValue('')
+    setInputPasswordValue('')
+  }, [])
 
   if (!isModalOpen) return null
 
@@ -46,13 +56,17 @@ export default function LoginModal() {
               <Label>이메일:</Label>
               <Input
                 type="email"
-                value={inputValue}
-                onChange={() => handleInputChange}
+                value={inputIdValue}
+                onChange={handleIdInputChange}
               />
             </FormGroup>
             <FormGroup>
               <Label>비밀번호:</Label>
-              <Input type="password" value={inputValue} />
+              <Input
+                type="password"
+                value={inputPasswordValue}
+                onChange={handlePasswordInputChange}
+              />
             </FormGroup>
             <SubmitButton type="submit">로그인</SubmitButton>
           </Form>
