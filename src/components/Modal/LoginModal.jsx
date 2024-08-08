@@ -15,17 +15,23 @@ import {
   IconWrapper,
   IconImage,
   ErrorMessage,
+  ProfileImageContainer,
+  ProfileImageWrapper,
+  ProfileImage,
+  AltText,
 } from '@components/Modal/LoginModal.style'
 import loginModalStore from '@stores/modalStore'
 import useUserStore from '@stores/userStore'
 import GoogleIcon from '@assets/google-icon.png'
 import NaverIcon from '@assets/naver-icon.png'
 import KakaoIcon from '@assets/kakao-icon.png'
+import DefaultProfileImage from '@assets/프로필사진.jpg' // 기본 프로필 이미지 경로
 
 export default function LoginModal() {
   const { isModalOpen, closeModal } = loginModalStore()
   const [inputIdValue, setInputIdValue] = useState('')
   const [inputPasswordValue, setInputPasswordValue] = useState('')
+  const [userImage, setUserImage] = useState('')
   const user = useUserStore((state) => state.user)
   const setUser = useUserStore((state) => state.setUser)
   const [errorMessage, setErrorMessage] = useState('')
@@ -58,8 +64,12 @@ export default function LoginModal() {
       setErrorMessage('아이디 또는 비밀번호가 일치하지 않습니다.')
     } else {
       setErrorMessage('')
-      setUser({ id: inputIdValue, password: inputPasswordValue })
-      console.log(user)
+      setUser({
+        id: inputIdValue,
+        password: inputPasswordValue,
+        profileImage: DefaultProfileImage,
+      }), // 로그인 성공 시 기본 프로필 이미지 설정 })
+        console.log(user)
       closeModal()
     }
   }
@@ -71,6 +81,12 @@ export default function LoginModal() {
         <FormContainer>
           <CloseButton onClick={closeModal}>&times;</CloseButton>
           <Title>스터디 플래너</Title>
+          <ProfileImageContainer>
+            <ProfileImageWrapper>
+              <ProfileImage src={user.profileImage} />
+              {!user.profileImage && <AltText>profile</AltText>}
+            </ProfileImageWrapper>
+          </ProfileImageContainer>
           <IconWrapper>
             <IconImage src={GoogleIcon} alt="Google"></IconImage>
             <IconImage src={NaverIcon} alt="Naver"></IconImage>

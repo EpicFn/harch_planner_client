@@ -122,3 +122,36 @@ export const ErrorMessage = styled.div`
   height: 1.5em; /* 고정 높이 설정 */
   line-height: 1.5em; /* 고정 높이에 맞춘 라인 높이 설정 */
 `
+export const ProfileImageContainer = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  width: auto;
+  height: auto;
+`
+
+export const ProfileImageWrapper = styled.div`
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 1px solid black;
+  background-color: gray;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+`
+
+export const ProfileImage = styled.img`
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+`
+export const AltText = styled.span`
+  position: absolute;
+  font-size: 14px;
+  color: white;
+`
