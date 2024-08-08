@@ -17,9 +17,9 @@ export const ModalContainer = styled.div`
   background: white;
   padding: 30px;
   border-radius: 8px;
-  width: 650px;
-  height: 400px;
-  max-width: 90%;
+  width: 700px;
+  height: 500px;
+  max-width: 700px;
   position: relative;
   display: flex;
 `
@@ -53,7 +53,8 @@ export const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  flex-grow: 0.3;
+  width: 345px;
+  max-width: 345px;
   height: 100%;
   padding: 2px 20px;
   box-sizing: border-box;
@@ -76,10 +77,12 @@ export const Title = styled.h2`
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
 `
 
 export const FormGroup = styled.div`
-  margin-bottom: 15px;
+  margin-bottom: 5px;
 `
 
 export const Label = styled.label`
@@ -92,7 +95,6 @@ export const Input = styled.input`
   width: 100%;
   padding: 8px;
   box-sizing: border-box;
-  margin-top: 5px;
   border-radius: 4px;
   border: 1px solid #ddd;
   background-color: white;
@@ -110,4 +112,13 @@ export const SubmitButton = styled.button`
   padding: 10px;
   cursor: pointer;
   border-radius: 8px;
+  margin-top: 10px;
+`
+export const ErrorMessage = styled.div`
+  width: 300px;
+  font-size: small;
+  font-weight: bold;
+  color: red;
+  height: 1.5em; /* 고정 높이 설정 */
+  line-height: 1.5em; /* 고정 높이에 맞춘 라인 높이 설정 */
 `
