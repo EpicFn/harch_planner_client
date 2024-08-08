@@ -38,10 +38,12 @@ export default function LoginModal() {
 
   const handleIdInputChange = (e) => {
     setInputIdValue(e.target.value)
+    setErrorMessage('')
   }
 
   const handlePasswordInputChange = (e) => {
     setInputPasswordValue(e.target.value)
+    setErrorMessage('')
   }
 
   useEffect(() => {
@@ -63,7 +65,6 @@ export default function LoginModal() {
     ) {
       setErrorMessage('아이디 또는 비밀번호가 일치하지 않습니다.')
     } else {
-      setErrorMessage('')
       setUser({
         id: inputIdValue,
         password: inputPasswordValue,
