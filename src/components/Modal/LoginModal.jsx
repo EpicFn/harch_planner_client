@@ -27,6 +27,7 @@ export default function LoginModal() {
   const [inputIdValue, setInputIdValue] = useState('')
   const [inputPasswordValue, setInputPasswordValue] = useState('')
   const user = useUserStore((state) => state.user)
+  const setUser = useUserStore((state) => state.setUser)
   const [errorMessage, setErrorMessage] = useState('')
 
   const handleIdInputChange = (e) => {
@@ -57,6 +58,8 @@ export default function LoginModal() {
       setErrorMessage('아이디 또는 비밀번호가 일치하지 않습니다.')
     } else {
       setErrorMessage('')
+      setUser({ id: inputIdValue, password: inputPasswordValue })
+      console.log(user)
       closeModal()
     }
   }
