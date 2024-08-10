@@ -1,6 +1,16 @@
 import React from 'react'
-import { MainPageContainer } from '@pages/MainPage/MainPage.style'
+import LoginModal from '@components/Modal/LoginModal'
+import { MainPageContainer, LoginButton } from './MainPage.style'
+import loginModalStore from '@stores/modalStore'
 
 export default function MainPage() {
-  return <MainPageContainer>테스트</MainPageContainer>
+  const openModal = loginModalStore((state) => state.openModal)
+
+  return (
+    <MainPageContainer>
+      <h1>Welcome to the Main Page</h1>
+      <LoginButton onClick={openModal}>Login</LoginButton>
+      <LoginModal />
+    </MainPageContainer>
+  )
 }
