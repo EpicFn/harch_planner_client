@@ -16,11 +16,14 @@ import useUserStore from '@stores/userStore'
 
 export default function MainPage() {
   const openModal = loginModalStore((state) => state.openModal)
+  const isModalOpen = loginModalStore((state) => state.isModalOpen)
   const user = useUserStore((state) => state.user)
   return (
     <MainPageContainer>
       <HeaderContainer>
-        {!user.profileImage && <LoginPrompt>로그인을 진행하세요</LoginPrompt>}
+        {user.profileImage === null && (
+          <LoginPrompt>로그인을 진행하세요</LoginPrompt>
+        )}
         <ProfileImage src={user.profileImage || ''} />
       </HeaderContainer>
       <MainContent>
@@ -30,7 +33,7 @@ export default function MainPage() {
           achieve your goals.
         </SubText>
         {user.id && <LoginButton onClick={openModal}>Login</LoginButton>}
-        <LoginModal />
+        {isModalOpen ? <LoginModal /> : null}
       </MainContent>
     </MainPageContainer>
   )

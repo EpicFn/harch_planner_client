@@ -95,7 +95,7 @@ export default function LoginModal() {
           </IconWrapper>
           <Form onSubmit={handleSubmit}>
             <FormGroup>
-              <Label>이메일:</Label>
+              <Label>이메일</Label>
               <Input
                 type="email"
                 value={inputIdValue}
@@ -103,7 +103,7 @@ export default function LoginModal() {
               />
             </FormGroup>
             <FormGroup>
-              <Label>비밀번호:</Label>
+              <Label>비밀번호</Label>
               <Input
                 type="password"
                 value={inputPasswordValue}
