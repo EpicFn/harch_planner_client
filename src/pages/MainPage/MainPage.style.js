@@ -11,21 +11,6 @@ export const MainPageContainer = styled.div`
 `
 
 // 상단 헤더
-export const HeaderContainer = styled.header`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 15px 35px;
-  box-sizing: border-box;
-  width: 100%;
-  height: 85px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  background: rgba(0, 0, 0, 0.5); /* 짙은 회색 반투명 배경 */
-  backdrop-filter: blur(10px); /* 배경 흐림 효과 */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* 살짝의 그림자 효과 */
-`
 
 // 로그인 안내 텍스트
 export const LoginPrompt = styled.span`
@@ -69,7 +54,7 @@ export const MainContent = styled.div`
 `
 
 // 페이지 타이틀
-export const Header = styled.h1`
+export const MainTitle = styled.h1`
   font-size: 3.5rem;
   margin-bottom: 20px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
