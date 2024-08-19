@@ -45,7 +45,7 @@ export default function MainPage() {
         {user.id ? (
           <LoginButton onClick={logout}>로그아웃</LoginButton>
         ) : (
-          <LoginButton onClick={openModal}>Login</LoginButton>
+          <LoginButton onClick={openModal}>로그인</LoginButton>
         )}
         {isModalOpen ? <LoginModal /> : null}
       </MainContent>
