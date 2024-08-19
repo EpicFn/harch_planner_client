@@ -5,9 +5,11 @@ export const MainPageContainer = styled.div`
   flex-direction: column;
   width: 100%;
   height: 100vh;
-  background: url('/src/assets/studying.jpg') no-repeat center center fixed;
+  background: url(${(props) => props.backgroundimage}) no-repeat center center
+    fixed;
   background-size: cover;
   font-family: 'Poppins', sans-serif;
+  transition: background-image 1s ease-in-out;
 `
 
 // 상단 헤더

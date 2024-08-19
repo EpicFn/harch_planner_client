@@ -1,24 +1,40 @@
-import React from 'react'
+import Header from '@components/Header/Header'
 import LoginModal from '@components/Modal/LoginModal'
+import loginModalStore from '@stores/modalStore'
+import useUserStore from '@stores/userStore'
+import { useEffect, useState } from 'react'
 import {
-  MainPageContainer,
-  MainContent,
   LoginButton,
+  MainContent,
+  MainPageContainer,
   MainTitle,
   SubText,
 } from './MainPage.style'
-import loginModalStore from '@stores/modalStore'
-import useUserStore from '@stores/userStore'
-import Header from '@components/Header/Header'
+
+const images = [
+  '/src/assets/studying.jpg',
+  '/src/assets/studying2.jpg',
+  '/src/assets/studying3.jpg',
+  '/src/assets/studying4.jpg',
+]
 
 export default function MainPage() {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const openModal = loginModalStore((state) => state.openModal)
   const isModalOpen = loginModalStore((state) => state.isModalOpen)
   const user = useUserStore((state) => state.user)
   const logout = useUserStore((state) => state.logout)
 
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length)
+    }, 5000)
+
+    return () => clearInterval(intervalId)
+  }, [])
+
   return (
-    <MainPageContainer>
+    <MainPageContainer backgroundimage={images[currentImageIndex]}>
       <Header />
       <MainContent>
         <MainTitle>Harch</MainTitle>
