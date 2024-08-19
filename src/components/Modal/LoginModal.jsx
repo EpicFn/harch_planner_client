@@ -29,9 +29,9 @@ import DefaultProfileImage from '@assets/프로필사진.jpg' // 기본 프로�
 
 export default function LoginModal() {
   const { isModalOpen, closeModal } = loginModalStore()
+  const login = useUserStore((state) => state.login)
   const [inputIdValue, setInputIdValue] = useState('')
   const [inputPasswordValue, setInputPasswordValue] = useState('')
-  const [userImage, setUserImage] = useState('')
   const user = useUserStore((state) => state.user)
   const setUser = useUserStore((state) => state.setUser)
   const [errorMessage, setErrorMessage] = useState('')
@@ -111,7 +111,9 @@ export default function LoginModal() {
               />
             </FormGroup>
             {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-            <SubmitButton type="submit">로그인</SubmitButton>
+            <SubmitButton type="submit" onClick={login}>
+              로그인
+            </SubmitButton>
           </Form>
         </FormContainer>
         <ImageContainer />
