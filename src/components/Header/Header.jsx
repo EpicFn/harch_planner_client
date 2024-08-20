@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom'
 import { HeaderContainer, NavLinks } from '@components/Header/Header.style'
+import { LoginPrompt, ProfileImage } from '@pages/MainPage/MainPage.style'
 import useUserStore from '@stores/userStore'
-import { ProfileImage, LoginPrompt } from '@pages/MainPage/MainPage.style'
+import { Link } from 'react-router-dom'
 
 export default function Header() {
   const user = useUserStore((state) => state.user)
