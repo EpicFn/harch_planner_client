@@ -17,7 +17,7 @@ const GlobalStyle = createGlobalStyle`
     display: flex;
     flex-direction: column;
     max-width: 100vw;
-    background-color: #F8F8F8;
+    background-color: #E1E1E1;
     border-color: black;
     align-items: center;
   }
