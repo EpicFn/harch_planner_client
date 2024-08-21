@@ -1,15 +1,23 @@
-import { HeaderContainer } from '@components/Header/Header.style'
-import { LoginPrompt, ProfileImage } from '@pages/MainPage/MainPage.style'
-import useUserStore from '@stores/userStore'
+import {
+  DdayBox,
+  HeaderContainer,
+  LogoBox,
+  UserNicknameBox,
+  UserProfileBox,
+} from './Header.style'
+
+//TODO :
+//prop로 값 보내기
+//nameBox 올렸을 때 setting 메뉴 띄우기
 
 export default function Header() {
-  const user = useUserStore((state) => state.user)
   return (
     <HeaderContainer>
-      {user.profileImage === null && (
-        <LoginPrompt>로그인을 진행하세요</LoginPrompt>
-      )}
-      {user.profileImage && <ProfileImage src={user.profileImage} />}
+      <LogoBox>Harch</LogoBox>
+      <UserProfileBox>
+        <DdayBox>D-154</DdayBox>
+        <UserNicknameBox>User0309</UserNicknameBox>
+      </UserProfileBox>
     </HeaderContainer>
   )
 }

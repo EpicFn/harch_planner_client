@@ -2,19 +2,35 @@ import styled from 'styled-components'
 
 export const HeaderContainer = styled.header`
   display: flex;
-  justify-content: right;
-  align-items: center;
-  padding: 15px 35px;
-  box-sizing: border-box;
-  width: 100%;
-  height: 85px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  background: rgba(0, 0, 0, 0.5); /* 짙은 회색 반투명 배경 */
-  backdrop-filter: blur(10px); /* 배경 흐림 효과 */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* 살짝의 그림자 효과 */
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 0 146px;
+  margin-top: 30px;
 `
+
+export const LogoBox = styled.div`
+  font-family: 'Ephesis';
+  font-weight: 400;
+  font-style: normal;
+  font-size: 40px;
+`
+
+export const UserProfileBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`
+
+export const DdayBox = styled.div`
+  padding-right: 8px;
+`
+
+export const UserNicknameBox = styled.div`
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 10px;
+`
+
 export const NavLinks = styled.nav`
   display: flex;
   gap: 30px;

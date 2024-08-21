@@ -1,7 +1,7 @@
+import DailyPlanner from '@pages/DailyPlanner/DailyPlanner'
 import MainPage from '@pages/MainPage/MainPage'
 import GlobalStyle from '@styles/GlobalStyle'
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
-import './App.css'
 
 function App() {
   return (
@@ -10,6 +10,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<MainPage />} />
+          <Route path="/dailyPlanner" element={<DailyPlanner />} />
         </Routes>
       </Router>
     </>
