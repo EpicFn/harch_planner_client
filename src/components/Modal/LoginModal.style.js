@@ -58,6 +58,7 @@ export const FormContainer = styled.div`
   height: 100%;
   padding: 2px 20px;
   box-sizing: border-box;
+  color: black;
 `
 
 export const ImageContainer = styled.div`
@@ -82,6 +83,10 @@ export const Form = styled.form`
 `
 
 export const FormGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: start;
   margin-bottom: 5px;
 `
 
@@ -115,6 +120,8 @@ export const SubmitButton = styled.button`
   margin-top: 10px;
 `
 export const ErrorMessage = styled.div`
+  display: flex;
+  justify-content: start;
   width: 300px;
   font-size: small;
   font-weight: bold;

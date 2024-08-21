@@ -1,9 +1,7 @@
-import React from 'react'
-import './App.css'
+import DailyPlanner from '@pages/DailyPlanner/DailyPlanner'
 import MainPage from '@pages/MainPage/MainPage'
 import GlobalStyle from '@styles/GlobalStyle'
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
-import DailyPlanner from '@pages/DailyPlanner/DailyPlanner'
 
 function App() {
   return (
