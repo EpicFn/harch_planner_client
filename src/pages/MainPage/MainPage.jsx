@@ -18,6 +18,13 @@ const images = [
   '/src/assets/studying4.jpg',
 ]
 
+function preloadImages(imageArray) {
+  imageArray.forEach((image) => {
+    const img = new Image()
+    img.src = image
+  })
+}
+
 export default function MainPage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const openModal = loginModalStore((state) => state.openModal)
@@ -26,6 +33,7 @@ export default function MainPage() {
   const logout = useUserStore((state) => state.logout)
 
   useEffect(() => {
+    preloadImages(images)
     const intervalId = setInterval(() => {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length)
     }, 5000)
