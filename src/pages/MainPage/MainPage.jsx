@@ -34,8 +34,10 @@ export default function MainPage() {
   }, [])
 
   useEffect(() => {
-    openModal()
-  }, [])
+    if (!user.id) {
+      openModal()
+    }
+  }, [user.id])
 
   return (
     <MainPageContainer backgroundimage={images[currentImageIndex]}>
