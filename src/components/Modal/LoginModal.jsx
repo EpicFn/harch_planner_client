@@ -1,31 +1,31 @@
-import React, { useEffect } from 'react'
-import { useState } from 'react'
+import GoogleIcon from '@assets/google-icon.png'
+import KakaoIcon from '@assets/kakao-icon.png'
+import NaverIcon from '@assets/naver-icon.png'
+import DefaultProfileImage from '@assets/프로필사진.jpg' // 기본 프로필 이미지 경로
 import {
-  ModalOverlay,
-  ModalContainer,
+  AltText,
   CloseButton,
-  FormContainer,
-  ImageContainer,
-  Title,
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  SubmitButton,
-  IconWrapper,
-  IconImage,
   ErrorMessage,
+  Form,
+  FormContainer,
+  FormGroup,
+  IconImage,
+  IconWrapper,
+  ImageContainer,
+  Input,
+  Label,
+  ModalContainer,
+  ModalOverlay,
+  ProfileImage,
   ProfileImageContainer,
   ProfileImageWrapper,
-  ProfileImage,
-  AltText,
+  SubmitButton,
+  Title,
 } from '@components/Modal/LoginModal.style'
 import loginModalStore from '@stores/modalStore'
 import useUserStore from '@stores/userStore'
-import GoogleIcon from '@assets/google-icon.png'
-import NaverIcon from '@assets/naver-icon.png'
-import KakaoIcon from '@assets/kakao-icon.png'
-import DefaultProfileImage from '@assets/프로필사진.jpg' // 기본 프로필 이미지 경로
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 export default function LoginModal() {
   const { isModalOpen, closeModal } = loginModalStore()
@@ -35,6 +35,8 @@ export default function LoginModal() {
   const user = useUserStore((state) => state.user)
   const setUser = useUserStore((state) => state.setUser)
   const [errorMessage, setErrorMessage] = useState('')
+
+  const navigate = useNavigate()
 
   const handleIdInputChange = (e) => {
     setInputIdValue(e.target.value)
@@ -72,6 +74,7 @@ export default function LoginModal() {
       }), // 로그인 성공 시 기본 프로필 이미지 설정 })
         console.log(user)
       closeModal()
+      navigate('/dailyPlanner')
     }
   }
 

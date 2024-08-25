@@ -1,4 +1,4 @@
-import Header from '@components/Header/Header'
+import MainHeader from '@components/MainHeader/MainHeader'
 import LoginModal from '@components/Modal/LoginModal'
 import loginModalStore from '@stores/modalStore'
 import useUserStore from '@stores/userStore'
@@ -33,9 +33,13 @@ export default function MainPage() {
     return () => clearInterval(intervalId)
   }, [])
 
+  useEffect(() => {
+    openModal()
+  }, [])
+
   return (
     <MainPageContainer backgroundimage={images[currentImageIndex]}>
-      <Header />
+      <MainHeader />
       <MainContent>
         <MainTitle>Harch</MainTitle>
         <SubText>
