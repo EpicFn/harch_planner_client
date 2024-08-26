@@ -68,3 +68,8 @@ export const ThemeButton = styled.button`
     border-color: #ccc;
   }
 `
+export const Logo = styled.img`
+  height: 50px;
+  max-height: 50px;
+  width: auto;
+`

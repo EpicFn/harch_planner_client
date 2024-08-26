@@ -8,15 +8,15 @@ import {
 } from './MainContentBox.style'
 
 export default function MainContentBox({ content }) {
-  const [theme, setTheme] = useState('light-green') // 기본 테마는 'light-green'
+  const [theme, setTheme] = useState('light-green')
 
   const handleThemeChange = (selectedTheme) => {
     setTheme(selectedTheme)
   }
 
   useEffect(() => {
-    document.body.className = '' // 기존 테마 클래스 제거
-    document.body.classList.add(`${theme}-theme`) // 새로운 테마 클래스 추가
+    document.body.className = ''
+    document.body.classList.add(`${theme}-theme`)
   }, [theme])
 
   return (

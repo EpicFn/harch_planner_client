@@ -2,7 +2,7 @@ import { useState } from 'react'
 import {
   DdayBox,
   HeaderContainer,
-  LogoBox,
+  Logo,
   ThemeButton,
   ThemeButtonContainer,
   UserNicknameBox,
@@ -19,7 +19,7 @@ export default function Header({ onThemeChange }) {
 
   return (
     <HeaderContainer>
-      <LogoBox>Harch</LogoBox>
+      <Logo src="src/assets/logo/Harch.png" />
       <ThemeButtonContainer>
         <ThemeButton
           color="#C8EBBF"
