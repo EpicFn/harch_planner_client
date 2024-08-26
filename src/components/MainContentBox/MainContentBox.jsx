@@ -8,7 +8,7 @@ import {
 } from './MainContentBox.style'
 
 export default function MainContentBox({ content }) {
-  const [theme, setTheme] = useState('light-green')
+  const [theme, setTheme] = useState('#E1E1E1')
 
   const handleThemeChange = (selectedTheme) => {
     setTheme(selectedTheme)
