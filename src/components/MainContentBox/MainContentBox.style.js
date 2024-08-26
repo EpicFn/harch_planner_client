@@ -30,7 +30,7 @@ export const MenuTap = styled.li`
 `
 
 export const ContentBox = styled.div`
-  height: 572px;
+  height: 850px;
   flex-shrink: 0;
   border-radius: 0px 0px 12px 12px;
   border: 1px solid #dedede;
