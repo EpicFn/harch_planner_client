@@ -11,6 +11,27 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --theme-color-light-green-start: #ffffe7;
+  --theme-color-light-green-end: #c8ebbf;
+  --theme-color-light-pink-start: #ffe8f7;
+  --theme-color-light-pink-end: #fffee7;
+}
+
+body.light-green-theme {
+  background: linear-gradient(
+    180deg,
+    var(--theme-color-light-green-start) 0%,
+    var(--theme-color-light-green-end) 100%
+  );
+}
+
+body.light-pink-theme {
+  background: linear-gradient(
+    180deg,
+    var(--theme-color-light-pink-start) 0%,
+    var(--theme-color-light-pink-end) 100%
+  );
 }
 
 a {

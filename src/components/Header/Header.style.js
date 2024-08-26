@@ -49,3 +49,22 @@ export const NavLinks = styled.nav`
     }
   }
 `
+export const ThemeButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+`
+
+export const ThemeButton = styled.button`
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  margin-left: 10px;
+  flex-shrink: 0;
+  border: 2px solid #dedede;
+  cursor: pointer;
+  background-color: ${(props) => props.color};
+  &:hover {
+    border-color: #ccc;
+  }
+`

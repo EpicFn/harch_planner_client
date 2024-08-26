@@ -1,19 +1,16 @@
-import Header from "@components/Header/Header";
-import { DailyPlannerContainer } from "./DailyPlanner.style";
-import MainContentBox from "@components/MainContentBox/MainContentBox";
+import MainContentBox from '@components/MainContentBox/MainContentBox'
+import { DailyPlannerContainer } from './DailyPlanner.style'
 
 export default function DailyPlanner() {
-    
-    const dailyPlannerJSX = 
-        <div>
-            <p>DailyPlanner</p>
-        </div>
-        
+  const dailyPlannerJSX = (
+    <div>
+      <p>DailyPlanner</p>
+    </div>
+  )
 
-    return(
-        <DailyPlannerContainer>
-            <Header />
-            <MainContentBox content={dailyPlannerJSX}/>
-        </DailyPlannerContainer>        
-    )
+  return (
+    <DailyPlannerContainer>
+      <MainContentBox content={dailyPlannerJSX} />
+    </DailyPlannerContainer>
+  )
 }
