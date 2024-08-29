@@ -15,6 +15,13 @@ export default function MainContentBox({ content }) {
   const { theme, setTheme } = useThemeStore()
   const [activeTab, setActiveTab] = useState(location.pathname)
 
+  const tabs = [
+    { path: '/calendarPage', label: '달력' },
+    { path: '/dailyPlannerPage', label: '일일 플래너' },
+    { path: '/RecordPage', label: '공부 기록' },
+    { path: '/LibraryPage', label: '서재' },
+  ]
+
   const handleThemeChange = (selectedTheme) => {
     setTheme(selectedTheme)
   }
@@ -34,30 +41,15 @@ export default function MainContentBox({ content }) {
       <Header onThemeChange={handleThemeChange} />
       <MainContentBoxContainer className={`${theme}-theme`}>
         <MenuList>
-          <MenuTap
-            active={activeTab === '/calendarPage' ? 'true' : 'false'}
-            onClick={() => handleTabClick('/calendarPage')}
-          >
-            달력
-          </MenuTap>
-          <MenuTap
-            active={activeTab === '/dailyPlannerPage' ? 'true' : 'false'}
-            onClick={() => handleTabClick('/dailyPlannerPage')}
-          >
-            일일 플래너
-          </MenuTap>
-          <MenuTap
-            active={activeTab === '/RecordPage' ? 'true' : 'false'}
-            onClick={() => handleTabClick('/RecordPage')}
-          >
-            공부 기록
-          </MenuTap>
-          <MenuTap
-            active={activeTab === '/LibraryPage' ? 'true' : 'false'}
-            onClick={() => handleTabClick('/LibraryPage')}
-          >
-            서재
-          </MenuTap>
+          {tabs.map((tab) => (
+            <MenuTap
+              key={tab.path}
+              active={activeTab === tab.path ? 'true' : 'false'}
+              onClick={() => handleTabClick(tab.path)}
+            >
+              {tab.label}
+            </MenuTap>
+          ))}
         </MenuList>
 
         <ContentBox>{content}</ContentBox>
