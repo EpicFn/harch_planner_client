@@ -1,4 +1,4 @@
-import Header from '@components/Header/Header'
+import MainHeader from '@components/MainHeader/MainHeader'
 import LoginModal from '@components/Modal/LoginModal'
 import loginModalStore from '@stores/modalStore'
 import useUserStore from '@stores/userStore'
@@ -18,6 +18,13 @@ const images = [
   '/src/assets/studying4.jpg',
 ]
 
+function preloadImages(imageArray) {
+  imageArray.forEach((image) => {
+    const img = new Image()
+    img.src = image
+  })
+}
+
 export default function MainPage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const openModal = loginModalStore((state) => state.openModal)
@@ -26,6 +33,7 @@ export default function MainPage() {
   const logout = useUserStore((state) => state.logout)
 
   useEffect(() => {
+    preloadImages(images)
     const intervalId = setInterval(() => {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length)
     }, 5000)
@@ -33,9 +41,15 @@ export default function MainPage() {
     return () => clearInterval(intervalId)
   }, [])
 
+  useEffect(() => {
+    if (!user.id) {
+      openModal()
+    }
+  }, [user.id])
+
   return (
     <MainPageContainer backgroundimage={images[currentImageIndex]}>
-      <Header />
+      <MainHeader />
       <MainContent>
         <MainTitle>Harch</MainTitle>
         <SubText>
