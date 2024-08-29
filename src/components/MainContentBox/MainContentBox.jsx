@@ -1,4 +1,6 @@
 import Header from '@components/Header/Header' // Header 컴포넌트 불러오기
+import MenuTap from '@components/MenuTap/MenuTap'
+import useThemeStore from '@stores/themeStore'
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
@@ -7,12 +9,10 @@ import {
   MenuList,
 } from './MainContentBox.style'
 
-import MenuTap from '@components/MenuTap/MenuTap'
-
 export default function MainContentBox({ content }) {
   const navigate = useNavigate()
   const location = useLocation()
-  const [theme, setTheme] = useState('#E1E1E1')
+  const { theme, setTheme } = useThemeStore()
   const [activeTab, setActiveTab] = useState(location.pathname)
 
   const handleThemeChange = (selectedTheme) => {
