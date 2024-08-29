@@ -1,5 +1,5 @@
+import LoginModal from '@components/LoginModal/LoginModal'
 import MainHeader from '@components/MainHeader/MainHeader'
-import LoginModal from '@components/Modal/LoginModal'
 import loginModalStore from '@stores/modalStore'
 import useUserStore from '@stores/userStore'
 import { useEffect, useState } from 'react'

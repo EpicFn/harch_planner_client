@@ -21,7 +21,7 @@ import {
   ProfileImageWrapper,
   SubmitButton,
   Title,
-} from '@components/Modal/LoginModal.style'
+} from '@components/LoginModal/LoginModal.style'
 import loginModalStore from '@stores/modalStore'
 import useUserStore from '@stores/userStore'
 import { useEffect, useState } from 'react'
@@ -74,7 +74,7 @@ export default function LoginModal() {
       }), // 로그인 성공 시 기본 프로필 이미지 설정 })
         console.log(user)
       closeModal()
-      navigate('/dailyPlanner')
+      navigate('/dailyPlannerPage')
     }
   }
 
