@@ -11,21 +11,17 @@ import {
   WeekTaskContainer,
   WeekTaskTitle,
 } from '@components/Calendar/Calendar.style'
+import EventModal from '@components/Calendar/EventModal'
 import dayGridPlugin from '@fullcalendar/daygrid'
+import interactionPlugin from '@fullcalendar/interaction'
 import FullCalendar from '@fullcalendar/react'
+import calendarEventStore from '@stores/calendarEventStore'
 import { useEffect, useState } from 'react'
 
 export default function Calendar() {
-  const [events] = useState([
-    { title: '수능특강 국어 3지문 끝내기', date: '2024-08-01' },
-    { title: '과탐 전체 끝내기', date: '2024-08-07' },
-    { title: '수능형식 수학 시작', date: '2024-08-14' },
-    {
-      title: '수능특강 국어 남은 지문 마무리, 수학학원 등록',
-      date: '2024-08-21',
-    },
-    { title: '입시설명회, 캠퍼스 투어 다녀오기', date: '2024-08-28' },
-  ])
+  const { events, addEvent } = calendarEventStore()
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedDate, setSelectedDate] = useState(null)
 
   const today = new Date()
   const [currentMonth, setCurrentMonth] = useState(null)
@@ -35,8 +31,25 @@ export default function Calendar() {
     setCurrentMonth(newMonth)
   }
 
+  const handleDateClick = (arg) => {
+    setSelectedDate(arg.dateStr)
+    setIsModalOpen(true)
+  }
+  console.log(isModalOpen)
+
+  const handleModalClose = () => {
+    setIsModalOpen(false)
+    setSelectedDate(null)
+  }
+
+  const handleEventSave = (title) => {
+    if (title && selectedDate) {
+      addEvent({ title, date: selectedDate })
+    }
+    handleModalClose()
+  }
+
   useEffect(() => {
-    // 페이지 로드시 현재 월로 상태 업데이트 해줬습니다
     const initialMonth = today.getMonth() + 1
     setCurrentMonth(initialMonth)
   }, [])
@@ -78,7 +91,7 @@ export default function Calendar() {
             </WeekTaskContainer>
           </SidebarContainer>
           <FullCalendar
-            plugins={[dayGridPlugin]}
+            plugins={[dayGridPlugin, interactionPlugin]}
             initialView="dayGridMonth"
             events={events}
             locale="ko"
@@ -91,12 +104,17 @@ export default function Calendar() {
               today: '오늘',
             }}
             datesSet={handleMonthChange}
-            viewDidMount={handleMonthChange}
-            viewDidUpdate={handleMonthChange}
+            dateClick={handleDateClick}
             height="auto"
             contentHeight="auto"
           />
         </CalendarContainer>
+
+        <EventModal
+          isOpen={isModalOpen}
+          onClose={handleModalClose}
+          onSave={handleEventSave}
+        />
       </Container>
     </>
   )

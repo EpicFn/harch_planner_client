@@ -98,7 +98,7 @@ export const GlobalStyle = createGlobalStyle`
   }
   .fc .fc-daygrid-event {
     background-color: #E5E5EC;
-    width: 70%;
+    width: 80%;
     height: auto;
     padding: 5px;
     box-sizing: border-box;
