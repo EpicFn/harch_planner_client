@@ -15,7 +15,7 @@ export const SidebarContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 430px;
+  width: 380px;
   height: 565px; // 부모 컨테이너와 같은 높이로 설정
   background-color: #f9f9f9;
   padding: 20px;
@@ -98,9 +98,6 @@ export const GlobalStyle = createGlobalStyle`
   }
   .fc .fc-daygrid-event {
     background-color: #E5E5EC;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     width: 70%;
     height: auto;
     padding: 5px;
@@ -109,6 +106,12 @@ export const GlobalStyle = createGlobalStyle`
     text-align: center;
     margin: 0 auto;
     border: none;
+  }
+  
+  .fc-h-event .fc-event-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .fc-daygrid-day-frame {
