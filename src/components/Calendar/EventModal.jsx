@@ -6,7 +6,7 @@ import {
   ModalBackground,
   ModalContainer,
 } from '@components/Calendar/EventModal.style'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export default function EventModal({ isOpen, onClose, onSave }) {
   const [title, setTitle] = useState('')
@@ -30,6 +30,10 @@ export default function EventModal({ isOpen, onClose, onSave }) {
       handleSave()
     }
   }
+
+  useEffect(() => {
+    setErrorMessage('')
+  }, [isOpen])
 
   if (!isOpen) return null
 
