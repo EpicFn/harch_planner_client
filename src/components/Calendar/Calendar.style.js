@@ -14,7 +14,7 @@ export const Container = styled.div`
 export const SidebarContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   width: 380px;
   height: 565px; // 부모 컨테이너와 같은 높이로 설정
   background-color: #f9f9f9;
@@ -25,6 +25,28 @@ export const SidebarContainer = styled.div`
   border-radius: 8px;
   flex-shrink: 0;
   overflow-y: scroll;
+
+  //스크롤바는 커스터마이징해봤는데 디자인 수정 필요할거같으면 가능합니다
+  &::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #b0b0b0;
+    background: linear-gradient(180deg, #c4c4c4, #8e8e8e);
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #b0b0b0, #7a7a7a);
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #e0e0e0;
+    border-radius: 10px;
+  }
 `
 
 export const WeekTaskContainer = styled.div`
@@ -33,10 +55,40 @@ export const WeekTaskContainer = styled.div`
   border-bottom: 1px solid #e5e5ec;
 `
 
+export const WeekTaskHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+`
+
 export const WeekTaskTitle = styled.h3`
   font-size: 18px;
   color: #333;
   margin-bottom: 10px;
+`
+
+export const WeekTaskAddButton = styled.button`
+  width: 24px;
+  height: 24px;
+  color: #333;
+  background-color: #f0f0f0;
+  border: 1px solid #cccccc;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #d9d9d9;
+  }
+
+  &:active {
+    background-color: #bfbfbf;
+  }
 `
 
 export const TaskItem = styled.div`

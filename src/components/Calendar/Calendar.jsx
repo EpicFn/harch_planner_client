@@ -7,11 +7,13 @@ import {
   MonthLabelBox,
   MonthTitle,
   SidebarContainer,
-  TaskItem,
+  WeekTaskAddButton,
   WeekTaskContainer,
+  WeekTaskHeader,
   WeekTaskTitle,
 } from '@components/Calendar/Calendar.style'
 import EventModal from '@components/Calendar/EventModal'
+import TaskItemComponent from '@components/Calendar/TaskItemComponent'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import FullCalendar from '@fullcalendar/react'
@@ -22,6 +24,22 @@ export default function Calendar() {
   const { events, addEvent } = calendarEventStore()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedDate, setSelectedDate] = useState(null)
+
+  const [weekTasks, setWeekTasks] = useState({
+    week1: [],
+    week2: [],
+    week3: [],
+    week4: [],
+    week5: [],
+  })
+
+  const weekTitles = {
+    week1: '1주차',
+    week2: '2주차',
+    week3: '3주차',
+    week4: '4주차',
+    week5: '5주차',
+  }
 
   const today = new Date()
   const [currentMonth, setCurrentMonth] = useState(null)
@@ -35,7 +53,6 @@ export default function Calendar() {
     setSelectedDate(arg.dateStr)
     setIsModalOpen(true)
   }
-  console.log(isModalOpen)
 
   const handleModalClose = () => {
     setIsModalOpen(false)
@@ -47,6 +64,24 @@ export default function Calendar() {
       addEvent({ title, date: selectedDate })
     }
     handleModalClose()
+  }
+
+  const addWeekTask = (weekKey) => {
+    setWeekTasks((prevTasks) => ({
+      ...prevTasks,
+      [weekKey]: [...prevTasks[weekKey], '주간목표 입력'],
+    }))
+  }
+
+  const updateWeekTask = (weekKey, index, updatedTask) => {
+    setWeekTasks((prevTasks) => {
+      const updatedTasks = [...prevTasks[weekKey]]
+      updatedTasks[index] = updatedTask
+      return {
+        ...prevTasks,
+        [weekKey]: updatedTasks,
+      }
+    })
   }
 
   useEffect(() => {
@@ -66,29 +101,25 @@ export default function Calendar() {
         </HeaderContainer>
         <CalendarContainer>
           <SidebarContainer>
-            <WeekTaskContainer>
-              <WeekTaskTitle>1주차</WeekTaskTitle>
-              <TaskItem>수능특강 국어 3지문 끝내기</TaskItem>
-            </WeekTaskContainer>
-            <WeekTaskContainer>
-              <WeekTaskTitle>2주차</WeekTaskTitle>
-              <TaskItem>과탐 한권 끝내기</TaskItem>
-              <TaskItem>모의고사 오답정리</TaskItem>
-            </WeekTaskContainer>
-            <WeekTaskContainer>
-              <WeekTaskTitle>3주차</WeekTaskTitle>
-              <TaskItem>수능형식 수학 시작</TaskItem>
-            </WeekTaskContainer>
-            <WeekTaskContainer>
-              <WeekTaskTitle>4주차</WeekTaskTitle>
-              <TaskItem>수능특강 국어 남은 지문 마무리</TaskItem>
-              <TaskItem>수학학원 등록</TaskItem>
-            </WeekTaskContainer>
-            <WeekTaskContainer>
-              <WeekTaskTitle>5주차</WeekTaskTitle>
-              <TaskItem>입시설명회</TaskItem>
-              <TaskItem>캠퍼스 투어 다녀오기</TaskItem>
-            </WeekTaskContainer>
+            {Object.keys(weekTasks).map((weekKey) => (
+              <WeekTaskContainer key={weekKey}>
+                <WeekTaskHeader>
+                  <WeekTaskTitle>{weekTitles[weekKey]}</WeekTaskTitle>
+                  <WeekTaskAddButton onClick={() => addWeekTask(weekKey)}>
+                    +
+                  </WeekTaskAddButton>
+                </WeekTaskHeader>
+                {weekTasks[weekKey].map((task, index) => (
+                  <TaskItemComponent
+                    key={index}
+                    weekKey={weekKey}
+                    task={task}
+                    index={index}
+                    updateWeekTask={updateWeekTask}
+                  />
+                ))}
+              </WeekTaskContainer>
+            ))}
           </SidebarContainer>
           <FullCalendar
             plugins={[dayGridPlugin, interactionPlugin]}
