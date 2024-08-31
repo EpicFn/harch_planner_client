@@ -27,7 +27,9 @@ export default function EventModal({ isOpen, onClose, onSave }) {
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
       event.preventDefault()
-      handleSave()
+      if (ButtonRef.current) {
+        ButtonRef.current.click()
+      }
     }
   }
 
