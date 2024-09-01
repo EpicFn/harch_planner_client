@@ -7,7 +7,7 @@ const useUserStore = create((set) => ({
     profileImage: null,
     name: '', //유저 네임 추가
   },
-  // 임의의 사용자 데이터를 일단 연동 전이라 설정해놨습니다
+  // db에 저장되어있는 임의의 사용자 데이터로 가정해놨습니다.
   dummyUser: {
     id: 'no2jfamily@naver.com',
     password: '123123',
@@ -16,7 +16,7 @@ const useUserStore = create((set) => ({
   },
   setUser: (newUser) => set({ user: newUser }),
   login: () => {
-    set((state) => ({ user: state.dummyUser }))
+    set((state) => ({ user: state.user }))
   },
   logout: () =>
     set({
