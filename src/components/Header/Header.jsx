@@ -1,4 +1,5 @@
 import useThemeStore from '@stores/themeStore'
+import useUserStore from '@stores/userStore'
 import {
   DdayBox,
   HeaderContainer,
@@ -11,6 +12,7 @@ import {
 
 export default function Header({ onThemeChange }) {
   const { setTheme } = useThemeStore()
+  const user = useUserStore((state) => state.user)
 
   const handleThemeChange = (theme) => {
     const selectedTheme = theme
@@ -35,7 +37,7 @@ export default function Header({ onThemeChange }) {
       </ThemeButtonContainer>
       <UserProfileBox>
         <DdayBox>D-154</DdayBox>
-        <UserNicknameBox>User0309</UserNicknameBox>
+        <UserNicknameBox>{user.name}</UserNicknameBox>
       </UserProfileBox>
     </HeaderContainer>
   )

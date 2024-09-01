@@ -71,12 +71,19 @@ export default function LoginModal() {
         id: inputIdValue,
         password: inputPasswordValue,
         profileImage: DefaultProfileImage,
+        name: '정준영', //일단 임의로 설정해놨습니다 -> api 연동 전 이므로
       }), // 로그인 성공 시 기본 프로필 이미지 설정 })
         console.log(user)
+    }
+  }
+
+  useEffect(() => {
+    if (user.id) {
+      // user.id가 설정된 이후에 페이지 이동
       closeModal()
       navigate('/dailyPlannerPage')
     }
-  }
+  }, [user.id, navigate, closeModal])
 
   if (!isModalOpen) return null
   return (
