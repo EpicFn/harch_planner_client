@@ -121,9 +121,18 @@ export const HeaderContainer = styled.div`
   margin-bottom: 16px;
 `
 
+export const YearTitle = styled.h1`
+  font-size: 3rem;
+  margin: 10px;
+  display: inline-block;
+  white-space: nowrap;
+`
+
 export const MonthTitle = styled.h1`
-  font-size: 4rem;
+  font-size: 3rem;
   margin: 0;
+  display: inline-block;
+  white-space: nowrap;
 `
 
 export const MonthLabelBox = styled.div`
@@ -172,6 +181,10 @@ export const GlobalStyle = createGlobalStyle`
 
   .fc .fc-toolbar.fc-header-toolbar {
     margin-bottom: 0.4rem;
+  }
+
+  .fc .fc-toolbar-title {
+    display: none
   }
 
   .fc .fc-event-title.fc-sticky {

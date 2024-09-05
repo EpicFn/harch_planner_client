@@ -11,6 +11,7 @@ import {
   WeekTaskContainer,
   WeekTaskHeader,
   WeekTaskTitle,
+  YearTitle,
 } from '@components/Calendar/Calendar.style'
 import EventModal from '@components/Calendar/EventModal'
 import TaskItemComponent from '@components/Calendar/TaskItemComponent'
@@ -42,11 +43,21 @@ export default function Calendar() {
   }
 
   const today = new Date()
+  const [currentYear, setCurrentYear] = useState(null)
   const [currentMonth, setCurrentMonth] = useState(null)
+
+  const handleYearChange = (newYear) => {
+    setCurrentYear(newYear)
+  }
 
   const handleMonthChange = (arg) => {
     const newMonth = arg.view.currentStart.getMonth() + 1
+    const newYear = arg.view.currentStart.getFullYear()
+
     setCurrentMonth(newMonth)
+    if (newYear !== currentYear) {
+      handleYearChange(newYear) // 년도가 변경될 경우 handleYearChange 호출
+    }
   }
 
   const handleDateClick = (arg) => {
@@ -94,7 +105,8 @@ export default function Calendar() {
       <GlobalStyle />
       <Container>
         <HeaderContainer>
-          <MonthTitle>{currentMonth}</MonthTitle>
+          <YearTitle>{currentYear + '년'}</YearTitle>
+          <MonthTitle>{currentMonth + '월'}</MonthTitle>
           <MonthLabelBox>
             <MonthLabel>월간목표</MonthLabel>
           </MonthLabelBox>
@@ -130,9 +142,6 @@ export default function Calendar() {
               left: 'prev,next today',
               center: 'title',
               right: '',
-            }}
-            buttonText={{
-              today: '오늘',
             }}
             datesSet={handleMonthChange}
             dateClick={handleDateClick}
