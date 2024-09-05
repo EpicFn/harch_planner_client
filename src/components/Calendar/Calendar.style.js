@@ -115,7 +115,7 @@ export const CalendarContainer = styled.div`
 
 export const HeaderContainer = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   width: 100%;
   align-items: center;
   margin-bottom: 16px;
@@ -150,6 +150,43 @@ export const MonthLabel = styled.h2`
   font-size: 20px;
   color: #505050;
   margin-left: 30px;
+`
+
+export const ContextMenu = styled.div`
+  position: absolute;
+  width: 120px;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  overflow: hidden;
+  top: 50px; /* 원하는 위치에 맞춰 조정 */
+  right: 20px; /* 오른쪽 하단 고정 */
+
+  div:first-child {
+    border-bottom: 0.3px solid gray;
+  }
+`
+
+export const ContextMenuItem = styled.div`
+  padding: 4px 15px;
+  font-size: 14px;
+  color: #333;
+  background-color: #fff;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+
+  &:hover {
+    background-color: #f5f5f5;
+    color: #007bff; /* hover 시 텍스트 색상 변경 */
+  }
+
+  &:active {
+    background-color: #e0e0e0; /* 클릭 시 배경 색상 */
+  }
 `
 
 export const GlobalStyle = createGlobalStyle`

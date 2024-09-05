@@ -1,10 +1,10 @@
 import {
   CalendarContainer,
   Container,
+  ContextMenu,
+  ContextMenuItem,
   GlobalStyle,
   HeaderContainer,
-  MonthLabel,
-  MonthLabelBox,
   MonthTitle,
   SidebarContainer,
   WeekTaskAddButton,
@@ -19,12 +19,21 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import FullCalendar from '@fullcalendar/react'
 import calendarEventStore from '@stores/calendarEventStore'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export default function Calendar() {
-  const { events, addEvent } = calendarEventStore()
+  const { events, addEvent, removeEvent } = calendarEventStore()
+  console.log(events)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedDate, setSelectedDate] = useState(null)
+  const [contextMenu, setContextMenu] = useState({
+    visible: false,
+    x: 0,
+    y: 0,
+    eventId: null,
+  })
+
+  const calendarRef = useRef(null)
 
   const [weekTasks, setWeekTasks] = useState({
     week1: [],
@@ -72,9 +81,17 @@ export default function Calendar() {
 
   const handleEventSave = (title) => {
     if (title && selectedDate) {
-      addEvent({ title, date: selectedDate })
+      const eventId = Date.now().toString() // 고유한 ID 생성
+      addEvent({ id: eventId, title, date: selectedDate }) // ID 포함하여 이벤트 추가
     }
     handleModalClose()
+  }
+
+  const handleDeleteEvent = () => {
+    if (contextMenu.eventId) {
+      removeEvent(contextMenu.eventId)
+    }
+    setContextMenu({ visible: false, x: 0, y: 0, eventId: null })
   }
 
   const addWeekTask = (weekKey) => {
@@ -96,6 +113,20 @@ export default function Calendar() {
   }
 
   useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (contextMenu.visible) {
+        setContextMenu({ visible: false, x: 0, y: 0, eventId: null })
+      }
+    }
+
+    window.addEventListener('click', handleClickOutside)
+
+    return () => {
+      window.removeEventListener('click', handleClickOutside)
+    }
+  }, [contextMenu.visible])
+
+  useEffect(() => {
     const initialMonth = today.getMonth() + 1
     setCurrentMonth(initialMonth)
   }, [])
@@ -107,9 +138,6 @@ export default function Calendar() {
         <HeaderContainer>
           <YearTitle>{currentYear + '년'}</YearTitle>
           <MonthTitle>{currentMonth + '월'}</MonthTitle>
-          <MonthLabelBox>
-            <MonthLabel>월간목표</MonthLabel>
-          </MonthLabelBox>
         </HeaderContainer>
         <CalendarContainer>
           <SidebarContainer>
@@ -134,6 +162,7 @@ export default function Calendar() {
             ))}
           </SidebarContainer>
           <FullCalendar
+            ref={calendarRef}
             plugins={[dayGridPlugin, interactionPlugin]}
             initialView="dayGridMonth"
             events={events}
@@ -145,6 +174,20 @@ export default function Calendar() {
             }}
             datesSet={handleMonthChange}
             dateClick={handleDateClick}
+            eventDidMount={(info) => {
+              info.el.addEventListener('contextmenu', (e) => {
+                e.preventDefault()
+
+                const rect = info.el.getBoundingClientRect() // 우클릭한 이벤트 요소의 위치를 기준으로 좌표 설정
+
+                setContextMenu({
+                  visible: true,
+                  x: rect.right - 30,
+                  y: rect.bottom - 20,
+                  eventId: info.event.id,
+                })
+              })
+            }}
             height="auto"
             contentHeight="auto"
           />
@@ -155,6 +198,13 @@ export default function Calendar() {
           onClose={handleModalClose}
           onSave={handleEventSave}
         />
+
+        {contextMenu.visible && (
+          <ContextMenu style={{ top: contextMenu.y, left: contextMenu.x }}>
+            <ContextMenuItem onClick={handleDeleteEvent}>수정</ContextMenuItem>
+            <ContextMenuItem onClick={handleDeleteEvent}>삭제</ContextMenuItem>
+          </ContextMenu>
+        )}
       </Container>
     </>
   )

@@ -4,9 +4,9 @@ const calendarEventStore = create((set) => ({
   events: [],
   addEvent: (newEvent) =>
     set((state) => ({ events: [...state.events, newEvent] })),
-  removeEvent: (eventDate) =>
+  removeEvent: (eventId) =>
     set((state) => ({
-      events: state.events.filter((event) => event.date !== eventDate),
+      events: state.events.filter((event) => event.id !== eventId), // ID 기준으로 삭제
     })),
 }))
 
