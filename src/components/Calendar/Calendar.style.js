@@ -197,7 +197,8 @@ export const EventContent = styled.div`
   border-radius: 4px;
   min-height: 10px;
   outline: none;
-  color: black;
+  color: #505050;
+  background-color: #e5e5ec;
 `
 
 export const GlobalStyle = createGlobalStyle`
@@ -242,14 +243,6 @@ export const GlobalStyle = createGlobalStyle`
     color: #505050 !important;
   }
 
-  .fc .fc-col-header-cell.fc-day-sun {
-    color: red;
-  }
-
-  .fc .fc-col-header-cell.fc-day-sat {
-    color: blue;
-  }
-
   .fc .fc-col-header-cell.fc-day-mon,
   .fc .fc-col-header-cell.fc-day-tue,
   .fc .fc-col-header-cell.fc-day-wed,
@@ -263,18 +256,8 @@ export const GlobalStyle = createGlobalStyle`
     text-decoration: none;
   }
 
-  .fc .fc-daygrid-day.fc-day-sun .fc-daygrid-day-number {
-    color: red !important;
-    font-weight: bold;
-  }
-
-  .fc .fc-daygrid-day.fc-day-sat .fc-daygrid-day-number {
-    color: blue !important;
-    font-weight: bold;
-  }
-
-  .fc .fc-daygrid-day:not(.fc-day-sun):not(.fc-day-sat) .fc-daygrid-day-number {
-    color: black !important;
+  .fc .fc-daygrid-day .fc-daygrid-day-number {
+    color: #505050 !important;
     font-weight: medium;
   }
 `
