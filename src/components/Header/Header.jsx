@@ -1,5 +1,6 @@
 import useThemeStore from '@stores/themeStore'
 import useUserStore from '@stores/userStore'
+import { useNavigate } from 'react-router-dom'
 import {
   DdayBox,
   HeaderContainer,
@@ -13,6 +14,7 @@ import {
 export default function Header({ onThemeChange }) {
   const { setTheme } = useThemeStore()
   const user = useUserStore((state) => state.user)
+  const navigate = useNavigate()
 
   const handleThemeChange = (theme) => {
     const selectedTheme = theme
@@ -24,7 +26,7 @@ export default function Header({ onThemeChange }) {
 
   return (
     <HeaderContainer>
-      <Logo src="src/assets/logo/Harch.png" />
+      <Logo src="src/assets/logo/Harch.png" onClick={() => navigate('/')} />
       <ThemeButtonContainer>
         <ThemeButton
           color="#C8EBBF"

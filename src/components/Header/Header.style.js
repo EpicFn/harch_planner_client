@@ -71,5 +71,6 @@ export const ThemeButton = styled.button`
 export const Logo = styled.img`
   height: 50px;
   max-height: 50px;
+  cursor: pointer;
   width: auto;
 `
