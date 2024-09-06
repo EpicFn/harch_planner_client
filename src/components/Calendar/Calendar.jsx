@@ -1,4 +1,5 @@
 import {
+  ArrowButton,
   CalendarContainer,
   Container,
   ContextMenu,
@@ -59,6 +60,16 @@ export default function Calendar() {
   const today = new Date()
   const [currentYear, setCurrentYear] = useState(null)
   const [currentMonth, setCurrentMonth] = useState(null)
+
+  const handlePrevClick = () => {
+    const calendarApi = calendarRef.current.getApi()
+    calendarApi.prev()
+  }
+
+  const handleNextClick = () => {
+    const calendarApi = calendarRef.current.getApi()
+    calendarApi.next()
+  }
 
   const handleYearChange = (newYear) => {
     setCurrentYear(newYear)
@@ -182,6 +193,8 @@ export default function Calendar() {
         <HeaderContainer>
           <YearTitle>{currentYear + '년'}</YearTitle>
           <MonthTitle>{currentMonth + '월'}</MonthTitle>
+          <ArrowButton onClick={handlePrevClick}>{'<'}</ArrowButton>
+          <ArrowButton onClick={handleNextClick}>{'>'}</ArrowButton>
         </HeaderContainer>
         <CalendarContainer>
           <SidebarContainer>
@@ -211,11 +224,7 @@ export default function Calendar() {
             initialView="dayGridMonth"
             events={events}
             locale="ko"
-            headerToolbar={{
-              left: 'prev,next today',
-              center: 'title',
-              right: '',
-            }}
+            headerToolbar={false}
             datesSet={handleMonthChange}
             dateClick={handleDateClick}
             eventContent={(info) => {

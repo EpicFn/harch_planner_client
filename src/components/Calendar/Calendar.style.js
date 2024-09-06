@@ -201,6 +201,38 @@ export const EventContent = styled.div`
   background-color: #e5e5ec;
 `
 
+export const ArrowButton = styled.button`
+  background-color: #fff;
+  border: 1px solid #ccc;
+  color: #333;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 8px;
+  margin: 0px 0px 0px 15px;
+  border-radius: 20%; /* 원형 버튼 */
+  width: 40px; /* 버튼 너비 */
+  height: 40px; /* 버튼 높이 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 버튼에 약간의 그림자 추가 */
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+
+  &:active {
+    background-color: #e0e0e0;
+    color: #0056b3;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* 클릭 시 그림자 변화 */
+  }
+
+  &:focus {
+    outline: none;
+  }
+`
+
 export const GlobalStyle = createGlobalStyle`
   .fc .fc-daygrid-event-harness {
     display: flex;
@@ -225,11 +257,11 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   .fc-daygrid-day-frame {
-    height: 80px;
+    height: 88px;
   }
 
   .fc .fc-toolbar.fc-header-toolbar {
-    margin-bottom: 0.4rem;
+    position: absolute;
   }
 
   .fc .fc-toolbar-title {
