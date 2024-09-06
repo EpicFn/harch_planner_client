@@ -234,6 +234,9 @@ export const GlobalStyle = createGlobalStyle`
   .fc .fc-toolbar-title {
     display: none
   }
+  .fc-direction-ltr .fc-toolbar > * > :not(:first-child) {
+    display: none
+  }
 
   .fc .fc-event-title.fc-sticky {
     color: #505050 !important;
