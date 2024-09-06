@@ -20,21 +20,23 @@ import TaskItemComponent from '@components/Calendar/TaskItemComponent'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import FullCalendar from '@fullcalendar/react'
-import calendarEventStore from '@stores/calendarEventStore'
+import useCalendarEvents from '@hooks/useCalendarEvents'
+import useContextMenu from '@hooks/useContextMenu'
 import { useEffect, useRef, useState } from 'react'
 
 export default function Calendar() {
-  const { events, addEvent, removeEvent, updateEvent } = calendarEventStore()
+  const {
+    events,
+    addCalendarEvent,
+    removeEvent,
+    updateEvent,
+    isFirstEventAdded,
+    setIsFirstEventAdded,
+  } = useCalendarEvents()
+  const { contextMenu, openContextMenu, closeContextMenu } = useContextMenu()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isNotificationVisible, setIsNotificationVisible] = useState(false)
   const [selectedDate, setSelectedDate] = useState(null)
-  const [contextMenu, setContextMenu] = useState({
-    visible: false,
-    x: 0,
-    y: 0,
-    eventId: null,
-  })
-  const [isFirstEventAdded, setIsFirstEventAdded] = useState(false)
 
   const [isEditing, setIsEditing] = useState(false) // 수정 모드 여부
   const [editingEventId, setEditingEventId] = useState(null) // 수정할 이벤트의 ID
@@ -100,7 +102,7 @@ export default function Calendar() {
   const handleAddEventSave = (title) => {
     if (title && selectedDate) {
       const eventId = Date.now().toString() // 고유한 ID 생성
-      addEvent({ id: eventId, title, date: selectedDate }) // ID 포함하여 이벤트 추가
+      addCalendarEvent({ id: eventId, title, date: selectedDate }) // ID 포함하여 이벤트 추가
     }
     if (!isFirstEventAdded) {
       setIsFirstEventAdded(true) // 처음 추가된 이후로는 모달을 띄우지 않도록 상태 변경
@@ -128,7 +130,7 @@ export default function Calendar() {
     setEditingEventId(eventId) // 수정할 이벤트 ID 저장
     const eventToUpdate = events.find((event) => event.id === eventId)
     setNewEventTitle(eventToUpdate.title) // 수정할 이벤트의 제목 저장
-    setContextMenu({ visible: false, x: 0, y: 0, eventId: null }) // contextMenu 숨기기
+    closeContextMenu() // contextMenu 숨기기
     setTimeout(() => {
       if (editableRef.current) {
         moveCursorToEnd(editableRef.current) // 커서를 텍스트 끝으로 이동
@@ -154,7 +156,7 @@ export default function Calendar() {
     if (contextMenu.eventId) {
       removeEvent(contextMenu.eventId)
     }
-    setContextMenu({ visible: false, x: 0, y: 0, eventId: null })
+    closeContextMenu()
   }
 
   //왼쪽 주차 목표 추가/수정
@@ -175,20 +177,6 @@ export default function Calendar() {
       }
     })
   }
-
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (contextMenu.visible) {
-        setContextMenu({ visible: false, x: 0, y: 0, eventId: null })
-      }
-    }
-
-    window.addEventListener('click', handleClickOutside)
-
-    return () => {
-      window.removeEventListener('click', handleClickOutside)
-    }
-  }, [contextMenu.visible])
 
   useEffect(() => {
     const initialMonth = today.getMonth() + 1
@@ -279,18 +267,9 @@ export default function Calendar() {
               )
             }}
             eventDidMount={(info) => {
-              info.el.addEventListener('contextmenu', (e) => {
-                e.preventDefault()
-
-                const rect = info.el.getBoundingClientRect() // 우클릭한 이벤트 요소의 위치를 기준으로 좌표 설정
-
-                setContextMenu({
-                  visible: true,
-                  x: rect.right - 30,
-                  y: rect.bottom - 20,
-                  eventId: info.event.id,
-                })
-              })
+              info.el.addEventListener('contextmenu', (e) =>
+                openContextMenu(e, info.event.id),
+              )
             }}
             height="auto"
             contentHeight="auto"
