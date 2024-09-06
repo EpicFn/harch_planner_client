@@ -114,6 +114,7 @@ export const CalendarContainer = styled.div`
 `
 
 export const HeaderContainer = styled.div`
+  position: relative;
   display: flex;
   justify-content: flex-start;
   width: 100%;

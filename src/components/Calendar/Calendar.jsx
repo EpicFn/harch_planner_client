@@ -25,8 +25,8 @@ import { useEffect, useRef, useState } from 'react'
 
 export default function Calendar() {
   const { events, addEvent, removeEvent, updateEvent } = calendarEventStore()
-  console.log(events)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isNotificationVisible, setIsNotificationVisible] = useState(false)
   const [selectedDate, setSelectedDate] = useState(null)
   const [contextMenu, setContextMenu] = useState({
     visible: false,
@@ -34,6 +34,8 @@ export default function Calendar() {
     y: 0,
     eventId: null,
   })
+  const [isFirstEventAdded, setIsFirstEventAdded] = useState(false)
+
   const [isEditing, setIsEditing] = useState(false) // 수정 모드 여부
   const [editingEventId, setEditingEventId] = useState(null) // 수정할 이벤트의 ID
   const [newEventTitle, setNewEventTitle] = useState('') // 수정 중인 제목
@@ -99,6 +101,13 @@ export default function Calendar() {
     if (title && selectedDate) {
       const eventId = Date.now().toString() // 고유한 ID 생성
       addEvent({ id: eventId, title, date: selectedDate }) // ID 포함하여 이벤트 추가
+    }
+    if (!isFirstEventAdded) {
+      setIsFirstEventAdded(true) // 처음 추가된 이후로는 모달을 띄우지 않도록 상태 변경
+      setIsNotificationVisible(true)
+      setTimeout(() => {
+        setIsNotificationVisible(false)
+      }, 3000)
     }
     handleModalClose()
   }
@@ -195,6 +204,23 @@ export default function Calendar() {
           <MonthTitle>{currentMonth + '월'}</MonthTitle>
           <ArrowButton onClick={handlePrevClick}>{'<'}</ArrowButton>
           <ArrowButton onClick={handleNextClick}>{'>'}</ArrowButton>
+          {isNotificationVisible && (
+            <div
+              style={{
+                position: 'absolute',
+                right: '5px',
+                backgroundColor: '#f0f0f0',
+                padding: '10px 20px',
+                borderRadius: '4px',
+                boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                zIndex: 1000,
+                opacity: isNotificationVisible ? 1 : 0,
+                transition: 'opacity 0.5s ease-in-out',
+              }}
+            >
+              <span>수정, 삭제는 우 클릭을 통해 가능합니다</span>
+            </div>
+          )}
         </HeaderContainer>
         <CalendarContainer>
           <SidebarContainer>
