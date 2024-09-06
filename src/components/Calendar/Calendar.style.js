@@ -188,6 +188,17 @@ export const ContextMenuItem = styled.div`
     background-color: #e0e0e0; /* 클릭 시 배경 색상 */
   }
 `
+//캘린더에 이벤트 추가 시 사용되는 컴포넌트
+export const EventContent = styled.div`
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  border-radius: 4px;
+  min-height: 10px;
+  outline: none;
+  color: black;
+`
 
 export const GlobalStyle = createGlobalStyle`
   .fc .fc-daygrid-event-harness {

@@ -3,6 +3,7 @@ import {
   Container,
   ContextMenu,
   ContextMenuItem,
+  EventContent,
   GlobalStyle,
   HeaderContainer,
   MonthTitle,
@@ -22,7 +23,7 @@ import calendarEventStore from '@stores/calendarEventStore'
 import { useEffect, useRef, useState } from 'react'
 
 export default function Calendar() {
-  const { events, addEvent, removeEvent } = calendarEventStore()
+  const { events, addEvent, removeEvent, updateEvent } = calendarEventStore()
   console.log(events)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedDate, setSelectedDate] = useState(null)
@@ -32,8 +33,12 @@ export default function Calendar() {
     y: 0,
     eventId: null,
   })
+  const [isEditing, setIsEditing] = useState(false) // 수정 모드 여부
+  const [editingEventId, setEditingEventId] = useState(null) // 수정할 이벤트의 ID
+  const [newEventTitle, setNewEventTitle] = useState('') // 수정 중인 제목
 
   const calendarRef = useRef(null)
+  const editableRef = useRef(null)
 
   const [weekTasks, setWeekTasks] = useState({
     week1: [],
@@ -79,7 +84,7 @@ export default function Calendar() {
     setSelectedDate(null)
   }
 
-  const handleEventSave = (title) => {
+  const handleAddEventSave = (title) => {
     if (title && selectedDate) {
       const eventId = Date.now().toString() // 고유한 ID 생성
       addEvent({ id: eventId, title, date: selectedDate }) // ID 포함하여 이벤트 추가
@@ -87,6 +92,44 @@ export default function Calendar() {
     handleModalClose()
   }
 
+  //수정 시 커서 맨끝으로 이동
+  const moveCursorToEnd = (element) => {
+    const range = document.createRange() // 새로운 range 생성
+    const selection = window.getSelection() // 현재 선택 영역 가져오기
+    range.selectNodeContents(element) // contentEditable의 모든 내용을 선택
+    range.collapse(false) // collapse를 false로 설정하여 범위를 텍스트 끝으로 설정
+    selection.removeAllRanges() // 현재 선택 영역을 모두 제거
+    selection.addRange(range) // 새로 생성한 range를 추가하여 커서를 끝으로 이동
+  }
+
+  //캘린더 일정 수정
+  const handleUpdateEvent = (eventId) => {
+    setIsEditing(true) // 수정 모드로 전환
+    setEditingEventId(eventId) // 수정할 이벤트 ID 저장
+    const eventToUpdate = events.find((event) => event.id === eventId)
+    setNewEventTitle(eventToUpdate.title) // 수정할 이벤트의 제목 저장
+    setContextMenu({ visible: false, x: 0, y: 0, eventId: null }) // contextMenu 숨기기
+    setTimeout(() => {
+      if (editableRef.current) {
+        moveCursorToEnd(editableRef.current) // 커서를 텍스트 끝으로 이동
+        editableRef.current.focus() // 포커스 설정
+      }
+    }, 0)
+  }
+
+  //수정되는거 저장
+  const handleSaveEditedEvent = (eventId) => {
+    const updatedEvent = {
+      id: eventId,
+      title: newEventTitle,
+      date: events.find((event) => event.id === eventId).date,
+    }
+    updateEvent(updatedEvent) // 수정된 이벤트 저장
+    setIsEditing(false) // 수정 모드 종료
+    setEditingEventId(null)
+  }
+
+  ////캘린더 일정 삭제
   const handleDeleteEvent = () => {
     if (contextMenu.eventId) {
       removeEvent(contextMenu.eventId)
@@ -94,6 +137,7 @@ export default function Calendar() {
     setContextMenu({ visible: false, x: 0, y: 0, eventId: null })
   }
 
+  //왼쪽 주차 목표 추가/수정
   const addWeekTask = (weekKey) => {
     setWeekTasks((prevTasks) => ({
       ...prevTasks,
@@ -174,6 +218,31 @@ export default function Calendar() {
             }}
             datesSet={handleMonthChange}
             dateClick={handleDateClick}
+            eventContent={(info) => {
+              return (
+                <EventContent
+                  contentEditable={
+                    isEditing && editingEventId === info.event.id
+                  }
+                  ref={
+                    isEditing && editingEventId === info.event.id
+                      ? editableRef
+                      : null
+                  }
+                  suppressContentEditableWarning={true}
+                  onInput={(e) => setNewEventTitle(e.currentTarget.textContent)}
+                  onBlur={() => handleSaveEditedEvent(info.event.id)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                      e.currentTarget.blur()
+                    }
+                  }}
+                >
+                  {info.event.title}
+                </EventContent>
+              )
+            }}
             eventDidMount={(info) => {
               info.el.addEventListener('contextmenu', (e) => {
                 e.preventDefault()
@@ -196,12 +265,16 @@ export default function Calendar() {
         <EventModal
           isOpen={isModalOpen}
           onClose={handleModalClose}
-          onSave={handleEventSave}
+          onSave={handleAddEventSave}
         />
 
         {contextMenu.visible && (
           <ContextMenu style={{ top: contextMenu.y, left: contextMenu.x }}>
-            <ContextMenuItem onClick={handleDeleteEvent}>수정</ContextMenuItem>
+            <ContextMenuItem
+              onClick={() => handleUpdateEvent(contextMenu.eventId)}
+            >
+              수정
+            </ContextMenuItem>
             <ContextMenuItem onClick={handleDeleteEvent}>삭제</ContextMenuItem>
           </ContextMenu>
         )}
