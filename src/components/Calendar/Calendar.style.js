@@ -151,7 +151,7 @@ export const EventContent = styled.div`
   text-overflow: ellipsis;
   max-width: 100%;
   border-radius: 4px;
-  height: 14px;
+  height: 12px;
   outline: none;
   color: #505050;
   font-size: small;
@@ -204,6 +204,7 @@ export const GlobalStyle = createGlobalStyle`
     border-radius: 4px;
     text-align: center;
     margin: 0 auto;
+    margin-bottom: 5px;
     border: none;
   }
   
