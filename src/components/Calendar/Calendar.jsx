@@ -7,16 +7,12 @@ import {
   EventContent,
   GlobalStyle,
   HeaderContainer,
+  MonthGoalList,
   MonthTitle,
   SidebarContainer,
-  WeekTaskAddButton,
-  WeekTaskContainer,
-  WeekTaskHeader,
-  WeekTaskTitle,
   YearTitle,
 } from '@components/Calendar/Calendar.style'
 import EventModal from '@components/Calendar/EventModal'
-import TaskItemComponent from '@components/Calendar/TaskItemComponent'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import FullCalendar from '@fullcalendar/react'
@@ -44,22 +40,6 @@ export default function Calendar() {
 
   const calendarRef = useRef(null)
   const editableRef = useRef(null)
-
-  const [weekTasks, setWeekTasks] = useState({
-    week1: [],
-    week2: [],
-    week3: [],
-    week4: [],
-    week5: [],
-  })
-
-  const weekTitles = {
-    week1: '1주차',
-    week2: '2주차',
-    week3: '3주차',
-    week4: '4주차',
-    week5: '5주차',
-  }
 
   const today = new Date()
   const [currentYear, setCurrentYear] = useState(null)
@@ -159,25 +139,6 @@ export default function Calendar() {
     closeContextMenu()
   }
 
-  //왼쪽 주차 목표 추가/수정
-  const addWeekTask = (weekKey) => {
-    setWeekTasks((prevTasks) => ({
-      ...prevTasks,
-      [weekKey]: [...prevTasks[weekKey], '주간목표 입력'],
-    }))
-  }
-
-  const updateWeekTask = (weekKey, index, updatedTask) => {
-    setWeekTasks((prevTasks) => {
-      const updatedTasks = [...prevTasks[weekKey]]
-      updatedTasks[index] = updatedTask
-      return {
-        ...prevTasks,
-        [weekKey]: updatedTasks,
-      }
-    })
-  }
-
   useEffect(() => {
     const initialMonth = today.getMonth() + 1
     setCurrentMonth(initialMonth)
@@ -212,25 +173,7 @@ export default function Calendar() {
         </HeaderContainer>
         <CalendarContainer>
           <SidebarContainer>
-            {Object.keys(weekTasks).map((weekKey) => (
-              <WeekTaskContainer key={weekKey}>
-                <WeekTaskHeader>
-                  <WeekTaskTitle>{weekTitles[weekKey]}</WeekTaskTitle>
-                  <WeekTaskAddButton onClick={() => addWeekTask(weekKey)}>
-                    +
-                  </WeekTaskAddButton>
-                </WeekTaskHeader>
-                {weekTasks[weekKey].map((task, index) => (
-                  <TaskItemComponent
-                    key={index}
-                    weekKey={weekKey}
-                    task={task}
-                    index={index}
-                    updateWeekTask={updateWeekTask}
-                  />
-                ))}
-              </WeekTaskContainer>
-            ))}
+            <MonthGoalList>월간목표</MonthGoalList>
           </SidebarContainer>
           <FullCalendar
             ref={calendarRef}
@@ -244,6 +187,7 @@ export default function Calendar() {
             eventContent={(info) => {
               return (
                 <EventContent
+                  key={info.event.id} // FullCalendar가 제공하는 고유 이벤트 ID 사용
                   contentEditable={
                     isEditing && editingEventId === info.event.id
                   }
@@ -266,6 +210,7 @@ export default function Calendar() {
                 </EventContent>
               )
             }}
+            eventOrder={'id'}
             eventDidMount={(info) => {
               info.el.addEventListener('contextmenu', (e) =>
                 openContextMenu(e, info.event.id),

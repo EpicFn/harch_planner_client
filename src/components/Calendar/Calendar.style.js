@@ -15,6 +15,7 @@ export const SidebarContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  align-items: center;
   width: 380px;
   height: 565px; // 부모 컨테이너와 같은 높이로 설정
   background-color: #f9f9f9;
@@ -49,56 +50,7 @@ export const SidebarContainer = styled.div`
   }
 `
 
-export const WeekTaskContainer = styled.div`
-  width: 100%;
-  margin-bottom: 20px;
-  border-bottom: 1px solid #e5e5ec;
-`
-
-export const WeekTaskHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-`
-
-export const WeekTaskTitle = styled.h3`
-  font-size: 18px;
-  color: #333;
-  margin-bottom: 10px;
-`
-
-export const WeekTaskAddButton = styled.button`
-  width: 24px;
-  height: 24px;
-  color: #333;
-  background-color: #f0f0f0;
-  border: 1px solid #cccccc;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #d9d9d9;
-  }
-
-  &:active {
-    background-color: #bfbfbf;
-  }
-`
-
-export const TaskItem = styled.div`
-  font-size: 16px;
-  color: #666;
-  margin-bottom: 5px;
-  background-color: #e5e5ec;
-  padding: 8px;
-  border-radius: 4px;
-`
+export const MonthGoalList = styled.h3``
 
 export const CalendarContainer = styled.div`
   display: flex;
@@ -191,14 +143,18 @@ export const ContextMenuItem = styled.div`
 `
 //캘린더에 이벤트 추가 시 사용되는 컴포넌트
 export const EventContent = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   max-width: 100%;
   border-radius: 4px;
-  min-height: 10px;
+  height: 14px;
   outline: none;
   color: #505050;
+  font-size: small;
   background-color: #e5e5ec;
 `
 
