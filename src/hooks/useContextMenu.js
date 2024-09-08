@@ -15,7 +15,7 @@ export default function useContextMenu() {
     setContextMenu({
       visible: true,
       x: rect.right - 30,
-      y: rect.bottom - 20,
+      y: rect.bottom - 10,
       eventId,
     })
   }

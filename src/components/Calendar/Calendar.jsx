@@ -12,7 +12,7 @@ import {
   SidebarContainer,
   YearTitle,
 } from '@components/Calendar/Calendar.style'
-import EventModal from '@components/Calendar/EventModal'
+import EventModal from '@components/Calendar/EventModal/EventModal'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import FullCalendar from '@fullcalendar/react'

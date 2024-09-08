@@ -5,7 +5,7 @@ import {
   Input,
   ModalBackground,
   ModalContainer,
-} from '@components/Calendar/EventModal.style'
+} from '@components/Calendar/EventModal/EventModal.style'
 import { useEffect, useRef, useState } from 'react'
 
 export default function EventModal({ isOpen, onClose, onSave }) {

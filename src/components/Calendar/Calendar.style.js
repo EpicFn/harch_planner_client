@@ -151,7 +151,7 @@ export const EventContent = styled.div`
   text-overflow: ellipsis;
   max-width: 100%;
   border-radius: 4px;
-  height: 12px;
+  height: 13.2px;
   outline: none;
   color: #505050;
   font-size: small;
