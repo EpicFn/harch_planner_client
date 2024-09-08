@@ -50,7 +50,9 @@ export const SidebarContainer = styled.div`
   }
 `
 
-export const MonthGoalList = styled.h3``
+export const MonthGoalList = styled.h3`
+  margin-top: 0px;
+`
 
 export const CalendarContainer = styled.div`
   display: flex;
