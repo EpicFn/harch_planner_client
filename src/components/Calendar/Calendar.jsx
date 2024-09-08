@@ -72,6 +72,9 @@ export default function Calendar() {
   const handleDateClick = (arg) => {
     setSelectedDate(arg.dateStr)
     setIsModalOpen(true)
+    if (isNotificationVisible) {
+      setIsNotificationVisible(false)
+    }
   }
 
   const handleModalClose = () => {
