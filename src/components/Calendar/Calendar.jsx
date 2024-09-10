@@ -1,15 +1,19 @@
 import {
-  ArrowButton,
   CalendarContainer,
+  CalendarIcon,
   Container,
   ContextMenu,
   ContextMenuItem,
   EventContent,
   GlobalStyle,
   HeaderContainer,
+  MonthArrowButton,
   MonthGoalList,
+  MonthMoveBox,
   MonthTitle,
   SidebarContainer,
+  SidebarHeader,
+  YearBox,
   YearTitle,
 } from '@components/Calendar/Calendar.style'
 import EventModal from '@components/Calendar/EventModal/EventModal'
@@ -151,31 +155,42 @@ export default function Calendar() {
     <>
       <GlobalStyle />
       <Container>
-        <HeaderContainer>
-          <YearTitle>{currentYear + '년'}</YearTitle>
-          <MonthTitle>{currentMonth + '월'}</MonthTitle>
-          <ArrowButton onClick={handlePrevClick}>{'<'}</ArrowButton>
-          <ArrowButton onClick={handleNextClick}>{'>'}</ArrowButton>
-          {isNotificationVisible && (
-            <div
-              style={{
-                position: 'absolute',
-                right: '5px',
-                backgroundColor: '#f0f0f0',
-                padding: '10px 20px',
-                borderRadius: '4px',
-                boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-                zIndex: 1000,
-                opacity: isNotificationVisible ? 1 : 0,
-                transition: 'opacity 0.5s ease-in-out',
-              }}
-            >
-              <span>수정, 삭제는 우 클릭을 통해 가능합니다</span>
-            </div>
-          )}
-        </HeaderContainer>
         <CalendarContainer>
           <SidebarContainer>
+            <HeaderContainer>
+              <SidebarHeader>
+                <YearBox>
+                  <YearTitle>{currentYear}</YearTitle>
+                  <CalendarIcon src="/src/assets/calendar.png" />
+                </YearBox>
+                <MonthMoveBox>
+                  <MonthTitle>{currentMonth + '월'}</MonthTitle>
+                  <MonthArrowButton onClick={handlePrevClick}>
+                    {'<'}
+                  </MonthArrowButton>
+                  <MonthArrowButton onClick={handleNextClick}>
+                    {'>'}
+                  </MonthArrowButton>
+                </MonthMoveBox>
+              </SidebarHeader>
+              {isNotificationVisible && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    right: '25px',
+                    backgroundColor: '#f0f0f0',
+                    padding: '10px 20px',
+                    borderRadius: '4px',
+                    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                    zIndex: 1000,
+                    opacity: isNotificationVisible ? 1 : 0,
+                    transition: 'opacity 0.5s ease-in-out',
+                  }}
+                >
+                  <span>수정, 삭제는 우 클릭을 통해 가능합니다</span>
+                </div>
+              )}
+            </HeaderContainer>
             <MonthGoalList>월간목표</MonthGoalList>
           </SidebarContainer>
           <FullCalendar

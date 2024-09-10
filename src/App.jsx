@@ -1,5 +1,5 @@
 import CalendarPage from '@pages/Calendar/CalendarPage'
-import DailyPlanner from '@pages/DailyPlanner/DailyPlanner'
+import DailyPlanner from '@pages/DailyPlanner/DailyPlannerPage'
 import LibraryPage from '@pages/Library/LibraryPage'
 import MainPage from '@pages/MainPage/MainPage'
 import RecordPage from '@pages/Record/RecordPage'

@@ -1,6 +1,7 @@
 import styled, { createGlobalStyle } from 'styled-components'
 
 export const Container = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column; // 사이드바와 캘린더를 가로로 배치
   justify-content: flex-start; // 시작 부분에 정렬
@@ -16,8 +17,8 @@ export const SidebarContainer = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  width: 380px;
-  height: 565px; // 부모 컨테이너와 같은 높이로 설정
+  width: 300px;
+  height: 100%; // 부모 컨테이너와 같은 높이로 설정
   background-color: #f9f9f9;
   padding: 20px;
   border: 1px solid #e0e0e0;
@@ -56,6 +57,7 @@ export const MonthGoalList = styled.h3`
 
 export const CalendarContainer = styled.div`
   display: flex;
+  align-items: center;
   width: 100%;
   flex-grow: 1;
   padding: 30px;
@@ -63,12 +65,11 @@ export const CalendarContainer = styled.div`
   border: 1px solid #e0e0e0;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  height: calc(100% - 80px); // 부모 컨테이너와 같은 높이로 설정
+  height: 100%;
   box-sizing: border-box;
 `
 
 export const HeaderContainer = styled.div`
-  position: relative;
   display: flex;
   justify-content: flex-start;
   width: 100%;
@@ -76,18 +77,76 @@ export const HeaderContainer = styled.div`
   margin-bottom: 16px;
 `
 
+export const SidebarHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  height: auto;
+`
+
+export const YearBox = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+`
+
 export const YearTitle = styled.h1`
-  font-size: 3rem;
-  margin: 10px;
+  font-size: 1rem;
+  margin-bottom: 10px;
   display: inline-block;
   white-space: nowrap;
 `
 
+export const CalendarIcon = styled.img`
+  width: 20px;
+  height: 20px;
+  margin-left: 6px;
+`
+
 export const MonthTitle = styled.h1`
-  font-size: 3rem;
+  font-size: 2.5rem;
   margin: 0;
   display: inline-block;
   white-space: nowrap;
+`
+
+export const MonthMoveBox = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+`
+
+export const MonthArrowButton = styled.button`
+  background-color: #fff;
+  border: 1px solid #ccc;
+  color: #333;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 12px;
+  margin: 0px 0px 0px 10px;
+  border-radius: 20%; /* 원형 버튼 */
+  width: 20px; /* 버튼 너비 */
+  height: 20px; /* 버튼 높이 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 버튼에 약간의 그림자 추가 */
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+
+  &:active {
+    background-color: #e0e0e0;
+    color: #0056b3;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* 클릭 시 그림자 변화 */
+  }
+
+  &:focus {
+    outline: none;
+  }
 `
 
 export const MonthLabelBox = styled.div`
@@ -160,38 +219,6 @@ export const EventContent = styled.div`
   background-color: #e5e5ec;
 `
 
-export const ArrowButton = styled.button`
-  background-color: #fff;
-  border: 1px solid #ccc;
-  color: #333;
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 8px;
-  margin: 0px 0px 0px 15px;
-  border-radius: 20%; /* 원형 버튼 */
-  width: 40px; /* 버튼 너비 */
-  height: 40px; /* 버튼 높이 */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 버튼에 약간의 그림자 추가 */
-  transition: all 0.3s ease;
-
-  &:hover {
-    background-color: #f0f0f0;
-  }
-
-  &:active {
-    background-color: #e0e0e0;
-    color: #0056b3;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* 클릭 시 그림자 변화 */
-  }
-
-  &:focus {
-    outline: none;
-  }
-`
-
 export const GlobalStyle = createGlobalStyle`
   .fc .fc-daygrid-event-harness {
     display: flex;
@@ -217,7 +244,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   .fc-daygrid-day-frame {
-    height: 88px;
+    height: 98px;
   }
 
   .fc .fc-toolbar.fc-header-toolbar {
