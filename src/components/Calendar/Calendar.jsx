@@ -177,7 +177,7 @@ export default function Calendar() {
                 <div
                   style={{
                     position: 'absolute',
-                    right: '25px',
+                    right: '35px',
                     backgroundColor: '#f0f0f0',
                     padding: '10px 20px',
                     borderRadius: '4px',

@@ -1,7 +1,6 @@
 import styled, { createGlobalStyle } from 'styled-components'
 
 export const Container = styled.div`
-  position: relative;
   display: flex;
   flex-direction: column; // 사이드바와 캘린더를 가로로 배치
   justify-content: flex-start; // 시작 부분에 정렬
@@ -204,6 +203,7 @@ export const ContextMenuItem = styled.div`
 `
 //캘린더에 이벤트 추가 시 사용되는 컴포넌트
 export const EventContent = styled.div`
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
