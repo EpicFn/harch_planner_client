@@ -49,13 +49,13 @@ export default function Calendar() {
   const [monthGoalList, setMonthGoalList] = useState([])
   const [editingGoal, setEditingGoal] = useState({ index: null, text: '' })
 
-  const calendarRef = useRef(null)
-  const editableRef = useRef(null)
-  const goalRefs = useRef([])
-
   const today = new Date()
   const [currentYear, setCurrentYear] = useState(null)
   const [currentMonth, setCurrentMonth] = useState(null)
+
+  const calendarRef = useRef(null)
+  const editableRef = useRef(null)
+  const goalRefs = useRef([])
 
   const handlePrevClick = () => {
     const calendarApi = calendarRef.current.getApi()
