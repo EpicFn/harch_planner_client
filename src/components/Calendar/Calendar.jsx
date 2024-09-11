@@ -8,7 +8,10 @@ import {
   GlobalStyle,
   HeaderContainer,
   MonthArrowButton,
+  MonthGoalAddButton,
+  MonthGoalItem,
   MonthGoalList,
+  MonthGoalTask,
   MonthMoveBox,
   MonthTitle,
   SidebarContainer,
@@ -42,8 +45,13 @@ export default function Calendar() {
   const [editingEventId, setEditingEventId] = useState(null) // 수정할 이벤트의 ID
   const [newEventTitle, setNewEventTitle] = useState('') // 수정 중인 제목
 
+  //월간목표 상태관리
+  const [monthGoalList, setMonthGoalList] = useState([])
+  const [editingGoal, setEditingGoal] = useState({ index: null, text: '' })
+
   const calendarRef = useRef(null)
   const editableRef = useRef(null)
+  const goalRefs = useRef([])
 
   const today = new Date()
   const [currentYear, setCurrentYear] = useState(null)
@@ -146,6 +154,47 @@ export default function Calendar() {
     closeContextMenu()
   }
 
+  const handleAddMonthGoal = () => {
+    setMonthGoalList((prevGoals) => [...prevGoals, `목표를 입력해주세요`])
+  }
+
+  const handleEditGoal = (index) => {
+    const goalText = monthGoalList[index]
+    setEditingGoal({ index, text: goalText })
+    setTimeout(() => {
+      if (goalRefs.current[index]) {
+        goalRefs.current[index].focus() // 편집 모드에서 포커스 설정
+      }
+    }, 0)
+  }
+
+  // 목표 저장
+  const handleSaveGoal = (index) => {
+    if (goalRefs.current[index] && goalRefs.current[index].textContent) {
+      // null 및 textContent 체크 추가
+      console.log('Saving goal:', goalRefs.current[index].textContent) // 디버깅을 위해 출력
+      const updatedGoals = [...monthGoalList]
+      updatedGoals[index] = goalRefs.current[index].textContent // goalRefs에서 textContent 가져옴
+      setMonthGoalList(updatedGoals)
+      setEditingGoal({ index: null, text: '' }) // 편집 모드 종료
+    } else {
+      console.error(
+        'goalRefs.current[index] is null or textContent is undefined',
+        goalRefs.current[index],
+      )
+    }
+  }
+
+  // 목표 텍스트 변경
+  const handleGoalTextChange = (index) => {
+    if (goalRefs.current[index]) {
+      setEditingGoal((prev) => ({
+        ...prev,
+        text: goalRefs.current[index].textContent, // ref에서 텍스트 가져오기
+      }))
+    }
+  }
+
   useEffect(() => {
     const initialMonth = today.getMonth() + 1
     setCurrentMonth(initialMonth)
@@ -191,7 +240,36 @@ export default function Calendar() {
                 </div>
               )}
             </HeaderContainer>
-            <MonthGoalList>월간목표</MonthGoalList>
+            <MonthGoalList>
+              월간목표
+              <MonthGoalAddButton onClick={handleAddMonthGoal}>
+                +
+              </MonthGoalAddButton>
+              <MonthGoalItem>
+                {monthGoalList.map((goal, index) => (
+                  <MonthGoalTask
+                    key={index}
+                    contentEditable={editingGoal.index === index}
+                    suppressContentEditableWarning={true}
+                    ref={(el) => {
+                      if (el) goalRefs.current[index] = el // null이 아닌 경우에만 ref 할당
+                    }} // 각 목표에 대한 ref 설정
+                    onInput={handleGoalTextChange}
+                    onBlur={() => handleSaveGoal(index)}
+                    onClick={() => handleEditGoal(index)} // 목표 클릭 시 편집 모드로 전환
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault()
+                        goalRefs.current[index]?.blur()
+                      }
+                    }}
+                  >
+                    {editingGoal.index === index ? editingGoal.text : goal}{' '}
+                    {/* 편집 중일 때 상태의 텍스트를 보여줌 */}
+                  </MonthGoalTask>
+                ))}
+              </MonthGoalItem>
+            </MonthGoalList>
           </SidebarContainer>
           <FullCalendar
             ref={calendarRef}

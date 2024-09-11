@@ -50,8 +50,54 @@ export const SidebarContainer = styled.div`
   }
 `
 
-export const MonthGoalList = styled.h3`
+export const MonthGoalList = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
   margin-top: 0px;
+  font-weight: bold;
+  font-size: 1.1rem;
+`
+export const MonthGoalItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-top: 20px;
+`
+
+export const MonthGoalTask = styled.div`
+  background-color: #f9f9f9;
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+  font-size: 14px;
+  width: 100%;
+  color: #333;
+  box-sizing: border-box;
+  outline: none;
+`
+
+export const MonthGoalAddButton = styled.button`
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 22px;
+  height: 22px;
+  top: 5px;
+  right: 0px;
+  border-radius: 50%;
+  border: 1px solid gray;
+  cursor: pointer;
+  color: #333;
 `
 
 export const CalendarContainer = styled.div`
@@ -117,9 +163,9 @@ export const MonthMoveBox = styled.div`
 `
 
 export const MonthArrowButton = styled.button`
-  background-color: #fff;
-  border: 1px solid #ccc;
   color: #333;
+  border: none;
+  background-color: none;
   font-size: 1.5rem;
   cursor: pointer;
   padding: 12px;
@@ -204,18 +250,15 @@ export const ContextMenuItem = styled.div`
 //캘린더에 이벤트 추가 시 사용되는 컴포넌트
 export const EventContent = styled.div`
   position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   max-width: 100%;
   border-radius: 4px;
-  height: 13.2px;
+  height: 100%;
   outline: none;
   color: #505050;
-  font-size: small;
+  font-size: 0.8rem;
   background-color: #e5e5ec;
 `
 
@@ -224,16 +267,18 @@ export const GlobalStyle = createGlobalStyle`
     display: flex;
     justify-content: center;
   }
-  .fc .fc-daygrid-event {
+  .fc .fc-daygrid-event {//EventComponent의 부모 컴포넌트
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: #E5E5EC;
     width: 80%;
-    height: auto;
-    padding: 5px;
+    height: 25px;
     box-sizing: border-box;
     border-radius: 4px;
-    text-align: center;
     margin: 0 auto;
     margin-bottom: 5px;
+    font-size: 0.9rem;
     border: none;
   }
   
