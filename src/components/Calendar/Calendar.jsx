@@ -9,9 +9,11 @@ import {
   HeaderContainer,
   MonthArrowButton,
   MonthGoalAddButton,
+  MonthGoalDeleteButton,
   MonthGoalItem,
   MonthGoalList,
   MonthGoalTask,
+  MonthGoalText,
   MonthMoveBox,
   MonthTitle,
   SidebarContainer,
@@ -168,6 +170,11 @@ export default function Calendar() {
     }, 0)
   }
 
+  const handleDeleteGoal = (e, index) => {
+    e.stopPropagation()
+    setMonthGoalList((prevGoals) => prevGoals.filter((_, i) => i !== index))
+  }
+
   // 목표 저장
   const handleSaveGoal = (index) => {
     if (goalRefs.current[index] && goalRefs.current[index].textContent) {
@@ -247,25 +254,30 @@ export default function Calendar() {
               </MonthGoalAddButton>
               <MonthGoalItem>
                 {monthGoalList.map((goal, index) => (
-                  <MonthGoalTask
-                    key={index}
-                    contentEditable={editingGoal.index === index}
-                    suppressContentEditableWarning={true}
-                    ref={(el) => {
-                      if (el) goalRefs.current[index] = el // null이 아닌 경우에만 ref 할당
-                    }} // 각 목표에 대한 ref 설정
-                    onInput={handleGoalTextChange}
-                    onBlur={() => handleSaveGoal(index)}
-                    onClick={() => handleEditGoal(index)} // 목표 클릭 시 편집 모드로 전환
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault()
-                        goalRefs.current[index]?.blur()
-                      }
-                    }}
-                  >
-                    {editingGoal.index === index ? editingGoal.text : goal}{' '}
-                    {/* 편집 중일 때 상태의 텍스트를 보여줌 */}
+                  <MonthGoalTask key={index}>
+                    <MonthGoalText
+                      contentEditable={editingGoal.index === index}
+                      suppressContentEditableWarning={true}
+                      ref={(el) => {
+                        if (el) goalRefs.current[index] = el
+                      }}
+                      onInput={handleGoalTextChange}
+                      onBlur={() => handleSaveGoal(index)}
+                      onClick={() => handleEditGoal(index)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          goalRefs.current[index]?.blur()
+                        }
+                      }}
+                    >
+                      {editingGoal.index === index ? editingGoal.text : goal}
+                    </MonthGoalText>
+                    <MonthGoalDeleteButton
+                      onClick={(e) => handleDeleteGoal(e, index)}
+                    >
+                      X
+                    </MonthGoalDeleteButton>
                   </MonthGoalTask>
                 ))}
               </MonthGoalItem>
@@ -308,9 +320,14 @@ export default function Calendar() {
             }}
             eventOrder={'id'}
             eventDidMount={(info) => {
-              info.el.addEventListener('contextmenu', (e) =>
-                openContextMenu(e, info.event.id),
-              )
+              info.el.addEventListener('contextmenu', (e) => {
+                e.preventDefault()
+
+                const mouseX = Math.min(e.pageX, window.innerWidth - 150)
+                const mouseY = Math.min(e.pageY, window.innerHeight - 100)
+
+                openContextMenu(mouseX, mouseY, info.event.id)
+              })
             }}
             height="auto"
             contentHeight="auto"
@@ -324,7 +341,9 @@ export default function Calendar() {
         />
 
         {contextMenu.visible && (
-          <ContextMenu style={{ top: contextMenu.y, left: contextMenu.x }}>
+          <ContextMenu
+            style={{ top: `${contextMenu.y}px`, left: `${contextMenu.x}px` }}
+          >
             <ContextMenuItem
               onClick={() => handleUpdateEvent(contextMenu.eventId)}
             >

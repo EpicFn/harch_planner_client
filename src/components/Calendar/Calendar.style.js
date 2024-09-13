@@ -16,10 +16,10 @@ export const SidebarContainer = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  width: 300px;
+  width: 310px;
   height: 100%; // 부모 컨테이너와 같은 높이로 설정
   background-color: #f9f9f9;
-  padding: 20px;
+  padding: 15px;
   border: 1px solid #e0e0e0;
   box-sizing: border-box;
   margin-right: 20px;
@@ -62,24 +62,29 @@ export const MonthGoalList = styled.div`
   font-size: 1.1rem;
 `
 export const MonthGoalItem = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  width: 100%;
+  align-items: space-between;
+  width: 95%;
   font-weight: bold;
   font-size: 1.1rem;
   margin-top: 20px;
 `
 
 export const MonthGoalTask = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   background-color: #f9f9f9;
-  padding: 10px;
+  padding: 8px;
   margin: 5px 0;
   border-radius: 8px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
   font-size: 14px;
-  width: 100%;
+  width: 95%;
   color: #333;
   box-sizing: border-box;
   outline: none;
@@ -88,9 +93,19 @@ export const MonthGoalTask = styled.div`
     box-shadow 0.3s ease;
 
   &:hover {
-    transform: scale(1.05);
+    transform: scale(1.02);
     box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.4);
   }
+`
+
+export const MonthGoalText = styled.div`
+  flex: 1;
+  outline: none;
+  background-color: transparent;
+  border: none;
+  cursor: text;
+  font-size: 14px;
+  box-sizing: border-box;
 `
 
 export const MonthGoalAddButton = styled.button`
@@ -100,12 +115,38 @@ export const MonthGoalAddButton = styled.button`
   align-items: center;
   width: 22px;
   height: 22px;
-  top: 5px;
-  right: 0px;
+  top: 3px;
+  right: 20px;
   border-radius: 50%;
-  border: 1px solid gray;
+  border: 1px solid #4caf50;
+  background-color: white;
+  color: #4caf50;
+  font-size: 1.2rem;
   cursor: pointer;
-  color: #333;
+
+  &:hover {
+    background-color: #4caf50;
+    color: white;
+    transform: scale(1.1);
+  }
+
+  &:focus {
+    outline: none;
+  }
+`
+
+export const MonthGoalDeleteButton = styled.button`
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  right: -22px;
+  background-color: transparent;
+  border: none;
+  color: red;
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 0px;
 `
 
 export const CalendarContainer = styled.div`
@@ -258,16 +299,20 @@ export const ContextMenuItem = styled.div`
 //캘린더에 이벤트 추가 시 사용되는 컴포넌트
 export const EventContent = styled.div`
   position: relative;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  display: flex; /* 중앙 정렬을 위한 Flexbox 설정 */
+  justify-content: center; /* 수평 중앙 정렬 */
+  align-items: center; /* 수직 중앙 정렬 */
   max-width: 100%;
   border-radius: 4px;
   height: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   outline: none;
   color: #505050;
   font-size: 0.8rem;
   background-color: #e5e5ec;
+  padding: 5px;
 `
 
 export const GlobalStyle = createGlobalStyle`
@@ -281,6 +326,9 @@ export const GlobalStyle = createGlobalStyle`
     align-items: center;
     background-color: #E5E5EC;
     width: 80%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     height: 25px;
     box-sizing: border-box;
     border-radius: 4px;

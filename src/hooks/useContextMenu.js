@@ -8,14 +8,11 @@ export default function useContextMenu() {
     eventId: null,
   })
 
-  const openContextMenu = (event, eventId) => {
-    event.preventDefault()
-    const rect = event.target.getBoundingClientRect() // 우클릭한 이벤트 요소의 위치를 기준으로 좌표 설정
-
+  const openContextMenu = (x, y, eventId) => {
     setContextMenu({
       visible: true,
-      x: rect.right - 30,
-      y: rect.bottom - 10,
+      x,
+      y,
       eventId,
     })
   }
