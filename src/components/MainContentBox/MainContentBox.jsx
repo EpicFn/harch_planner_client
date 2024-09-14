@@ -1,14 +1,26 @@
 import Header from '@components/Header/Header' // Header 컴포넌트 불러오기
+import MenuTap from '@components/MenuTap/MenuTap'
+import useThemeStore from '@stores/themeStore'
 import { useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import {
   ContentBox,
   MainContentBoxContainer,
   MenuList,
-  MenuTap,
 } from './MainContentBox.style'
 
 export default function MainContentBox({ content }) {
-  const [theme, setTheme] = useState('#E1E1E1')
+  const navigate = useNavigate()
+  const location = useLocation()
+  const { theme, setTheme } = useThemeStore()
+  const [activeTab, setActiveTab] = useState(location.pathname)
+
+  const tabs = [
+    { path: '/calendarPage', label: '달력' },
+    { path: '/dailyPlannerPage', label: '일일 플래너' },
+    { path: '/RecordPage', label: '공부 기록' },
+    { path: '/LibraryPage', label: '서재' },
+  ]
 
   const handleThemeChange = (selectedTheme) => {
     setTheme(selectedTheme)
@@ -19,15 +31,25 @@ export default function MainContentBox({ content }) {
     document.body.classList.add(`${theme}-theme`)
   }, [theme])
 
+  const handleTabClick = (path) => {
+    setActiveTab(path)
+    navigate(path)
+  }
+
   return (
     <>
       <Header onThemeChange={handleThemeChange} />
       <MainContentBoxContainer className={`${theme}-theme`}>
         <MenuList>
-          <MenuTap>달력</MenuTap>
-          <MenuTap on>일일 플래너</MenuTap>
-          <MenuTap>공부 기록</MenuTap>
-          <MenuTap>서재</MenuTap>
+          {tabs.map((tab) => (
+            <MenuTap
+              key={tab.path}
+              active={activeTab === tab.path ? 'true' : 'false'}
+              onClick={() => handleTabClick(tab.path)}
+            >
+              {tab.label}
+            </MenuTap>
+          ))}
         </MenuList>
 
         <ContentBox>{content}</ContentBox>

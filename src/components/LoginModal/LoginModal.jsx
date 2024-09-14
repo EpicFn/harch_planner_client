@@ -21,7 +21,7 @@ import {
   ProfileImageWrapper,
   SubmitButton,
   Title,
-} from '@components/Modal/LoginModal.style'
+} from '@components/LoginModal/LoginModal.style'
 import loginModalStore from '@stores/modalStore'
 import useUserStore from '@stores/userStore'
 import { useEffect, useState } from 'react'
@@ -34,6 +34,7 @@ export default function LoginModal() {
   const [inputPasswordValue, setInputPasswordValue] = useState('')
   const user = useUserStore((state) => state.user)
   const setUser = useUserStore((state) => state.setUser)
+  const dummyUser = useUserStore((state) => state.dummyUser)
   const [errorMessage, setErrorMessage] = useState('')
 
   const navigate = useNavigate()
@@ -57,26 +58,33 @@ export default function LoginModal() {
   }, [isModalOpen])
 
   const handleSubmit = (e) => {
-    //유효성 검사 로직
     e.preventDefault()
+
     if (!inputIdValue || !inputPasswordValue) {
       setErrorMessage('아이디와 비밀번호를 입력하세요.')
     } else if (
-      inputIdValue !== user.id ||
-      inputPasswordValue !== user.password
+      inputIdValue === dummyUser.id &&
+      inputPasswordValue === dummyUser.password
     ) {
-      setErrorMessage('아이디 또는 비밀번호가 일치하지 않습니다.')
-    } else {
       setUser({
         id: inputIdValue,
         password: inputPasswordValue,
         profileImage: DefaultProfileImage,
-      }), // 로그인 성공 시 기본 프로필 이미지 설정 })
-        console.log(user)
-      closeModal()
-      navigate('/dailyPlanner')
+        name: dummyUser.name, // 로그인 성공 시 dummyUser의 이름을 설정
+      })
+      login() // 로그인 성공 시 login 함수 호출
+    } else {
+      setErrorMessage('아이디 또는 비밀번호가 일치하지 않습니다.')
     }
   }
+
+  useEffect(() => {
+    if (user.id) {
+      // user.id가 설정된 이후에 페이지 이동
+      closeModal()
+      navigate('/dailyPlannerPage')
+    }
+  }, [user.id, navigate, closeModal])
 
   if (!isModalOpen) return null
   return (

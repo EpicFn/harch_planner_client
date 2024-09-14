@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import useThemeStore from '@stores/themeStore'
+import useUserStore from '@stores/userStore'
+import { useNavigate } from 'react-router-dom'
 import {
   DdayBox,
   HeaderContainer,
@@ -10,16 +12,21 @@ import {
 } from './Header.style'
 
 export default function Header({ onThemeChange }) {
-  const [theme, setTheme] = useState('light-green') // 기본 테마는 'light-green'
+  const { setTheme } = useThemeStore()
+  const user = useUserStore((state) => state.user)
+  const navigate = useNavigate()
 
-  const handleThemeChange = (selectedTheme) => {
+  const handleThemeChange = (theme) => {
+    const selectedTheme = theme
     setTheme(selectedTheme)
-    onThemeChange(selectedTheme) // 부모 컴포넌트로 테마 변경 알림
+    if (onThemeChange) {
+      onThemeChange(selectedTheme)
+    }
   }
 
   return (
     <HeaderContainer>
-      <Logo src="src/assets/logo/Harch.png" />
+      <Logo src="src/assets/logo/Harch.png" onClick={() => navigate('/')} />
       <ThemeButtonContainer>
         <ThemeButton
           color="#C8EBBF"
@@ -32,7 +39,7 @@ export default function Header({ onThemeChange }) {
       </ThemeButtonContainer>
       <UserProfileBox>
         <DdayBox>D-154</DdayBox>
-        <UserNicknameBox>User0309</UserNicknameBox>
+        <UserNicknameBox>{user.name}</UserNicknameBox>
       </UserProfileBox>
     </HeaderContainer>
   )

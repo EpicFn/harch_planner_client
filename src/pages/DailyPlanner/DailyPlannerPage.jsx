@@ -1,7 +1,7 @@
 import MainContentBox from '@components/MainContentBox/MainContentBox'
 import { DailyPlannerContainer } from './DailyPlanner.style'
 
-export default function DailyPlanner() {
+export default function DailyPlannerPage() {
   const dailyPlannerJSX = (
     <div>
       <p>DailyPlanner</p>

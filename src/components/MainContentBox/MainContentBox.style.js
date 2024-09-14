@@ -13,22 +13,6 @@ export const MenuList = styled.ul`
   margin-bottom: 0;
 `
 
-export const MenuTap = styled.li`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  flex: 1 0 0;
-  align-self: stretch;
-  border-radius: 8px 8px 0px 0px;
-  border-top: 1px solid rgba(222, 222, 222, 0.5);
-  border-right: 1px solid rgba(222, 222, 222, 0.5);
-  border-left: 1px solid rgba(222, 222, 222, 0.5);
-  background: ${(props) =>
-    props.on ? 'rgba(255, 255, 255, 0.80)' : 'rgba(255, 255, 255, 0.50)'};
-  padding: 3px 0;
-`
-
 export const ContentBox = styled.div`
   height: 750px;
   flex-shrink: 0;
