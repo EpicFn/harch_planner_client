@@ -16,12 +16,14 @@ import {
   MonthGoalText,
   MonthMoveBox,
   MonthTitle,
+  MoreLinkStyled,
   SidebarContainer,
   SidebarHeader,
   YearBox,
   YearTitle,
 } from '@components/Calendar/Calendar.style'
 import EventModal from '@components/Calendar/EventModal/EventModal'
+import ExpendedModal from '@components/Calendar/ExpendedModal/ExpendedModal'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import FullCalendar from '@fullcalendar/react'
@@ -54,6 +56,10 @@ export default function Calendar() {
   const today = new Date()
   const [currentYear, setCurrentYear] = useState(null)
   const [currentMonth, setCurrentMonth] = useState(null)
+
+  //캘린더 일자에 2개 넘어갈 경우 로직 상태
+  const [isExpendeModalOpen, setIsExpendeModalOpen] = useState(false)
+  const [selectedDateEvents, setSelectedDateEvents] = useState([])
 
   const calendarRef = useRef(null)
   const editableRef = useRef(null)
@@ -156,11 +162,13 @@ export default function Calendar() {
     closeContextMenu()
   }
 
+  //월간목표 추가
   const handleAddMonthGoal = () => {
     setMonthGoalList((prevGoals) => [...prevGoals, `목표를 입력해주세요`])
   }
 
-  const handleEditGoal = (index) => {
+  //월간목표 수정
+  const handleEditMonthGoal = (index) => {
     const goalText = monthGoalList[index]
     setEditingGoal({ index, text: goalText })
     setTimeout(() => {
@@ -175,24 +183,20 @@ export default function Calendar() {
     setMonthGoalList((prevGoals) => prevGoals.filter((_, i) => i !== index))
   }
 
-  // 목표 저장
+  // 월간목표 저장
   const handleSaveGoal = (index) => {
-    if (goalRefs.current[index] && goalRefs.current[index].textContent) {
-      // null 및 textContent 체크 추가
-      console.log('Saving goal:', goalRefs.current[index].textContent) // 디버깅을 위해 출력
+    const currentRef = goalRefs.current[index]
+
+    if (currentRef && currentRef.textContent) {
+      console.log('Saving goal:', currentRef.textContent) // 디버깅을 위해 출력
       const updatedGoals = [...monthGoalList]
-      updatedGoals[index] = goalRefs.current[index].textContent // goalRefs에서 textContent 가져옴
+      updatedGoals[index] = currentRef.textContent // goalRefs에서 textContent 가져옴
       setMonthGoalList(updatedGoals)
       setEditingGoal({ index: null, text: '' }) // 편집 모드 종료
-    } else {
-      console.error(
-        'goalRefs.current[index] is null or textContent is undefined',
-        goalRefs.current[index],
-      )
     }
   }
 
-  // 목표 텍스트 변경
+  // 월간목표 텍스트 변경
   const handleGoalTextChange = (index) => {
     if (goalRefs.current[index]) {
       setEditingGoal((prev) => ({
@@ -206,6 +210,12 @@ export default function Calendar() {
     const initialMonth = today.getMonth() + 1
     setCurrentMonth(initialMonth)
   }, [])
+
+  useEffect(() => {
+    goalRefs.current = Array(monthGoalList.length)
+      .fill(null)
+      .map((_, i) => goalRefs.current[i] || null)
+  }, [monthGoalList])
 
   return (
     <>
@@ -262,12 +272,14 @@ export default function Calendar() {
                         if (el) goalRefs.current[index] = el
                       }}
                       onInput={handleGoalTextChange}
-                      onBlur={() => handleSaveGoal(index)}
-                      onClick={() => handleEditGoal(index)}
+                      onBlur={() =>
+                        goalRefs.current[index] && handleSaveGoal(index)
+                      } // 안전하게 null 체크
+                      onClick={() => handleEditMonthGoal(index)}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                           e.preventDefault()
-                          goalRefs.current[index]?.blur()
+                          goalRefs.current[index]?.blur() // null 체크 후 blur
                         }
                       }}
                     >
@@ -292,6 +304,20 @@ export default function Calendar() {
             headerToolbar={false}
             datesSet={handleMonthChange}
             dateClick={handleDateClick}
+            dayMaxEvents={2}
+            moreLinkContent={(arg) => {
+              // 추가적인 이벤트 수를 표시
+              return <MoreLinkStyled>+{arg.num}</MoreLinkStyled>
+            }}
+            moreLinkClassNames="custom-more-link"
+            moreLinkClick={(arg) => {
+              // 클릭 시 ExpendedModal 열기
+              setSelectedDate(arg.date)
+              setSelectedDateEvents(arg.allSegs.map((seg) => seg.event))
+              setIsExpendeModalOpen(true)
+
+              return false
+            }}
             eventContent={(info) => {
               return (
                 <EventContent
@@ -332,6 +358,14 @@ export default function Calendar() {
             height="auto"
             contentHeight="auto"
           />
+          {isExpendeModalOpen && (
+            <ExpendedModal
+              isOpen={isExpendeModalOpen}
+              onClose={() => setIsExpendeModalOpen(false)}
+              selectedDate={selectedDate}
+              events={selectedDateEvents}
+            />
+          )}
         </CalendarContainer>
 
         <EventModal

@@ -299,20 +299,37 @@ export const ContextMenuItem = styled.div`
 //캘린더에 이벤트 추가 시 사용되는 컴포넌트
 export const EventContent = styled.div`
   position: relative;
-  display: flex; /* 중앙 정렬을 위한 Flexbox 설정 */
-  justify-content: center; /* 수평 중앙 정렬 */
-  align-items: center; /* 수직 중앙 정렬 */
-  max-width: 100%;
+  display: block;
+  width: 160px;
+  max-width: 160px;
   border-radius: 4px;
   height: 100%;
+  line-height: 37px;
+  min-height: 37px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  text-align: center; /* 가로 중앙 정렬 */
   outline: none;
   color: #505050;
   font-size: 0.8rem;
   background-color: #e5e5ec;
-  padding: 5px;
+  padding: 5px 10px;
+  box-sizing: border-box;
+`
+//일정 추가 시에 태스크 2개가 넘어갈 경우 나오는 숫자
+export const MoreLinkStyled = styled.div`
+  background-color: #ccff90;
+  color: black;
+  padding: 3px 3px;
+  box-sizing: border-box;
+  border-radius: 5px;
+  font-weight: medium;
+
+  &:hover {
+    transform: scale(1.1);
+    background-color: #ccff90; // hover 시에도 동일한 배경색 유지
+  }
 `
 
 export const GlobalStyle = createGlobalStyle`
@@ -320,12 +337,17 @@ export const GlobalStyle = createGlobalStyle`
     display: flex;
     justify-content: center;
   }
+
+  .fc .fc-daygrid-day-top {
+    position: relative;
+  }
+
   .fc .fc-daygrid-event {//EventComponent의 부모 컴포넌트
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: #E5E5EC;
-    width: 80%;
+    width: 100%;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -346,10 +368,34 @@ export const GlobalStyle = createGlobalStyle`
 
   .fc-daygrid-day-frame {
     height: 98px;
+    max-height: 98px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  //기본 팝업 지움(구글링)
+  .fc-popover {
+    visibility: hidden;
   }
 
   .fc .fc-toolbar.fc-header-toolbar {
     position: absolute;
+  }
+
+/* 커스텀 more-link 스타일 */
+  .custom-more-link {
+    position: absolute;
+    left: 10px;  /* 날짜 옆으로 이동 */
+    top: -80px;
+    transform: translateY(-50%); /* 정확한 중앙 배치 */
+    background-color: white; /* 필요 시 배경 색상 추가 */
+    padding: 0 5px;
+    font-size: 12px;
+    font-weight: bold;
+    color: blue; /* 원하는 색상으로 변경 */
+    cursor: pointer;
+    z-index: 10; /* 다른 요소 위에 표시되도록 설정 */
+    display: block; /* 레이아웃을 차지하지 않도록 display 설정 */
   }
 
   .fc .fc-toolbar-title {
@@ -379,5 +425,16 @@ export const GlobalStyle = createGlobalStyle`
   .fc .fc-daygrid-day .fc-daygrid-day-number {
     color: #505050 !important;
     font-weight: medium;
+  }
+
+  .fc .fc-more-link {
+    background-color: transparent !important; 
+    color: inherit !important; 
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  .fc .fc-more-link:hover {
+    background-color: transparent !important;
   }
 `

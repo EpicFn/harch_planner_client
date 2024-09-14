@@ -1,60 +1,82 @@
 import styled from 'styled-components'
 
-export const ModalBackground = styled.div`
+export const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
-  left: 0;
+  right: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.4); /* 투명한 어두운 배경 */
+  z-index: 1000;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
-  z-index: 10;
 `
 
 export const ModalContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  background-color: white;
-  padding: 20px;
-  border-radius: 10px;
+  background-color: #fff;
+  padding: 20px 40px;
+  border-radius: 8px;
   width: 400px;
-  height: 200px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-`
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+  transform: translateX(100%);
+  animation: slideIn 0.4s forwards;
+  margin-right: 70px;
 
-export const Input = styled.input`
-  width: 80%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-`
-
-export const ButtonWrapper = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-`
-
-export const Button = styled.button`
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #0056b3;
+  @keyframes slideIn {
+    to {
+      transform: translateX(0);
+    }
   }
 `
-export const ErrorMessage = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  color: red;
+
+export const CloseButton = styled.button`
+  background-color: transparent;
+  border: none;
+  font-size: 1.2rem;
   font-weight: bold;
-  width: 85%;
+  color: #999;
+  position: absolute;
+  top: 25px;
+  right: 20px;
+  cursor: pointer;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #333;
+  }
+`
+
+export const Title = styled.h2`
+  margin-top: 0;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 1.6rem;
+  color: #333;
+`
+
+export const EventWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`
+
+export const EventItem = styled.div`
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f5;
+  padding: 10px 15px;
+  border-radius: 6px;
+  font-size: 16px;
+  color: #333;
+  position: relative;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+
+  &:before {
+    content: '${(props) => props.index + 1}.';
+    font-weight: bold;
+    margin-right: 10px;
+    color: #4caf50; // 번호 색상
+    font-size: 1.2rem;
+  }
 `

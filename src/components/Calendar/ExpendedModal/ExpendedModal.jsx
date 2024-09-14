@@ -1,62 +1,39 @@
 import {
-  Button,
-  ButtonWrapper,
-  ErrorMessage,
-  Input,
-  ModalBackground,
+  CloseButton,
+  EventItem,
+  EventWrapper,
   ModalContainer,
-} from '@components/Calendar/EventModal/EventModal.style'
-import { useEffect, useRef, useState } from 'react'
+  ModalOverlay,
+  Title,
+} from './ExpendedModal.style'
 
-export default function EventModal({ isOpen, onClose, onSave }) {
-  const [title, setTitle] = useState('')
-  const [erroeMessage, setErrorMessage] = useState('')
-  const ButtonRef = useRef(null)
-
-  const handleSave = () => {
-    if (title.trim()) {
-      onSave(title)
-      setTitle('')
-      onClose()
-    } else {
-      setErrorMessage('일정을 입력하세요')
-      console.log('Title is empty')
-    }
-  }
-
-  const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
-      event.preventDefault()
-      if (ButtonRef.current) {
-        ButtonRef.current.click()
-      }
-    }
-  }
-
-  useEffect(() => {
-    setErrorMessage('')
-  }, [isOpen])
-
+export default function ExpendedModal({
+  isOpen,
+  onClose,
+  events,
+  selectedDate,
+}) {
   if (!isOpen) return null
 
+  const formattedDate = new Date(selectedDate).toLocaleDateString('ko-KR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+
   return (
-    <ModalBackground onClick={onClose}>
-      <ModalContainer onClick={(e) => e.stopPropagation()}>
-        <h2>일정 추가</h2>
-        <Input
-          type="text"
-          placeholder="일정 제목"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          onKeyDown={handleKeyDown} // 키 입력을 감지하는 핸들러 추가
-        />
-        {erroeMessage && <ErrorMessage>{erroeMessage}</ErrorMessage>}
-        <ButtonWrapper>
-          <Button ref={ButtonRef} onClick={handleSave}>
-            저장
-          </Button>
-        </ButtonWrapper>
+    <ModalOverlay>
+      <ModalContainer>
+        <CloseButton onClick={onClose}>닫기</CloseButton>
+        <Title>{formattedDate}</Title>
+        <EventWrapper>
+          {events.map((event, index) => (
+            <EventItem key={event.id} index={index}>
+              {event.title}
+            </EventItem>
+          ))}
+        </EventWrapper>
       </ModalContainer>
-    </ModalBackground>
+    </ModalOverlay>
   )
 }
