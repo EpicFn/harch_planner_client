@@ -2,6 +2,7 @@ import styled from 'styled-components'
 
 export const MainContentBoxContainer = styled.div`
   margin: 0 146px;
+  margin-bottom : 40px;
 `
 
 export const MenuList = styled.ul`
