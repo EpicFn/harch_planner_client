@@ -52,9 +52,10 @@ export default function LoginModal() {
 
 
   const handleNaverIconClick = () => {
-    fetch('http://218.239.229.119:1500/account/oauth2/naver/get_state', {
+    fetch('https://218.239.229.119:1500/account/oauth2/naver/get_state', {
       method: 'GET',
-      credentials: 'include' // 쿠키를 포함하도록 설정
+      credentials: 'include', // 쿠키를 포함하도록 설정
+      mode: 'cors'
     })
     .then(response => {
       if (!response.ok) {
