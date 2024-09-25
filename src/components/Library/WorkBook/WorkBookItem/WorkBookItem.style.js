@@ -32,19 +32,6 @@ export const BookSubject = styled.span`
   margin-bottom: 5px;
 `
 
-export const ProgressCircle = styled.div`
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background-color: #f3f3f3;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #ff6b6b;
-  font-size: 1rem;
-  font-weight: bold;
-`
-
 export const DateText = styled.span`
   font-size: 0.875rem;
   color: #777;

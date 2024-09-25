@@ -18,7 +18,7 @@ export default function Library() {
       name: '문제집 이름을 입력해주세요',
       subject: '과목 이름을 입력해주세요',
       date: '23.08.01',
-      progress: '65%',
+      progress: '65',
     },
   ])
 
@@ -29,7 +29,7 @@ export default function Library() {
         name: '문제집 이름을 입력해주세요',
         subject: '과목 이름을 입력해주세요',
         date: '23.08.01',
-        progress: '65%',
+        progress: '65',
       },
     ])
   }

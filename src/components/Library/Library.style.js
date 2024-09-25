@@ -4,7 +4,7 @@ export const LibraryContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 30px 60px;
+  padding: 30px 100px;
   width: 100%;
   height: 100%;
   box-sizing: border-box;
