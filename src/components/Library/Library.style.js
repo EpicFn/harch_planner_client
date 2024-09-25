@@ -21,6 +21,27 @@ export const OngoingSection = styled.div`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow-y: scroll;
   color: black;
+
+  &::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #b0b0b0;
+    background: linear-gradient(180deg, #c4c4c4, #8e8e8e);
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #b0b0b0, #7a7a7a);
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #e0e0e0;
+    border-radius: 10px;
+  }
 `
 
 export const OngoingSectionHeader = styled.div`
