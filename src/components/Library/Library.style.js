@@ -1,3 +1,4 @@
+import { FaSearch } from 'react-icons/fa'
 import styled from 'styled-components'
 
 export const LibraryContainer = styled.div`
@@ -107,4 +108,40 @@ export const AddButton = styled.button`
     transform: scale(1.05);
     transition: transform 0.2s ease-in;
   }
+`
+
+export const SearchContainer = styled.div`
+  position: relative;
+  width: 340px;
+`
+
+export const SearchInput = styled.input`
+  width: 100%;
+  height: 40px;
+  padding: 0 15px 0 40px; /* 왼쪽에 아이콘 공간 확보 */
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-size: 1rem;
+  color: #333;
+  background-color: #f9f9f9;
+  outline: none;
+  transition:
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+
+  &:focus {
+    border-color: #ff6b6b;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    background-color: #fff;
+  }
+`
+
+export const SearchIcon = styled(FaSearch)`
+  position: absolute;
+  left: 15px; /* 입력 필드 내부 아이콘 위치 */
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+  font-size: 1rem;
 `

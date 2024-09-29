@@ -7,6 +7,9 @@ import {
   OngoingSection,
   OngoingSectionContent,
   OngoingSectionHeader,
+  SearchContainer,
+  SearchIcon,
+  SearchInput,
   SectionTitle,
 } from './Library.style'
 
@@ -39,6 +42,10 @@ export default function Library() {
       <OngoingSection>
         <OngoingSectionHeader>
           <SectionTitle>학습중인 교재 목록</SectionTitle>
+          <SearchContainer>
+            <SearchIcon />
+            <SearchInput placeholder="검색어를 입력하세요..." />
+          </SearchContainer>
           <AddButton onClick={addWorkBook}>추가하기</AddButton>
         </OngoingSectionHeader>
         <OngoingSectionContent>
