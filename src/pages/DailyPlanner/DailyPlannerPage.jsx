@@ -1,16 +1,12 @@
 import MainContentBox from '@components/MainContentBox/MainContentBox'
-import { DailyPlannerContainer } from './DailyPlanner.style'
+import { DailyPlannerContainer } from './DailyPlannerPage.style'
+import DailyPlanner from '@components/DailyPlanner/DailyPlanner'
 
 export default function DailyPlannerPage() {
-  const dailyPlannerJSX = (
-    <div>
-      <p>DailyPlanner</p>
-    </div>
-  )
 
   return (
     <DailyPlannerContainer>
-      <MainContentBox content={dailyPlannerJSX} />
+      <MainContentBox content={<DailyPlanner />} />
     </DailyPlannerContainer>
   )
 }
