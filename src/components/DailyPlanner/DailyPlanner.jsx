@@ -16,9 +16,11 @@ import {
     TaskCategorySelect,
     TaskInputFuncBox,
     TaskSubmitBtn,
+    EraserIcon,
 } from "./DailyPlanner.style";
 
 import TaskListByCategory from "./TaskListByCategory";
+import TimeTable from "./TimeTable/TimeTable";
 
 
 //tasks dummy data
@@ -89,6 +91,7 @@ const DailyPlanner = () => {
                         <TaskInput type="text" placeholder={taskInputPlaceholder} />
                         <TaskInputFuncBox>
                             <TaskCategorySelect>
+                                <option value="" disabled selected hidden>{taskCategoryPlaceholder}</option>
                                 <option value="국어">국어</option>
                                 <option value="수학">수학</option>
                                 <option value="영어">영어</option>
@@ -99,7 +102,8 @@ const DailyPlanner = () => {
                 </TaskInfoBox>
             </PlanContainer>
             <TimeTableContainer>
-                <h2>Time Table</h2>
+                <TimeTable />
+                <EraserIcon src="/src/assets/Eraser.svg" />
             </TimeTableContainer>
             <AchievementInfoContainer>
                 <h2>Achievement</h2>

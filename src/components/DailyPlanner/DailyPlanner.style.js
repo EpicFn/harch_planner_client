@@ -227,7 +227,6 @@ export const TaskInput = styled.input`
     border-radius: 4px;
     border: 1px solid var(--Line-Disabled, #CACAD7);
 
-    color: var(--Line-Disabled, #CACAD7);
     
     /* Pretendard Light/Button 12 */
     font-family: Pretendard;
@@ -300,10 +299,27 @@ export const TaskSubmitBtn = styled.button`
 
 export const TimeTableContainer = styled.div`
     display: flex;
-    flex-direction: column;
-    flex: 3;
-    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+    flex: 4;
+    width : 100%;
     height: 100%;
+
+    margin : 0 20px;
+`
+
+export const EraserIcon = styled.img`
+    width: 23px;
+    height: 44px;
+    flex-shrink: 0;
+
+    margin-top : 5px;
+
+    border-radius: 0px 4px 4px 0px;
+    border-top: 1px solid var(--Line-Regular_Color, #E5E5EC);
+    border-right: 1px solid var(--Line-Regular_Color, #E5E5EC);
+    border-bottom: 1px solid var(--Line-Regular_Color, #E5E5EC);
+    background: rgba(255, 255, 255, 0.50);
 `
 
 //----------------------------------------------
