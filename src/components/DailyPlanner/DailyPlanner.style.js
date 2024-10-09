@@ -303,9 +303,9 @@ export const TimeTableContainer = styled.div`
     justify-content: center;
     flex: 4;
     width : 100%;
-    height: 100%;
+    height: 95%;
 
-    margin : 0 20px;
+    margin : 20px;
 `
 
 export const EraserIcon = styled.img`
@@ -331,5 +331,20 @@ export const AchievementInfoContainer = styled.div`
     flex-direction: column;
     flex: 5;
     width: 100%;
-    height: 100%;
+    height: 95%;
+
+    margin : 20px;
+
+    align-items: start;
+`
+
+export const AchievementTextBox = styled.div`
+    margin-top: 10px;
+
+    color: #000;
+    font-family: Pretendard;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
 `

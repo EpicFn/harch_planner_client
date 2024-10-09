@@ -17,6 +17,7 @@ import {
     TaskInputFuncBox,
     TaskSubmitBtn,
     EraserIcon,
+    AchievementTextBox,
 } from "./DailyPlanner.style";
 
 import TaskListByCategory from "./TaskListByCategory";
@@ -106,7 +107,7 @@ const DailyPlanner = () => {
                 <EraserIcon src="/src/assets/Eraser.svg" />
             </TimeTableContainer>
             <AchievementInfoContainer>
-                <h2>Achievement</h2>
+                <AchievementTextBox>오늘의 학습 성취도</AchievementTextBox>
             </AchievementInfoContainer>
         </Container>
     );
