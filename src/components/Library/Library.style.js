@@ -15,7 +15,7 @@ export const OngoingSection = styled.div`
   width: 60%; // 7:3 비율로 왼쪽 영역을 더 넓게 설정
   height: 650px;
   max-height: 650px;
-  background-color: white;
+  background-color: rgba(217, 217, 217, 0.5);
   border-radius: 8px;
   padding: 20px 40px;
   box-sizing: border-box;
@@ -64,7 +64,7 @@ export const CompletedSection = styled.div`
   width: 30%; // 오른쪽 영역
   height: 650px;
   max-height: 650px;
-  background-color: white;
+  background-color: rgba(217, 217, 217, 0.5);
   border-radius: 8px;
   padding: 20px 40px;
   box-sizing: border-box;
