@@ -1,6 +1,7 @@
 import {
   CloseButton,
   InputContainer,
+  Line,
   ModalButton,
   ModalButtonContainer,
   ModalContainer,
@@ -19,7 +20,7 @@ import {
   Title,
   Tooltip,
 } from 'chart.js'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Bar } from 'react-chartjs-2'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
@@ -30,6 +31,13 @@ export default function LibraryModal({ workbook, onClose, workbookIndex }) {
   const { updateWorkbook, removeWorkbook } = workBookContentStore()
   const [updatedName, setUpdatedName] = useState('')
   const [updatedSubject, setUpdatedSubject] = useState('')
+
+  useEffect(() => {
+    if (workbook) {
+      setUpdatedName(workbook.name || '')
+      setUpdatedSubject(workbook.subject || '')
+    }
+  }, [workbook])
 
   const handleWorkBookUpdate = () => {
     updateWorkbook(workbookIndex, {
@@ -112,6 +120,7 @@ export default function LibraryModal({ workbook, onClose, workbookIndex }) {
             />
           </InputContainer>
         </ModalContent>
+        <Line />
         <div style={{ width: '100%', height: '300px' }}>
           <Bar data={data} options={options} />
         </div>

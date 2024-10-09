@@ -94,9 +94,14 @@ export const CloseButton = styled.button`
   font-size: 1.5rem;
   cursor: pointer;
   color: #888;
-  transition: color 0.2s ease;
 
   &:hover {
-    color: #ff5a5a;
+    transform: scale(1.05);
+    transition: transform 0.2s ease-in;
   }
+`
+export const Line = styled.hr`
+  width: 98%;
+  height: 1px;
+  background-color: gray;
 `
