@@ -333,7 +333,7 @@ export const AchievementInfoContainer = styled.div`
     width: 100%;
     height: 95%;
 
-    margin : 20px;
+    margin : 40px 40px;
 
     align-items: start;
 `
@@ -346,5 +346,53 @@ export const AchievementTextBox = styled.div`
     font-size: 20px;
     font-style: normal;
     font-weight: 400;
+    line-height: normal;
+`
+
+export const WorkBookItemContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: center;
+
+    width: 100%;
+
+    gap: 10px;
+
+    margin-top: 20px;
+`
+
+export const RecordChartContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+
+    margin : 20px 0px;
+`
+
+export const MultiValueBarDiscriptionBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 5px;
+`
+export const MultiValueBarTextBox = styled.div`
+    color: #000;
+    font-family: Pretendard;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+`
+
+export const MultiValueBarLargeTextBox = styled.div`
+    color: #000;
+    font-family: Pretendard;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
     line-height: normal;
 `

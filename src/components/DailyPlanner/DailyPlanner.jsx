@@ -18,14 +18,21 @@ import {
     TaskSubmitBtn,
     EraserIcon,
     AchievementTextBox,
+    WorkBookItemContainer,
+    MultiValueBarDiscriptionBox,
+    MultiValueBarTextBox,
+    MultiValueBarLargeTextBox,
+    RecordChartContainer,
 } from "./DailyPlanner.style";
+import MultiValueBar from "./MultiValueBar/MultiValueBar";
 
 import TaskListByCategory from "./TaskListByCategory";
 import TimeTable from "./TimeTable/TimeTable";
+import WorkBookItem from "./WorkBookItem/WorkBookItem";
 
 
 //tasks dummy data
-const tasksList = [
+const dummyTasksList = [
     {
         category: "국어",
         tasks: [
@@ -51,6 +58,70 @@ const tasksList = [
     },
 ];
 
+//workbook dummy data
+const dummyWorkbookList = [
+    {
+        name: "나혼자 풀기",
+        subject: "국어",
+        date: "2021.09.01",
+        progress : 76,
+    },
+    {
+        name: "수학의 정석",
+        subject: "수학",
+        date: "2021.09.02",
+        progress: 50,
+    },
+    {
+        name: "영어의 달인",
+        subject: "영어",
+        date: "2021.09.03",
+        progress: 30,
+    }
+]
+
+//과목별 공부시간 dummy data
+const dummyStudyTimeData = [
+    {
+        category: "국어",
+        size: 30,
+        color: '#FFE0E0',
+    },
+    {
+        category: "수학",
+        size: 60,
+        color: "#FFFEE0",
+    },
+    {
+        category: "영어",
+        size: 45,
+        color: "#E0F9FF",
+    },
+    {
+        category: "과학",
+        size: 90,
+        color: "#F1E0FF",
+    },
+    {
+        category: "사회",
+        size: 20,
+        color: "#C3F6D2",
+    }
+]
+
+//Task 달성률 dummy data
+const dummyTaskAchievementData = [
+    {
+        category : 'success',
+        size : 12,
+        color : '#8F8F8F',
+    },
+    {
+        category : 'fail',
+        size : 8,
+        color : '#D9D9D9',
+    }
+]
 
 const DailyPlanner = () => {
 
@@ -64,6 +135,13 @@ const DailyPlanner = () => {
     //
     const taskInputPlaceholder = "할 일을 입력 후 Enter 키 혹은 입력 버튼을 눌러주세요.";
     const taskCategoryPlaceholder = "교재나 과목을 선택해 주세요.";
+
+    const handleWorkbookClick = (workbookIndex) => {
+        console.log(`Clicked workbook index: ${workbookIndex}`);
+    };
+
+    const formattedTotalStudyTime = `${Math.floor(dummyStudyTimeData.reduce((total, item) => total + item.size, 0) / 60)}시간 ${dummyStudyTimeData.reduce((total, item) => total + item.size, 0) % 60}분`;
+
 
     return (
         <Container>
@@ -80,7 +158,7 @@ const DailyPlanner = () => {
                 </DateInfoBox>
                 <TaskInfoBox>
                     <TaskListBox>
-                        {tasksList.map((tasks, index) => (
+                        {dummyTasksList.map((tasks, index) => (
                             <TaskListByCategory
                                 key={index}
                                 category={tasks.category}
@@ -108,6 +186,41 @@ const DailyPlanner = () => {
             </TimeTableContainer>
             <AchievementInfoContainer>
                 <AchievementTextBox>오늘의 학습 성취도</AchievementTextBox>
+                
+                <RecordChartContainer>
+                    <MultiValueBarDiscriptionBox>
+                        <MultiValueBarTextBox>공부시간</MultiValueBarTextBox>
+                        <MultiValueBarLargeTextBox>{formattedTotalStudyTime}</MultiValueBarLargeTextBox>
+                    </MultiValueBarDiscriptionBox>
+                    <MultiValueBar datas={dummyStudyTimeData} />
+                    <div style={{ height: '30px' }}></div>
+                    <MultiValueBarDiscriptionBox>
+                        <MultiValueBarTextBox>오늘의 목표 달성률</MultiValueBarTextBox>
+                        <div style={
+                            {
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'end',
+                                gap: '10px',
+                            }
+                        }>
+                            <MultiValueBarTextBox>{`${dummyTaskAchievementData[0].size + dummyTaskAchievementData[1].size}개 중 ${dummyTaskAchievementData[0].size}개`}</MultiValueBarTextBox>
+                            <MultiValueBarLargeTextBox>{`${parseInt(dummyTaskAchievementData[0].size/(dummyTaskAchievementData[0].size + dummyTaskAchievementData[1].size) * 100)}%`}</MultiValueBarLargeTextBox>
+                        </div>
+                    </MultiValueBarDiscriptionBox>
+                    <MultiValueBar datas={dummyTaskAchievementData} />
+                
+                </RecordChartContainer>
+
+                <WorkBookItemContainer>
+                    {dummyWorkbookList.map((workbook, index) => (
+                        <WorkBookItem
+                            key={index}
+                            workbook={workbook}
+                            onClick={() => handleWorkbookClick(index)}
+                        />
+                    ))}
+                </WorkBookItemContainer>
             </AchievementInfoContainer>
         </Container>
     );
