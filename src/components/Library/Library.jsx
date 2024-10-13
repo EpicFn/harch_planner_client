@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { debounce } from 'lodash'
+import { Suspense, useEffect, useState } from 'react'
 
 import LibraryModal from '@components/Library/LibraryModal/LibraryModal'
 import {
@@ -15,12 +16,15 @@ import {
 } from './Library.style'
 
 import WorkBookItem from '@components/Library/WorkBook/WorkBookItem/WorkBookItem'
+import LoadingSpinner from '@components/Loading/LoadingSpinner'
 import workBookContentStore from '@stores/workBookContentStore'
 
 export default function Library() {
   const { workbooks, setWorkbooks } = workBookContentStore() // Use Zustand store
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedWorkbookIndex, setSelectedWorkbookIndex] = useState(null)
+  const [searchTerm, setSearchTerm] = useState('') // 검색어 상태
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
 
   const addWorkBook = () => {
     const newWorkbook = {
@@ -32,10 +36,28 @@ export default function Library() {
     setWorkbooks([...workbooks, newWorkbook])
   }
 
+  const debouncedSearch = debounce((value) => {
+    setDebouncedSearchTerm(value)
+  }, 300)
+
+  useEffect(() => {
+    debouncedSearch(searchTerm)
+
+    // 컴포넌트가 언마운트될 때 debounce 타이머를 정리
+    return () => {
+      debouncedSearch.cancel()
+    }
+  }, [searchTerm])
+
   const openModal = (index) => {
     setSelectedWorkbookIndex(index)
     setIsModalOpen(true)
   }
+
+  // 검색어에 따라 문제집 필터링
+  const filteredWorkbooks = workbooks.filter((workbook) =>
+    workbook.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
+  )
 
   return (
     <LibraryContainer>
@@ -45,19 +67,25 @@ export default function Library() {
           <SectionTitle>학습중인 교재 목록</SectionTitle>
           <SearchContainer>
             <SearchIcon />
-            <SearchInput placeholder="검색어를 입력하세요..." />
+            <SearchInput
+              placeholder="검색어를 입력하세요..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </SearchContainer>
           <AddButton onClick={addWorkBook}>추가하기</AddButton>
         </OngoingSectionHeader>
-        <OngoingSectionContent>
-          {workbooks.map((workbook, index) => (
-            <WorkBookItem
-              key={index}
-              workbook={workbook}
-              onClick={() => openModal(index)} // Open modal on click
-            />
-          ))}
-        </OngoingSectionContent>
+        <Suspense fallback={<LoadingSpinner />}>
+          <OngoingSectionContent>
+            {filteredWorkbooks.map((workbook, index) => (
+              <WorkBookItem
+                key={index}
+                workbook={workbook}
+                onClick={() => openModal(index)} // Open modal on click
+              />
+            ))}
+          </OngoingSectionContent>
+        </Suspense>
       </OngoingSection>
 
       {/* 오른쪽 완료한 교재 목록 */}
