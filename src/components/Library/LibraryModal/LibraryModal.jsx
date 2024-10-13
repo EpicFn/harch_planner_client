@@ -20,7 +20,7 @@ import {
   Title,
   Tooltip,
 } from 'chart.js'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Bar } from 'react-chartjs-2'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
@@ -31,6 +31,8 @@ export default function LibraryModal({ workbook, onClose, workbookIndex }) {
   const { updateWorkbook, removeWorkbook } = workBookContentStore()
   const [updatedName, setUpdatedName] = useState('')
   const [updatedSubject, setUpdatedSubject] = useState('')
+  const nameInputRef = useRef(null)
+  const subjectInputRef = useRef(null)
 
   useEffect(() => {
     if (workbook) {
@@ -51,6 +53,12 @@ export default function LibraryModal({ workbook, onClose, workbookIndex }) {
   const handleWorkBookDelete = () => {
     removeWorkbook(workbookIndex)
     onClose()
+  }
+
+  const handleKeyDown = (e, ref) => {
+    if (e.key === 'Enter') {
+      ref.current.blur() // Enter 키를 누르면 해당 input의 포커스 해제
+    }
   }
 
   const data = {
@@ -110,13 +118,17 @@ export default function LibraryModal({ workbook, onClose, workbookIndex }) {
               type="text"
               value={updatedName}
               onChange={(e) => setUpdatedName(e.target.value)}
+              onKeyDown={(e) => handleKeyDown(e, nameInputRef)} // Enter 키 이벤트 추가
               placeholder="문제집 이름을 입력하세요"
+              ref={nameInputRef} // input 요소 참조
             />
             <ModalInput
               type="text"
               value={updatedSubject}
               onChange={(e) => setUpdatedSubject(e.target.value)}
+              onKeyDown={(e) => handleKeyDown(e, subjectInputRef)} // Enter 키 이벤트 추가
               placeholder="과목 이름을 입력하세요"
+              ref={subjectInputRef} // input 요소 참조
             />
           </InputContainer>
         </ModalContent>
