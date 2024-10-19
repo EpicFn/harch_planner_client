@@ -25,10 +25,11 @@ import {
     RecordChartContainer,
 } from "./DailyPlanner.style";
 import MultiValueBar from "./MultiValueBar/MultiValueBar";
-
 import TaskListByCategory from "./TaskListByCategory";
 import TimeTable from "./TimeTable/TimeTable";
 import WorkBookItem from "./WorkBookItem/WorkBookItem";
+
+import { useState } from "react";
 
 
 //tasks dummy data
@@ -125,6 +126,9 @@ const dummyTaskAchievementData = [
 
 const DailyPlanner = () => {
 
+    //---------------------------------Variables---------------------------------
+
+    // 날짜 정보 가져오기
     const today = new Date();
     const month = today.getMonth() + 1; // Months are zero-indexed
     const day = today.getDate();
@@ -132,16 +136,53 @@ const DailyPlanner = () => {
     const formattedDay = `${day}일`;
     const dayofweek = today.toLocaleDateString('ko-KR', { weekday: 'long' });
 
-    //
+    // Task 입력창 placeholder
     const taskInputPlaceholder = "할 일을 입력 후 Enter 키 혹은 입력 버튼을 눌러주세요.";
     const taskCategoryPlaceholder = "교재나 과목을 선택해 주세요.";
 
+    //---------------------------------States---------------------------------
+
+    const [tasksList, setTasksList] = useState(dummyTasksList);
+    const [taskInput, setTaskInput] = useState("");
+    const [workbooks, setWorkbooks] = useState(dummyWorkbookList);
+    const [studyTimeData, setStudyTimeData] = useState(dummyStudyTimeData);
+    const [taskAchievementData, setTaskAchievementData] = useState(dummyTaskAchievementData);
+
+    //---------------------------------Event Handlers---------------------------------
+
+    //TODO : 해당 workbook 페이지로 이동
     const handleWorkbookClick = (workbookIndex) => {
         console.log(`Clicked workbook index: ${workbookIndex}`);
     };
 
     const formattedTotalStudyTime = `${Math.floor(dummyStudyTimeData.reduce((total, item) => total + item.size, 0) / 60)}시간 ${dummyStudyTimeData.reduce((total, item) => total + item.size, 0) % 60}분`;
 
+    /**
+     * Task 입력창에 입력된 내용을 tasksList에 추가하는 함수
+     * @returns 적당한 값(안중요함)
+     */
+    const handleTaskSubmit = () => {
+        if (taskInput.trim() === "") return;
+
+        const selectedCategory = document.querySelector("select").value;
+        if (!selectedCategory) return;
+
+        const newTask = { contents: taskInput, sledding: "none" };
+        const updatedTasksList = tasksList.map((tasksForCategory) => {
+            if (tasksForCategory.category === selectedCategory) {
+                return {
+                    ...tasksForCategory,
+                    tasks: [...tasksForCategory.tasks, newTask],
+                };
+            }
+            return tasksForCategory;
+        });
+
+        setTasksList(updatedTasksList);
+        setTaskInput("");
+    };
+
+    //---------------------------------Rendering---------------------------------
 
     return (
         <Container>
@@ -158,16 +199,26 @@ const DailyPlanner = () => {
                 </DateInfoBox>
                 <TaskInfoBox>
                     <TaskListBox>
-                        {dummyTasksList.map((tasks, index) => (
+                        {tasksList.map((tasksForCategory, index) => (
                             <TaskListByCategory
                                 key={index}
-                                category={tasks.category}
-                                tasks={tasks.tasks}
+                                category={tasksForCategory.category}
+                                tasks={tasksForCategory.tasks}
+                                setTasks = {(newTasks) => {
+                                    const newTasksList = [...tasksList];
+                                    newTasksList[index].tasks = newTasks;
+                                    setTasksList(newTasksList);
+                                }}
                             />
                         ))}
                     </TaskListBox>
                     <TaskInputBox>
-                        <TaskInput type="text" placeholder={taskInputPlaceholder} />
+                        <TaskInput
+                            type="text"
+                            placeholder={taskInputPlaceholder}
+                            value={taskInput}
+                            onChange={(e) => setTaskInput(e.target.value)}
+                        />
                         <TaskInputFuncBox>
                             <TaskCategorySelect>
                                 <option value="" disabled selected hidden>{taskCategoryPlaceholder}</option>
@@ -175,7 +226,7 @@ const DailyPlanner = () => {
                                 <option value="수학">수학</option>
                                 <option value="영어">영어</option>
                             </TaskCategorySelect>
-                            <TaskSubmitBtn>등록</TaskSubmitBtn>
+                            <TaskSubmitBtn onClick={handleTaskSubmit}>등록</TaskSubmitBtn>
                         </TaskInputFuncBox>
                     </TaskInputBox>
                 </TaskInfoBox>
@@ -192,7 +243,7 @@ const DailyPlanner = () => {
                         <MultiValueBarTextBox>공부시간</MultiValueBarTextBox>
                         <MultiValueBarLargeTextBox>{formattedTotalStudyTime}</MultiValueBarLargeTextBox>
                     </MultiValueBarDiscriptionBox>
-                    <MultiValueBar datas={dummyStudyTimeData} />
+                    <MultiValueBar datas={studyTimeData} />
                     <div style={{ height: '30px' }}></div>
                     <MultiValueBarDiscriptionBox>
                         <MultiValueBarTextBox>오늘의 목표 달성률</MultiValueBarTextBox>
@@ -204,16 +255,16 @@ const DailyPlanner = () => {
                                 gap: '10px',
                             }
                         }>
-                            <MultiValueBarTextBox>{`${dummyTaskAchievementData[0].size + dummyTaskAchievementData[1].size}개 중 ${dummyTaskAchievementData[0].size}개`}</MultiValueBarTextBox>
-                            <MultiValueBarLargeTextBox>{`${parseInt(dummyTaskAchievementData[0].size/(dummyTaskAchievementData[0].size + dummyTaskAchievementData[1].size) * 100)}%`}</MultiValueBarLargeTextBox>
+                            <MultiValueBarTextBox>{`${taskAchievementData[0].size + taskAchievementData[1].size}개 중 ${taskAchievementData[0].size}개`}</MultiValueBarTextBox>
+                            <MultiValueBarLargeTextBox>{`${parseInt(taskAchievementData[0].size/(taskAchievementData[0].size + taskAchievementData[1].size) * 100)}%`}</MultiValueBarLargeTextBox>
                         </div>
                     </MultiValueBarDiscriptionBox>
-                    <MultiValueBar datas={dummyTaskAchievementData} />
+                    <MultiValueBar datas={taskAchievementData} />
                 
                 </RecordChartContainer>
 
                 <WorkBookItemContainer>
-                    {dummyWorkbookList.map((workbook, index) => (
+                    {workbooks.map((workbook, index) => (
                         <WorkBookItem
                             key={index}
                             workbook={workbook}

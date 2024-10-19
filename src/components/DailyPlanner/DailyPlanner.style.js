@@ -102,13 +102,20 @@ export const TaskInfoBox = styled.div`
     height: 100%;
     padding: 10px;
     background-color: #FFF;
+
+    overflow-y: auto;
+    overflow-x: hidden;
 `
 
 export const TaskListBox = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: start;
-    flex: 3;
+    height: 90%;
+    
+
+    overflow-y: auto;
+    overflow-x: hidden;
     
 `
 export const TasksByCategoryBox = styled.div`
@@ -211,22 +218,53 @@ export const TaskItemCheckBox = styled.img`
     height: 24px;
 `
 
+export const TaskControlMenu = styled.div`
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left: -80px;
+    top: -35px;
+    z-index: 1;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    width: 80px;
+    
+    visibility: ${props => props.visibility || 'hidden'};
+
+    opacity: ${props => (props.visibility === 'visible' ? 1 : 0)};
+    transform: ${props => (props.visibility === 'visible' ? 'scale(1)' : 'scale(0.8)')};
+    transform-origin: center right;
+    transition: transform 0.1s ease-in-out, opacity 0.1s ease-in-out;
+`
+
+export const TaskControlMenuItem = styled.div`
+    padding: 5px;
+    cursor: pointer;
+    text-align: center;
+
+    border: 1px solid #ccc;
+`
+
 
 export const TaskInputBox = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: 20px;
 `
 
 export const TaskInput = styled.input`
     display: flex;
-    width: 100%;
+    width: 98%;
     align-items: center;
     gap: 10px;
 
     border-radius: 4px;
     border: 1px solid var(--Line-Disabled, #CACAD7);
 
+    
     
     /* Pretendard Light/Button 12 */
     font-family: Pretendard;
