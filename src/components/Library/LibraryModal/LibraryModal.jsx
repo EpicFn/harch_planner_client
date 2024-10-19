@@ -28,7 +28,8 @@ import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 
 export default function LibraryModal({ workbook, onClose, workbookIndex }) {
-  const { updateWorkbook, removeWorkbook } = workBookContentStore()
+  const updateWorkbook = workBookContentStore((state) => state.updateWorkbook)
+  const removeWorkbook = workBookContentStore((state) => state.removeWorkbook)
   const [updatedName, setUpdatedName] = useState('')
   const [updatedSubject, setUpdatedSubject] = useState('')
   const nameInputRef = useRef(null)
@@ -118,17 +119,17 @@ export default function LibraryModal({ workbook, onClose, workbookIndex }) {
               type="text"
               value={updatedName}
               onChange={(e) => setUpdatedName(e.target.value)}
-              onKeyDown={(e) => handleKeyDown(e, nameInputRef)} // Enter 키 이벤트 추가
+              onKeyDown={(e) => handleKeyDown(e, nameInputRef)}
               placeholder="문제집 이름을 입력하세요"
-              ref={nameInputRef} // input 요소 참조
+              ref={nameInputRef}
             />
             <ModalInput
               type="text"
               value={updatedSubject}
               onChange={(e) => setUpdatedSubject(e.target.value)}
-              onKeyDown={(e) => handleKeyDown(e, subjectInputRef)} // Enter 키 이벤트 추가
+              onKeyDown={(e) => handleKeyDown(e, subjectInputRef)}
               placeholder="과목 이름을 입력하세요"
-              ref={subjectInputRef} // input 요소 참조
+              ref={subjectInputRef}
             />
           </InputContainer>
         </ModalContent>

@@ -12,7 +12,7 @@ const workBookContentStore = create((set) => ({
   removeWorkbook: (index) =>
     set((state) => {
       const newWorkbooks = state.workbooks.filter((_, i) => i !== index)
-      return { workbooks: newWorkbooks }
+      return { workbooks: [...newWorkbooks] }
     }),
 }))
 

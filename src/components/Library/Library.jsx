@@ -20,7 +20,8 @@ import LoadingSpinner from '@components/Loading/LoadingSpinner'
 import workBookContentStore from '@stores/workBookContentStore'
 
 export default function Library() {
-  const { workbooks, setWorkbooks } = workBookContentStore() // Use Zustand store
+  const workbooks = workBookContentStore((state) => state.workbooks)
+  const setWorkbooks = workBookContentStore((state) => state.setWorkbooks)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedWorkbookIndex, setSelectedWorkbookIndex] = useState(null)
   const [searchTerm, setSearchTerm] = useState('') // 검색어 상태
@@ -49,8 +50,16 @@ export default function Library() {
     }
   }, [searchTerm])
 
+  useEffect(() => {
+    // workbooks 상태가 변경될 때 필터링된 교재 리스트 다시 계산
+    console.log('Workbooks updated:', workbooks)
+  }, [workbooks])
+
   const openModal = (index) => {
-    setSelectedWorkbookIndex(index)
+    const actualIndex = workbooks.findIndex(
+      (workbook) => workbook.name === filteredWorkbooks[index].name,
+    )
+    setSelectedWorkbookIndex(actualIndex)
     setIsModalOpen(true)
   }
 
