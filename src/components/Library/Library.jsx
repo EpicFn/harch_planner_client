@@ -25,7 +25,6 @@ export default function Library() {
   const setWorkbooks = workBookContentStore((state) => state.setWorkbooks)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false) // 추가 모달 상태
   const [isEditModalOpen, setIsEditModalOpen] = useState(false) // 편집 모달 상태
-  const [isEditing, setIsEditing] = useState(false) // 추가/수정 모드 구분 상태
   const [selectedWorkbookIndex, setSelectedWorkbookIndex] = useState(null)
   const [searchTerm, setSearchTerm] = useState('') // 검색어 상태
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
