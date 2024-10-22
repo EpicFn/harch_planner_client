@@ -3,6 +3,10 @@ import { create } from 'zustand'
 const workBookContentStore = create((set) => ({
   workbooks: [],
   setWorkbooks: (newWorkbooks) => set({ workbooks: newWorkbooks }),
+  addWorkbook: (newWorkbook) =>
+    set((state) => ({
+      workbooks: [...state.workbooks, newWorkbook],
+    })),
   updateWorkbook: (index, updatedWorkbook) =>
     set((state) => {
       const newWorkbooks = [...state.workbooks]

@@ -9,7 +9,7 @@ import {
   ModalInput,
   ModalLayout,
   ProgressContainer,
-} from '@components/Library/LibraryModal/LibraryModal.style'
+} from '@components/Library/LibraryModal/LibraryEditModal/LibraryEditModal.style'
 import workBookContentStore from '@stores/workBookContentStore'
 import {
   BarElement,
@@ -27,7 +27,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 
-export default function LibraryModal({ workbook, onClose, workbookIndex }) {
+export default function LibraryEditModal({ workbook, onClose, workbookIndex }) {
   const updateWorkbook = workBookContentStore((state) => state.updateWorkbook)
   const removeWorkbook = workBookContentStore((state) => state.removeWorkbook)
   const [updatedName, setUpdatedName] = useState('')
@@ -63,7 +63,7 @@ export default function LibraryModal({ workbook, onClose, workbookIndex }) {
   }
 
   const data = {
-    labels: ['23.08.01'], // X축 레이블
+    labels: [workbook.date], // X축 레이블
     datasets: [
       {
         label: '주간 진행률',

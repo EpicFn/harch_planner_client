@@ -26,6 +26,19 @@ export const ModalLayout = styled.div`
   justify-content: space-around;
   align-items: center;
   gap: 20px;
+
+  animation: fadeIn 0.3s ease-in-out; // 애니메이션 추가
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 `
 
 export const ProgressContainer = styled.div`

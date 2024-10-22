@@ -1,7 +1,8 @@
 import { debounce } from 'lodash'
 import { Suspense, useEffect, useState } from 'react'
 
-import LibraryModal from '@components/Library/LibraryModal/LibraryModal'
+import LibraryAddModal from '@components/Library/LibraryModal/LibraryAddModal/LibraryAddModal'
+import LibraryEditModal from '@components/Library/LibraryModal/LibraryEditModal/LibraryEditModal'
 import {
   AddButton,
   CompletedSection,
@@ -22,20 +23,12 @@ import workBookContentStore from '@stores/workBookContentStore'
 export default function Library() {
   const workbooks = workBookContentStore((state) => state.workbooks)
   const setWorkbooks = workBookContentStore((state) => state.setWorkbooks)
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false) // 추가 모달 상태
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false) // 편집 모달 상태
+  const [isEditing, setIsEditing] = useState(false) // 추가/수정 모드 구분 상태
   const [selectedWorkbookIndex, setSelectedWorkbookIndex] = useState(null)
   const [searchTerm, setSearchTerm] = useState('') // 검색어 상태
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
-
-  const addWorkBook = () => {
-    const newWorkbook = {
-      name: '문제집 이름을 입력해주세요',
-      subject: '과목 이름을 입력해주세요',
-      date: '23.08.01',
-      progress: '65',
-    }
-    setWorkbooks([...workbooks, newWorkbook])
-  }
 
   const debouncedSearch = debounce((value) => {
     setDebouncedSearchTerm(value)
@@ -55,18 +48,24 @@ export default function Library() {
     console.log('Workbooks updated:', workbooks)
   }, [workbooks])
 
-  const openModal = (index) => {
+  const openEditModal = (index) => {
     const actualIndex = workbooks.findIndex(
       (workbook) => workbook.name === filteredWorkbooks[index].name,
     )
     setSelectedWorkbookIndex(actualIndex)
-    setIsModalOpen(true)
+    setIsEditModalOpen(true)
+  }
+
+  const openAddModal = () => {
+    setIsAddModalOpen(true)
   }
 
   // 검색어에 따라 문제집 필터링
   const filteredWorkbooks = workbooks.filter((workbook) =>
     workbook.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
   )
+
+  console.log(workbooks)
 
   return (
     <LibraryContainer>
@@ -82,7 +81,7 @@ export default function Library() {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </SearchContainer>
-          <AddButton onClick={addWorkBook}>추가하기</AddButton>
+          <AddButton onClick={openAddModal}>추가하기</AddButton>
         </OngoingSectionHeader>
         <Suspense fallback={<LoadingSpinner />}>
           <OngoingSectionContent>
@@ -90,7 +89,7 @@ export default function Library() {
               <WorkBookItem
                 key={index}
                 workbook={workbook}
-                onClick={() => openModal(index)} // Open modal on click
+                onClick={() => openEditModal(index)} // 수정 모달 열기
               />
             ))}
           </OngoingSectionContent>
@@ -102,10 +101,16 @@ export default function Library() {
         <SectionTitle>완료한 교재</SectionTitle>
       </CompletedSection>
 
-      {isModalOpen && (
-        <LibraryModal
+      {isAddModalOpen && (
+        <LibraryAddModal
+          onClose={() => setIsAddModalOpen(false)} // 추가 모달 닫기
+        />
+      )}
+
+      {isEditModalOpen && (
+        <LibraryEditModal
           workbook={workbooks[selectedWorkbookIndex]}
-          onClose={() => setIsModalOpen(false)}
+          onClose={() => setIsEditModalOpen(false)} // 편집 모달 닫기
           workbookIndex={selectedWorkbookIndex}
         />
       )}
