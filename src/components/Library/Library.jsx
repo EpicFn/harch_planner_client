@@ -22,7 +22,6 @@ import workBookContentStore from '@stores/workBookContentStore'
 
 export default function Library() {
   const workbooks = workBookContentStore((state) => state.workbooks)
-  const setWorkbooks = workBookContentStore((state) => state.setWorkbooks)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false) // 추가 모달 상태
   const [isEditModalOpen, setIsEditModalOpen] = useState(false) // 편집 모달 상태
   const [selectedWorkbookIndex, setSelectedWorkbookIndex] = useState(null)

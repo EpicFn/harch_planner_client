@@ -8,6 +8,7 @@ import {
   ModalContent,
   ModalInput,
   ModalLayout,
+  ModalPageInput,
   ProgressContainer,
 } from '@components/Library/LibraryModal/LibraryEditModal/LibraryEditModal.style'
 import workBookContentStore from '@stores/workBookContentStore'
@@ -30,10 +31,20 @@ import 'react-circular-progressbar/dist/styles.css'
 export default function LibraryEditModal({ workbook, onClose, workbookIndex }) {
   const updateWorkbook = workBookContentStore((state) => state.updateWorkbook)
   const removeWorkbook = workBookContentStore((state) => state.removeWorkbook)
-  const [updatedName, setUpdatedName] = useState('')
-  const [updatedSubject, setUpdatedSubject] = useState('')
+
+  const [updatedName, setUpdatedName] = useState(workbook.name || '')
+  const [updatedSubject, setUpdatedSubject] = useState(workbook.subject || '')
+  const [goalPages, setGoalPages] = useState(workbook.goalPages || 0)
+  const [studiedPages, setStudiedPages] = useState('') // 공부한 페이지 수
+
   const nameInputRef = useRef(null)
   const subjectInputRef = useRef(null)
+  const goalPagesRef = useRef(null)
+  const studiedPagesRef = useRef(null)
+
+  const calculateProgress = (studied, goal) => {
+    return goal > 0 ? Math.round((studied / goal) * 100) : 0
+  }
 
   useEffect(() => {
     if (workbook) {
@@ -42,12 +53,17 @@ export default function LibraryEditModal({ workbook, onClose, workbookIndex }) {
     }
   }, [workbook])
 
-  const handleWorkBookUpdate = () => {
-    updateWorkbook(workbookIndex, {
+  const handleUpdateWorkbook = () => {
+    const progress = calculateProgress(studiedPages, goalPages)
+    const updatedWorkbook = {
       ...workbook,
       name: updatedName,
       subject: updatedSubject,
-    })
+      goalPages,
+      progress,
+    }
+
+    updateWorkbook(workbookIndex, updatedWorkbook)
     onClose()
   }
 
@@ -132,13 +148,27 @@ export default function LibraryEditModal({ workbook, onClose, workbookIndex }) {
               ref={subjectInputRef}
             />
           </InputContainer>
+          <ModalPageInput
+            type="number"
+            value={studiedPages}
+            onChange={(e) => setStudiedPages(e.target.value)}
+            onKeyDown={(e) => handleKeyDown(e, studiedPagesRef)}
+            ref={studiedPagesRef}
+          />
+          <ModalPageInput
+            type="number"
+            value={goalPages}
+            onChange={(e) => setGoalPages(e.target.value)}
+            onKeyDown={(e) => handleKeyDown(e, goalPagesRef)}
+            ref={goalPagesRef}
+          />
         </ModalContent>
         <Line />
         <div style={{ width: '100%', height: '300px' }}>
           <Bar data={data} options={options} />
         </div>
         <ModalButtonContainer>
-          <ModalButton onClick={handleWorkBookUpdate}>수정완료</ModalButton>
+          <ModalButton onClick={handleUpdateWorkbook}>수정완료</ModalButton>
           <ModalButton
             onClick={handleWorkBookDelete}
             style={{ backgroundColor: 'red' }}

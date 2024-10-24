@@ -72,9 +72,20 @@ export const ModalInput = styled.input`
   border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 1rem;
-  width: 320px;
+  width: 280px;
   height: 39px;
   box-sizing: border-box;
+`
+
+export const ModalPageInput = styled.input`
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  width: 80px;
+  height: 39px;
+  box-sizing: border-box;
+  text-align: center;
 `
 
 export const ModalButtonContainer = styled.div`
