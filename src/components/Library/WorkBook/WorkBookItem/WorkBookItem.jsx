@@ -10,7 +10,7 @@ import {
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 
-export default function WorkBookItem({ workbook, onClick }) {
+export default function WorkBookItem({ workbook, onClick, status }) {
   const [animatedProgress, setAnimatedProgress] = useState(0)
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export default function WorkBookItem({ workbook, onClick }) {
   }, [workbook.progress])
 
   return (
-    <StyledWorkBookItem onClick={onClick}>
+    <StyledWorkBookItem onClick={onClick} status={status}>
       <div
         style={{
           width: 80,

@@ -66,9 +66,52 @@ export const CompletedSection = styled.div`
   max-height: 650px;
   background-color: rgba(217, 217, 217, 0.5);
   border-radius: 8px;
-  padding: 20px 40px;
+  padding: 20px 30px;
   box-sizing: border-box;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #b0b0b0;
+    background: linear-gradient(180deg, #c4c4c4, #8e8e8e);
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #b0b0b0, #7a7a7a);
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #e0e0e0;
+    border-radius: 10px;
+  }
+`
+
+export const CompletedSectionContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+  align-items: center;
+  gap: 20px;
+  height: auto;
+`
+
+export const CompletedBookItem = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #333;
 `
 
 export const SectionTitle = styled.h2`

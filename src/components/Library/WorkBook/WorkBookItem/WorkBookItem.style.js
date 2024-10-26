@@ -7,7 +7,8 @@ export const StyledWorkBookItem = styled.div`
   background-color: #f9f9f9;
   border-radius: 8px;
   padding: 10px;
-  width: calc(50% - 15px); /* 두 세로 줄을 위한 너비 설정 (50%) */
+  width: ${(props) =>
+    props.status === 'completed' ? '100%' : 'calc(50% - 15px)'};
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
   height: 100px; /* 각 항목의 높이를 고정 */

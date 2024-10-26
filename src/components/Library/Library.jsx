@@ -6,6 +6,7 @@ import LibraryEditModal from '@components/Library/LibraryModal/LibraryEditModal/
 import {
   AddButton,
   CompletedSection,
+  CompletedSectionContent,
   LibraryContainer,
   OngoingSection,
   OngoingSectionContent,
@@ -48,7 +49,7 @@ export default function Library() {
 
   const openEditModal = (index) => {
     const actualIndex = workbooks.findIndex(
-      (workbook) => workbook.name === filteredWorkbooks[index].name,
+      (workbook) => workbook.name === ongoingWorkbooks[index].name,
     )
     setSelectedWorkbookIndex(actualIndex)
     setIsEditModalOpen(true)
@@ -58,12 +59,17 @@ export default function Library() {
     setIsAddModalOpen(true)
   }
 
-  // 검색어에 따라 문제집 필터링
-  const filteredWorkbooks = workbooks.filter((workbook) =>
-    workbook.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
+  const ongoingWorkbooks = workbooks.filter(
+    (workbook) =>
+      workbook.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) &&
+      workbook.progress < 100,
   )
 
-  console.log(workbooks)
+  const completedWorkbooks = workbooks.filter(
+    (workbook) =>
+      workbook.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) &&
+      workbook.progress === 100,
+  )
 
   return (
     <LibraryContainer>
@@ -83,11 +89,12 @@ export default function Library() {
         </OngoingSectionHeader>
         <Suspense fallback={<LoadingSpinner />}>
           <OngoingSectionContent>
-            {filteredWorkbooks.map((workbook, index) => (
+            {ongoingWorkbooks.map((workbook, index) => (
               <WorkBookItem
                 key={index}
                 workbook={workbook}
-                onClick={() => openEditModal(index)} // 수정 모달 열기
+                status="ongoing"
+                onClick={() => openEditModal(index)}
               />
             ))}
           </OngoingSectionContent>
@@ -97,6 +104,11 @@ export default function Library() {
       {/* 오른쪽 완료한 교재 목록 */}
       <CompletedSection>
         <SectionTitle>완료한 교재</SectionTitle>
+        <CompletedSectionContent>
+          {completedWorkbooks.map((workbook, index) => (
+            <WorkBookItem key={index} workbook={workbook} status="completed" />
+          ))}
+        </CompletedSectionContent>
       </CompletedSection>
 
       {isAddModalOpen && (
