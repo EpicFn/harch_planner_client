@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export const StyledWorkBookItem = styled.div`
+export const StyledWorkbookItem = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;

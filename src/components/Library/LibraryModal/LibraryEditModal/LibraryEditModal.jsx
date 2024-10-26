@@ -11,7 +11,7 @@ import {
   ModalPageInput,
   ProgressContainer,
 } from '@components/Library/LibraryModal/LibraryEditModal/LibraryEditModal.style'
-import workBookContentStore from '@stores/workBookContentStore'
+import workbookContentStore from '@stores/workbookContentStore'
 import {
   BarElement,
   CategoryScale,
@@ -29,8 +29,8 @@ import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 
 export default function LibraryEditModal({ workbook, onClose, workbookIndex }) {
-  const updateWorkbook = workBookContentStore((state) => state.updateWorkbook)
-  const removeWorkbook = workBookContentStore((state) => state.removeWorkbook)
+  const updateWorkbook = workbookContentStore((state) => state.updateWorkbook)
+  const removeWorkbook = workbookContentStore((state) => state.removeWorkbook)
 
   const [updatedName, setUpdatedName] = useState(workbook.name || '')
   const [updatedSubject, setUpdatedSubject] = useState(workbook.subject || '')

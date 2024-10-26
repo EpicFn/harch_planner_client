@@ -11,11 +11,11 @@ import {
   ModalPageInput,
   ModalPageInputBox,
 } from '@components/Library/LibraryModal/LibraryAddModal/LibraryAddModal.style'
-import workBookContentStore from '@stores/workBookContentStore'
+import workbookContentStore from '@stores/workbookContentStore'
 import { useRef, useState } from 'react'
 
 export default function LibraryAddModal({ onClose }) {
-  const addWorkbook = workBookContentStore((state) => state.addWorkbook)
+  const addWorkbook = workbookContentStore((state) => state.addWorkbook)
 
   const [name, setName] = useState('')
   const [subject, setSubject] = useState('')

@@ -5,12 +5,12 @@ import {
   BookSubject,
   BookTitle,
   DateText,
-  StyledWorkBookItem,
-} from '@components/Library/WorkBook/WorkBookItem/WorkBookItem.style'
+  StyledWorkbookItem,
+} from '@components/Library/WorkBook/WorkbookItem/WorkbookItem.style'
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 
-export default function WorkBookItem({ workbook, onClick, status }) {
+export default function WorkbookItem({ workbook, onClick, status }) {
   const [animatedProgress, setAnimatedProgress] = useState(0)
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export default function WorkBookItem({ workbook, onClick, status }) {
   }, [workbook.progress])
 
   return (
-    <StyledWorkBookItem onClick={onClick} status={status}>
+    <StyledWorkbookItem onClick={onClick} status={status}>
       <div
         style={{
           width: 80,
@@ -50,6 +50,6 @@ export default function WorkBookItem({ workbook, onClick, status }) {
         <BookSubject>{workbook.subject}</BookSubject>
         <DateText>{workbook.date}</DateText>
       </BookInfo>
-    </StyledWorkBookItem>
+    </StyledWorkbookItem>
   )
 }

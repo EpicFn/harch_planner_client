@@ -17,12 +17,12 @@ import {
   SectionTitle,
 } from './Library.style'
 
-import WorkBookItem from '@components/Library/WorkBook/WorkBookItem/WorkBookItem'
+import WorkbookItem from '@components/Library/WorkBook/WorkbookItem/WorkbookItem'
 import LoadingSpinner from '@components/Loading/LoadingSpinner'
-import workBookContentStore from '@stores/workBookContentStore'
+import workbookContentStore from '@stores/workbookContentStore'
 
 export default function Library() {
-  const workbooks = workBookContentStore((state) => state.workbooks)
+  const workbooks = workbookContentStore((state) => state.workbooks)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false) // 추가 모달 상태
   const [isEditModalOpen, setIsEditModalOpen] = useState(false) // 편집 모달 상태
   const [selectedWorkbookIndex, setSelectedWorkbookIndex] = useState(null)
@@ -88,7 +88,7 @@ export default function Library() {
         <Suspense fallback={<LoadingSpinner />}>
           <OngoingSectionContent>
             {ongoingWorkbooks.map((workbook, index) => (
-              <WorkBookItem
+              <WorkbookItem
                 key={index}
                 workbook={workbook}
                 status="ongoing"
@@ -104,7 +104,7 @@ export default function Library() {
         <SectionTitle>완료한 교재</SectionTitle>
         <CompletedSectionContent>
           {completedWorkbooks.map((workbook, index) => (
-            <WorkBookItem key={index} workbook={workbook} status="completed" />
+            <WorkbookItem key={index} workbook={workbook} status="completed" />
           ))}
         </CompletedSectionContent>
       </CompletedSection>
