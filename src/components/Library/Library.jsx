@@ -66,9 +66,7 @@ export default function Library() {
   )
 
   const completedWorkbooks = workbooks.filter(
-    (workbook) =>
-      workbook.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) &&
-      workbook.progress === 100,
+    (workbook) => workbook.progress === 100,
   )
 
   return (
