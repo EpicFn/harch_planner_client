@@ -50,13 +50,17 @@ export default function LibraryEditModal({ workbook, onClose, workbookIndex }) {
   }, [workbook])
 
   const handleUpdateWorkbook = () => {
+    const calculatedProgress =
+      goalPages > 0
+        ? Math.min(Math.round((studiedPages / goalPages) * 100), 100)
+        : 0
     const updatedWorkbook = {
       ...workbook,
       name: updatedName,
       subject: updatedSubject,
-      goalPages: workbook.goalPages,
-      studiedPages: workbook.studiedPages,
-      progress: workbook.progress,
+      goalPages,
+      studiedPages,
+      progress: calculatedProgress,
     }
 
     updateWorkbook(workbookIndex, updatedWorkbook)
