@@ -35,16 +35,12 @@ export default function LibraryEditModal({ workbook, onClose, workbookIndex }) {
   const [updatedName, setUpdatedName] = useState(workbook.name || '')
   const [updatedSubject, setUpdatedSubject] = useState(workbook.subject || '')
   const [goalPages, setGoalPages] = useState(workbook.goalPages || 0)
-  const [studiedPages, setStudiedPages] = useState('') // 공부한 페이지 수
+  const [studiedPages, setStudiedPages] = useState(workbook.studiedPages) // 공부한 페이지 수
 
   const nameInputRef = useRef(null)
   const subjectInputRef = useRef(null)
   const goalPagesRef = useRef(null)
   const studiedPagesRef = useRef(null)
-
-  const calculateProgress = (studied, goal) => {
-    return goal > 0 ? Math.round((studied / goal) * 100) : 0
-  }
 
   useEffect(() => {
     if (workbook) {
@@ -54,13 +50,13 @@ export default function LibraryEditModal({ workbook, onClose, workbookIndex }) {
   }, [workbook])
 
   const handleUpdateWorkbook = () => {
-    const progress = calculateProgress(studiedPages, goalPages)
     const updatedWorkbook = {
       ...workbook,
       name: updatedName,
       subject: updatedSubject,
-      goalPages,
-      progress,
+      goalPages: workbook.goalPages,
+      studiedPages: workbook.studiedPages,
+      progress: workbook.progress,
     }
 
     updateWorkbook(workbookIndex, updatedWorkbook)

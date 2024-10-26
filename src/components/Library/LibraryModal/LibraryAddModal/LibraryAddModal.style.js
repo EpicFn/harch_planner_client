@@ -77,6 +77,42 @@ export const ModalInput = styled.input`
   }
 `
 
+export const ModalPageInputBox = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 1rem;
+  width: 100%;
+  height: auto;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.1); // 내부 그림자
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+
+  &:focus {
+    border-color: #6c63ff; // 포커스 시 테두리 색 변경
+    outline: none;
+  }
+`
+
+export const ModalPageInput = styled.input`
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  width: 150px;
+  text-align: center;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.1); // 내부 그림자
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+
+  &:focus {
+    border-color: #6c63ff; // 포커스 시 테두리 색 변경
+    outline: none;
+  }
+`
+
 export const ModalButtonContainer = styled.div`
   display: flex;
   justify-content: flex-end;
