@@ -10,11 +10,11 @@ export const LibraryContainer = styled.div`
   background-color: #f5f5f5;
 `
 export const OngoingSection = styled.div`
-  flex: 2;
+  flex-grow: 2;
   max-width: 66.67%; /* 2:3 비율 설정 */
   height: 100%;
   background-color: white;
-  padding: 20px 40px;
+  padding: 20px 60px;
   box-sizing: border-box;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow-y: scroll;
@@ -52,7 +52,7 @@ export const OngoingSectionHeader = styled.div`
 `
 
 export const Sidebar = styled.div`
-  flex: 1;
+  flex-grow: 1;
   max-width: 33.33%; /* 1:3 비율 설정 */
   height: 100%;
   background-color: rgba(217, 217, 217, 0.5);
@@ -66,7 +66,7 @@ export const Sidebar = styled.div`
 export const OngoingSectionContent = styled.div`
   display: flex;
   flex-wrap: wrap; /* 줄 바꿈을 허용 */
-  gap: 20px;
+  gap: 40px;
 `
 
 export const CompletedSection = styled.div`
@@ -165,6 +165,7 @@ export const AddButton = styled.button`
 export const SearchContainer = styled.div`
   position: relative;
   width: auto;
+  height: auto;
 `
 
 export const SearchInput = styled.input`

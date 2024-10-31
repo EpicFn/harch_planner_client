@@ -8,7 +8,7 @@ export const StyledWorkbookItem = styled.div`
   border-radius: 8px;
   padding: 10px;
   width: ${(props) =>
-    props.status === 'completed' ? '100%' : 'calc(50% - 15px)'};
+    props.status === 'completed' ? '100%' : 'calc(30% - 10px)'};
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
   height: 100px; /* 각 항목의 높이를 고정 */
