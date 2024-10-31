@@ -5,8 +5,6 @@ import LibraryAddModal from '@components/Library/LibraryModal/LibraryAddModal/Li
 import LibraryEditModal from '@components/Library/LibraryModal/LibraryEditModal/LibraryEditModal'
 import {
   AddButton,
-  CompletedSection,
-  CompletedSectionContent,
   LibraryContainer,
   OngoingSection,
   OngoingSectionContent,
@@ -15,6 +13,7 @@ import {
   SearchIcon,
   SearchInput,
   SectionTitle,
+  Sidebar,
 } from './Library.style'
 
 import WorkbookItem from '@components/Library/WorkBook/WorkbookItem/WorkbookItem'
@@ -71,18 +70,22 @@ export default function Library() {
 
   return (
     <LibraryContainer>
-      {/* 왼쪽 학습중인 교재 목록 */}
+      {/* 오른쪽 완료한 교재 목록 */}
+
+      <Sidebar>
+        <SearchContainer>
+          <SearchIcon />
+          <SearchInput
+            placeholder="검색"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </SearchContainer>
+      </Sidebar>
+
       <OngoingSection>
         <OngoingSectionHeader>
           <SectionTitle>학습중인 교재 목록</SectionTitle>
-          <SearchContainer>
-            <SearchIcon />
-            <SearchInput
-              placeholder="검색어를 입력하세요..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </SearchContainer>
           <AddButton onClick={openAddModal}>추가하기</AddButton>
         </OngoingSectionHeader>
         <Suspense fallback={<LoadingSpinner />}>
@@ -98,16 +101,6 @@ export default function Library() {
           </OngoingSectionContent>
         </Suspense>
       </OngoingSection>
-
-      {/* 오른쪽 완료한 교재 목록 */}
-      <CompletedSection>
-        <SectionTitle>완료한 교재</SectionTitle>
-        <CompletedSectionContent>
-          {completedWorkbooks.map((workbook, index) => (
-            <WorkbookItem key={index} workbook={workbook} status="completed" />
-          ))}
-        </CompletedSectionContent>
-      </CompletedSection>
 
       {isAddModalOpen && (
         <LibraryAddModal

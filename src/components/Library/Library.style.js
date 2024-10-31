@@ -3,20 +3,17 @@ import styled from 'styled-components'
 
 export const LibraryContainer = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 30px 100px;
   width: 100%;
   height: 100%;
   box-sizing: border-box;
   background-color: #f5f5f5;
 `
 export const OngoingSection = styled.div`
-  width: 60%; // 7:3 비율로 왼쪽 영역을 더 넓게 설정
-  height: 650px;
-  max-height: 650px;
-  background-color: rgba(217, 217, 217, 0.5);
-  border-radius: 8px;
+  flex: 2;
+  max-width: 66.67%; /* 2:3 비율 설정 */
+  height: 100%;
+  background-color: white;
   padding: 20px 40px;
   box-sizing: border-box;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -52,6 +49,18 @@ export const OngoingSectionHeader = styled.div`
   width: 100%;
   height: 80px;
   margin-bottom: 50px;
+`
+
+export const Sidebar = styled.div`
+  flex: 1;
+  max-width: 33.33%; /* 1:3 비율 설정 */
+  height: 100%;
+  background-color: rgba(217, 217, 217, 0.5);
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `
 
 export const OngoingSectionContent = styled.div`
@@ -155,15 +164,15 @@ export const AddButton = styled.button`
 
 export const SearchContainer = styled.div`
   position: relative;
-  width: 340px;
+  width: auto;
 `
 
 export const SearchInput = styled.input`
-  width: 100%;
+  width: 312px;
   height: 40px;
   padding: 0 15px 0 40px; /* 왼쪽에 아이콘 공간 확보 */
   border: 1px solid #ddd;
-  border-radius: 20px;
+  border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   font-size: 1rem;
   color: #333;
