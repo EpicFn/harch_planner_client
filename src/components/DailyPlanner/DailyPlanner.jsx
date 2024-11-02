@@ -168,8 +168,11 @@ const DailyPlanner = () => {
         if (!selectedCategory) return;
 
         const newTask = { contents: taskInput, sledding: "none" };
+        let categoryExists = false;
+
         const updatedTasksList = tasksList.map((tasksForCategory) => {
             if (tasksForCategory.category === selectedCategory) {
+                categoryExists = true;
                 return {
                     ...tasksForCategory,
                     tasks: [...tasksForCategory.tasks, newTask],
@@ -177,6 +180,13 @@ const DailyPlanner = () => {
             }
             return tasksForCategory;
         });
+
+        if (!categoryExists) {
+            updatedTasksList.push({
+                category: selectedCategory,
+                tasks: [newTask],
+            });
+        }
 
         setTasksList(updatedTasksList);
         setTaskInput("");

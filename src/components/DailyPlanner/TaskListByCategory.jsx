@@ -77,17 +77,38 @@ export default function TaskListByCategory({ category, tasks, setTasks }) {
                         default:
                             checkBoxSrc = '/src/assets/Square.svg';
                     }
-                    
+
+                    const handleDragStart = (e) => {
+                        e.dataTransfer.setData('text/plain', index);
+                    };
+
+                    const handleDrop = (e) => {
+                        const draggedIndex = e.dataTransfer.getData('text');
+                        const newTaskList = [...tasks];
+                        const [draggedTask] = newTaskList.splice(draggedIndex, 1);
+                        newTaskList.splice(index, 0, draggedTask);
+                        setTasks(newTaskList);
+                    };
+
+                    const handleDragOver = (e) => {
+                        e.preventDefault();
+                    };
 
                     return (
-                        <TaskItem key={index}>
+                        <TaskItem
+                            key={index}
+                            draggable
+                            onDragStart={handleDragStart}
+                            onDrop={handleDrop}
+                            onDragOver={handleDragOver}
+                        >
                             <div style={{ position: 'absolute', visibility: menuVisible[index] ? 'visible' : 'hidden' }}>
                                 <TaskControlMenu visibility={menuVisible[index] ? 'visible' : 'hidden'}>
                                     <TaskControlMenuItem>수정</TaskControlMenuItem>
-                                    <TaskControlMenuItem onClick={() => {handleDeleteTask(index)}}>삭제</TaskControlMenuItem>
+                                    <TaskControlMenuItem onClick={() => { handleDeleteTask(index) }}>삭제</TaskControlMenuItem>
                                 </TaskControlMenu>
                             </div>
-                            <MovingPointForTaskItem onClick={() => {toggleMenu(index)}} />
+                            <MovingPointForTaskItem onClick={() => { toggleMenu(index) }} />
                             <TaskItemContent sledding={task.sledding}>
                                 {task.contents}
                             </TaskItemContent>

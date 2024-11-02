@@ -180,7 +180,7 @@ export const MovingPointForTaskItem = styled.div`
     margin : 0px 5px;
 
     border-radius: 5px;
-    background-color: black;
+    background-color: #c6c6c6;
 `
 
 export const TaskItemContent = styled.div`
@@ -260,6 +260,9 @@ export const TaskInput = styled.input`
     width: 98%;
     align-items: center;
     gap: 10px;
+
+    padding-top: 4px;
+    padding-bottom: 4px;
 
     border-radius: 4px;
     border: 1px solid var(--Line-Disabled, #CACAD7);
