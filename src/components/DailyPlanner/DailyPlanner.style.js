@@ -158,10 +158,9 @@ export const TaskItemList = styled.ul`
 export const TaskItem = styled.li`
     display: flex;
     flex-direction: row;
-    align-items : center;
 
     height: 24px;
-    padding: 0px 4px 0px 8px;
+    padding: 0px 4px 0px 0px;
     margin-bottom: 10px;
     gap: 8px;
 
@@ -174,9 +173,12 @@ export const TaskItem = styled.li`
     opacity: 0.5;
     border: 2px dashed #000;
     `}
+
 `
 
 export const MovingPointForTaskItem = styled.div`
+    align-self: center;
+
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -185,9 +187,14 @@ export const MovingPointForTaskItem = styled.div`
     width : 10px;
     
     margin : 0px 5px;
+    margin-left: 8px;
 
     border-radius: 5px;
     background-color: #c6c6c6;
+
+    //position: relative;
+    //transition: transform 0.3s ease;
+    //transform: ${({ isSlid }) => (isSlid ? 'translateX(68px)' : 'translateX(0)')};
 `
 
 export const TaskItemContent = styled.div`
@@ -198,6 +205,8 @@ export const TaskItemContent = styled.div`
     width: 100%;
     position: relative;
 
+    
+
     overflow: hidden;
     color: var(--Font-03_Gray, #505050);
     text-overflow: ellipsis;
@@ -207,6 +216,10 @@ export const TaskItemContent = styled.div`
     line-height: 20px;
 
     user-select: none;
+
+    //white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; 
 
     &::before {
         content: '';
@@ -220,6 +233,10 @@ export const TaskItemContent = styled.div`
         transform-origin: left;
         transition: transform 0.3s ease;
     }
+
+    //position: relative;
+    //transition: transform 0.3s ease;
+    //transform: ${({ isSlid }) => (isSlid ? 'translateX(68px)' : 'translateX(0)')};
 `
 
 export const TaskItemCheckBox = styled.img`
@@ -228,32 +245,47 @@ export const TaskItemCheckBox = styled.img`
 `
 
 export const TaskControlMenu = styled.div`
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    left: -80px;
-    top: -35px;
-    z-index: 1;
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    width: 80px;
-    
-    visibility: ${props => props.visibility || 'hidden'};
+    //position: absolute;
 
-    opacity: ${props => (props.visibility === 'visible' ? 1 : 0)};
+    display: flex;
+    flex-direction: row;
+    
+    align-items: center;
+    width:68px;
+    
+    display: ${({ isSlid }) => (isSlid ? 'flex' : 'none')};
+    transition: display 0.3s ease;
+
+    /* opacity: ${props => (props.visibility === 'visible' ? 1 : 0)};
     transform: ${props => (props.visibility === 'visible' ? 'scale(1)' : 'scale(0.8)')};
     transform-origin: center right;
-    transition: transform 0.1s ease-in-out, opacity 0.1s ease-in-out;
+    transition: transform 0.1s ease-in-out, opacity 0.1s ease-in-out; */
 `
 
 export const TaskControlMenuItem = styled.div`
-    padding: 5px;
+    position: relative;
     cursor: pointer;
+    //border: 1px solid #ccc;
+    height: 100%;
+    width: 34px;
+    
+    display: ${({ isSlid }) => (isSlid ? 'flex' : 'none')};
+    transition: display 0.3s ease;
+
+    align-items: center;
+    justify-content: center;
+
+
+    //styleName: Pretendard Light/Body 12;
+    font-family: Pretendard;
+    font-size: 12px;
+    font-weight: 300;
     text-align: center;
 
-    border: 1px solid #ccc;
+    color: #FFFFFF;
+    background: ${({ commentType }) => (commentType === 'edit' ? '#767676' : '#FF4141')};
+    border-radius: ${({ commentType }) => (commentType === 'edit' ? '0px' : '4px 0px 0px 4px')};
+    
 `
 
 

@@ -15,15 +15,17 @@ import { useState } from 'react';
 
 
 export default function TaskListByCategory({ category, tasks, setTasks }) {
+    //TaskItem 드래그 앤 드롭 관련 상태
     const [draggingIndex, setDraggingIndex] = useState(null);
+    const [slidIndex, setSlidIndex] = useState(null);
 
     const initialMenuVisibility = tasks.map(() => false);
     const [menuVisible, setMenuVisible] = useState(initialMenuVisibility);
 
-    const toggleMenu = (index) => {
-        const newMenuVisibility = tasks.map((_, i) => i === index ? !menuVisible[i] : false);
-        setMenuVisible(newMenuVisibility);
-    };
+    // const toggleMenu = (index) => {
+    //     const newMenuVisibility = tasks.map((_, i) => i === index ? !menuVisible[i] : false);
+    //     setMenuVisible(newMenuVisibility);
+    // };
 
     const handleCheckBoxClick = (index) => {
         const newTaskList = [...tasks];
@@ -47,13 +49,21 @@ export default function TaskListByCategory({ category, tasks, setTasks }) {
 
     };
 
+    //TaskItem 스와이프 관련 상태 함수
+    const toggleSlide = (index) => {
+        setSlidIndex(slidIndex === index ? null : index);
+    };
+
     const handleDeleteTask = (index) => {
         const newMenuVisibility = tasks.map(() => false);
         setMenuVisible(newMenuVisibility);
 
         const newTaskList = tasks.filter((_, i) => i !== index);
         setTasks(newTaskList);
+
+        setSlidIndex(null);
     };
+
 
 
     return (
@@ -118,19 +128,38 @@ export default function TaskListByCategory({ category, tasks, setTasks }) {
                             onDragOver={handleDragOver}
                             onDragEnd={handleDragEnd}
                         >
-                            <div style={{ position: 'absolute', visibility: menuVisible[index] ? 'visible' : 'hidden' }}>
+                            {/* <div style={{ position: 'absolute', visibility: menuVisible[index] ? 'visible' : 'hidden' }}>
                                 <TaskControlMenu visibility={menuVisible[index] ? 'visible' : 'hidden'}>
                                     <TaskControlMenuItem>수정</TaskControlMenuItem>
                                     <TaskControlMenuItem onClick={() => { handleDeleteTask(index) }}>삭제</TaskControlMenuItem>
                                 </TaskControlMenu>
-                            </div>
+                            </div> */}
+                            <TaskControlMenu
+                                isSlid={index === slidIndex}>
+                                <TaskControlMenuItem
+                                    isSlid={index === slidIndex}
+                                    commentType="delete"
+                                    onClick={() => { handleDeleteTask(index) }}>
+                                    삭제
+                                </TaskControlMenuItem>
+                                <TaskControlMenuItem
+                                    isSlid={index === slidIndex}
+                                    commentType="edit"
+                                    onClick={() => { console.log("!!!!!!!") }}>
+                                    수정
+                                </TaskControlMenuItem>
+                            </TaskControlMenu>
+
                             <MovingPointForTaskItem
                                 onMouseDown={() => { setDraggingIndex(index) }}
                                 onMouseUp={() => { setDraggingIndex(null) }}
+                                isSlid={index === slidIndex}
                             //onClick={() => { toggleMenu(index) }}
-
                             />
-                            <TaskItemContent sledding={task.sledding}>
+                            <TaskItemContent
+                                onClick={() => { toggleSlide(index) }}
+                                sledding={task.sledding}
+                                isSlid={index === slidIndex}>
                                 {task.contents}
                             </TaskItemContent>
                             <TaskItemCheckBox src={checkBoxSrc} onClick={() => handleCheckBoxClick(index)} />
