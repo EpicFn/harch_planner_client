@@ -1,19 +1,33 @@
 import { debounce } from 'lodash'
-import { Suspense, useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 
 import LibraryAddModal from '@components/Library/LibraryModal/LibraryAddModal/LibraryAddModal'
 import LibraryEditModal from '@components/Library/LibraryModal/LibraryEditModal/LibraryEditModal'
 import {
-  AddButton,
+  AddSubjectButton,
+  CompletedSection,
+  CompletedSectionContent,
+  CompletedSectionHeader,
+  CompletedSubject,
   LibraryContainer,
   OngoingSection,
   OngoingSectionContent,
   OngoingSectionHeader,
+  OngoingSubject,
   SearchContainer,
   SearchIcon,
   SearchInput,
   SectionTitle,
   Sidebar,
+  SubjectCircle,
+  SubjectContainer,
+  SubjectContent,
+  SubjectHeader,
+  SubjectName,
+  SubjectTitle,
+  SubjectTitleContainer,
+  SubjectToggleIcon,
+  WorkbookItemStyled,
 } from './Library.style'
 
 import WorkbookItem from '@components/Library/WorkBook/WorkbookItem/WorkbookItem'
@@ -27,6 +41,10 @@ export default function Library() {
   const [selectedWorkbookIndex, setSelectedWorkbookIndex] = useState(null)
   const [searchTerm, setSearchTerm] = useState('') // 검색어 상태
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
+
+  const [expandedSubjects, setExpandedSubjects] = useState({})
+  const [selectedSubject, setSelectedSubject] = useState(null)
+  const [viewCompleted, setViewCompleted] = useState(false)
 
   const debouncedSearch = debounce((value) => {
     setDebouncedSearchTerm(value)
@@ -48,7 +66,7 @@ export default function Library() {
 
   const openEditModal = (index) => {
     const actualIndex = workbooks.findIndex(
-      (workbook) => workbook.name === ongoingWorkbooks[index].name,
+      (workbook) => workbook.name === displayedWorkbooks[index].name,
     )
     setSelectedWorkbookIndex(actualIndex)
     setIsEditModalOpen(true)
@@ -58,15 +76,34 @@ export default function Library() {
     setIsAddModalOpen(true)
   }
 
-  const ongoingWorkbooks = workbooks.filter(
-    (workbook) =>
-      workbook.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) &&
-      workbook.progress < 100,
+  const toggleSubject = (subject) => {
+    setExpandedSubjects((prevState) => ({
+      ...prevState,
+      [subject]: !prevState[subject],
+    }))
+  }
+
+  const filteredWorkbooks = workbooks.filter((workbook) =>
+    workbook.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
   )
 
-  const completedWorkbooks = workbooks.filter(
-    (workbook) => workbook.progress === 100,
-  )
+  const displayedWorkbooks = filteredWorkbooks.filter((workbook) => {
+    if (selectedSubject) {
+      return workbook.subject === selectedSubject
+    }
+
+    return viewCompleted ? workbook.progress === 100 : workbook.progress < 100
+  })
+
+  const subjectColors = {
+    국어: '#9b51e0',
+    사회탐구: '#ff6b6b',
+    수학: '#76A6FF',
+  }
+
+  const selectSubject = (subject) => {
+    setSelectedSubject(subject)
+  }
 
   return (
     <LibraryContainer>
@@ -81,26 +118,100 @@ export default function Library() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </SearchContainer>
+        <CompletedSubject
+          onClick={() => {
+            setSelectedSubject(null)
+            setViewCompleted(true)
+          }}
+        >
+          ✔️ 완료한 교재
+        </CompletedSubject>
+        <OngoingSubject
+          onClick={() => {
+            setSelectedSubject(null) // 과목 선택 해제
+            setViewCompleted(false)
+          }}
+        >
+          ⏳ 학습 중인 교재
+        </OngoingSubject>
+        <SubjectContainer>
+          <SubjectHeader>
+            <SubjectTitle>교재 추가</SubjectTitle>
+            <AddSubjectButton onClick={openAddModal} />
+          </SubjectHeader>
+          <SubjectContent>
+            {Array.from(new Set(workbooks.map((wb) => wb.subject))).map(
+              (subject) => (
+                <React.Fragment key={subject}>
+                  <SubjectTitleContainer onClick={() => selectSubject(subject)}>
+                    <SubjectCircle color={subjectColors[subject]} />
+                    <SubjectName>{subject}</SubjectName>
+                    <SubjectToggleIcon
+                      isopen={String(expandedSubjects[subject])}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        toggleSubject(subject)
+                      }}
+                    >
+                      ▸
+                    </SubjectToggleIcon>
+                  </SubjectTitleContainer>
+                  {expandedSubjects[subject] &&
+                    workbooks
+                      .filter((wb) => wb.subject === subject)
+                      .map((workbook, idx) => (
+                        <WorkbookItemStyled key={`${subject}-${idx}`}>
+                          {workbook.name}
+                        </WorkbookItemStyled>
+                      ))}
+                </React.Fragment>
+              ),
+            )}
+          </SubjectContent>
+        </SubjectContainer>
       </Sidebar>
 
-      <OngoingSection>
-        <OngoingSectionHeader>
-          <SectionTitle>학습중인 교재 목록</SectionTitle>
-          <AddButton onClick={openAddModal}>추가하기</AddButton>
-        </OngoingSectionHeader>
-        <Suspense fallback={<LoadingSpinner />}>
-          <OngoingSectionContent>
-            {ongoingWorkbooks.map((workbook, index) => (
-              <WorkbookItem
-                key={index}
-                workbook={workbook}
-                status="ongoing"
-                onClick={() => openEditModal(index)}
-              />
-            ))}
-          </OngoingSectionContent>
-        </Suspense>
-      </OngoingSection>
+      {viewCompleted ? (
+        <CompletedSection>
+          <CompletedSectionHeader>
+            <SectionTitle>
+              {selectedSubject ? `${selectedSubject}` : '완료한 교재'}
+            </SectionTitle>
+          </CompletedSectionHeader>
+          <Suspense fallback={<LoadingSpinner />}>
+            <CompletedSectionContent>
+              {displayedWorkbooks.map((workbook, index) => (
+                <WorkbookItem
+                  key={index}
+                  workbook={workbook}
+                  status="completed"
+                  onClick={() => openEditModal(index)}
+                />
+              ))}
+            </CompletedSectionContent>
+          </Suspense>
+        </CompletedSection>
+      ) : (
+        <OngoingSection>
+          <OngoingSectionHeader>
+            <SectionTitle>
+              {selectedSubject ? `${selectedSubject}` : '학습 중인 교재'}
+            </SectionTitle>
+          </OngoingSectionHeader>
+          <Suspense fallback={<LoadingSpinner />}>
+            <OngoingSectionContent>
+              {displayedWorkbooks.map((workbook, index) => (
+                <WorkbookItem
+                  key={index}
+                  workbook={workbook}
+                  status="ongoing"
+                  onClick={() => openEditModal(index)}
+                />
+              ))}
+            </OngoingSectionContent>
+          </Suspense>
+        </OngoingSection>
+      )}
 
       {isAddModalOpen && (
         <LibraryAddModal

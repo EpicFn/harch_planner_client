@@ -7,8 +7,7 @@ export const StyledWorkbookItem = styled.div`
   background-color: #f9f9f9;
   border-radius: 8px;
   padding: 10px;
-  width: ${(props) =>
-    props.status === 'completed' ? '100%' : 'calc(30% - 10px)'};
+  width: calc(30% - 10px);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
   height: 100px; /* 각 항목의 높이를 고정 */
@@ -21,10 +20,11 @@ export const BookInfo = styled.div`
 `
 
 export const BookTitle = styled.span`
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: bold;
   color: #333;
   margin-bottom: 5px;
+  max-width: 80px;
 `
 
 export const BookSubject = styled.span`
