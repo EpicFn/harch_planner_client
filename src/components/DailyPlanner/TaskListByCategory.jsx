@@ -80,12 +80,19 @@ export default function TaskListByCategory({ category, tasks, setTasks }) {
                     }
 
                     const handleDragStart = (e) => {
-                        e.dataTransfer.setData('text/plain', index);
+                        e.dataTransfer.setData('text/plain', JSON.stringify({ index, category }));
+                        //e.dataTransfer.setData('text/plain', index);
                         setDraggingIndex(index);
                     };
 
                     const handleDrop = (e) => {
-                        const draggedIndex = e.dataTransfer.getData('text');
+                        //const draggedIndex = e.dataTransfer.getData('text');
+                        e.preventDefault(); // 기본 동작 방지
+                        const { index: draggedIndex, category: draggedCategory } = JSON.parse(e.dataTransfer.getData('text'));
+                        if (draggedCategory !== category) {
+                            return; // 다른 카테고리로 드롭을 방지
+                        }
+
                         const newTaskList = [...tasks];
                         const [draggedTask] = newTaskList.splice(draggedIndex, 1);
                         newTaskList.splice(index, 0, draggedTask);
@@ -99,7 +106,6 @@ export default function TaskListByCategory({ category, tasks, setTasks }) {
 
                     const handleDragEnd = () => {
                         setDraggingIndex(null);
-
                     };
 
                     return (
