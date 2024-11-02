@@ -25,6 +25,9 @@ export const BookTitle = styled.span`
   color: #333;
   margin-bottom: 5px;
   max-width: 80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 export const BookSubject = styled.span`

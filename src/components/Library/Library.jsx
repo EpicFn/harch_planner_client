@@ -99,6 +99,10 @@ export default function Library() {
     국어: '#9b51e0',
     사회탐구: '#ff6b6b',
     수학: '#76A6FF',
+    과학탐구: '#00b894',
+    영어: '#ff9f43',
+    한국사: '#fd79a8',
+    제2외국어: '#00cec9',
   }
 
   const selectSubject = (subject) => {
