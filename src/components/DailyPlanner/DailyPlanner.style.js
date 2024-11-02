@@ -167,6 +167,13 @@ export const TaskItem = styled.li`
 
     border-radius: 4px;
     background: rgba(210, 210, 210, 0.20);
+
+    user-select: none;
+
+    ${({ isDragging }) => isDragging && `
+    opacity: 0.5;
+    border: 2px dashed #000;
+    `}
 `
 
 export const MovingPointForTaskItem = styled.div`
@@ -198,6 +205,8 @@ export const TaskItemContent = styled.div`
     font-size: 14px;
     font-weight: 300;
     line-height: 20px;
+
+    user-select: none;
 
     &::before {
         content: '';

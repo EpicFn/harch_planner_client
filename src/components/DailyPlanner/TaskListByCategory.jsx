@@ -12,9 +12,10 @@ import {
 } from "./DailyPlanner.style"
 import { useState } from 'react';
 
-                            
+
 
 export default function TaskListByCategory({ category, tasks, setTasks }) {
+    const [draggingIndex, setDraggingIndex] = useState(null);
 
     const initialMenuVisibility = tasks.map(() => false);
     const [menuVisible, setMenuVisible] = useState(initialMenuVisibility);
@@ -47,7 +48,7 @@ export default function TaskListByCategory({ category, tasks, setTasks }) {
     };
 
     const handleDeleteTask = (index) => {
-        const newMenuVisibility = tasks.map(() =>false);
+        const newMenuVisibility = tasks.map(() => false);
         setMenuVisible(newMenuVisibility);
 
         const newTaskList = tasks.filter((_, i) => i !== index);
@@ -80,6 +81,7 @@ export default function TaskListByCategory({ category, tasks, setTasks }) {
 
                     const handleDragStart = (e) => {
                         e.dataTransfer.setData('text/plain', index);
+                        setDraggingIndex(index);
                     };
 
                     const handleDrop = (e) => {
@@ -88,19 +90,27 @@ export default function TaskListByCategory({ category, tasks, setTasks }) {
                         const [draggedTask] = newTaskList.splice(draggedIndex, 1);
                         newTaskList.splice(index, 0, draggedTask);
                         setTasks(newTaskList);
+                        setDraggingIndex(null);
                     };
 
                     const handleDragOver = (e) => {
                         e.preventDefault();
                     };
 
+                    const handleDragEnd = () => {
+                        setDraggingIndex(null);
+
+                    };
+
                     return (
                         <TaskItem
                             key={index}
-                            draggable
-                            onDragStart={handleDragStart}
+                            isDragging={index === draggingIndex}
+                            draggable={index === draggingIndex}
+                            onDragStart={(e) => handleDragStart(e, index)}
                             onDrop={handleDrop}
                             onDragOver={handleDragOver}
+                            onDragEnd={handleDragEnd}
                         >
                             <div style={{ position: 'absolute', visibility: menuVisible[index] ? 'visible' : 'hidden' }}>
                                 <TaskControlMenu visibility={menuVisible[index] ? 'visible' : 'hidden'}>
@@ -108,7 +118,12 @@ export default function TaskListByCategory({ category, tasks, setTasks }) {
                                     <TaskControlMenuItem onClick={() => { handleDeleteTask(index) }}>삭제</TaskControlMenuItem>
                                 </TaskControlMenu>
                             </div>
-                            <MovingPointForTaskItem onClick={() => { toggleMenu(index) }} />
+                            <MovingPointForTaskItem
+                                onMouseDown={() => { setDraggingIndex(index) }}
+                                onMouseUp={() => { setDraggingIndex(null) }}
+                            //onClick={() => { toggleMenu(index) }}
+
+                            />
                             <TaskItemContent sledding={task.sledding}>
                                 {task.contents}
                             </TaskItemContent>
