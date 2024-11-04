@@ -27,6 +27,7 @@ export default function LibraryAddModal({ onClose }) {
   const [goalPages, setGoalPages] = useState('')
   const [studiedPages, setStudiedPages] = useState('') // 공부한 페이지 수
   const [subjectColor, setSubjectColor] = useState('')
+  const [shaking, setIsShaking] = useState('false')
 
   const nameInputRef = useRef(null)
   const subjectInputRef = useRef(null)
@@ -34,6 +35,12 @@ export default function LibraryAddModal({ onClose }) {
   const studiedPagesRef = useRef(null)
 
   const handleAddWorkbook = () => {
+    if (!name || !subject || !goalPages || !studiedPages) {
+      setIsShaking('true') // 진동 트리거
+      setTimeout(() => setIsShaking('false'), 300) // 애니메이션 후 상태 리셋
+      return
+    }
+
     const progress = calculateProgress(studiedPages, goalPages) // 성취도 계산
 
     const newWorkbook = {
@@ -63,7 +70,7 @@ export default function LibraryAddModal({ onClose }) {
 
   return (
     <ModalContainer>
-      <ModalLayout>
+      <ModalLayout shaking={shaking}>
         <CloseButton onClick={onClose}>×</CloseButton>
         <ModalContent>
           <InputContainer>

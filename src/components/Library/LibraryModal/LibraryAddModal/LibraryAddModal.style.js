@@ -1,4 +1,19 @@
-import styled from 'styled-components'
+import { css, keyframes, styled } from 'styled-components'
+
+const shake = keyframes`
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-5px);
+  }
+`
 
 export const ModalContainer = styled.div`
   position: fixed;
@@ -27,6 +42,14 @@ export const ModalLayout = styled.div`
   align-items: flex-start;
   gap: 20px;
   animation: fadeIn 0.3s ease-in-out;
+
+  ${({ shaking }) =>
+    shaking === 'true' &&
+    css`
+      animation:
+        fadeIn 0.3s ease-in-out,
+        ${shake} 0.4s ease-in-out;
+    `};
 
   @keyframes fadeIn {
     from {
