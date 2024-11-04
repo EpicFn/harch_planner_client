@@ -95,16 +95,6 @@ export default function Library() {
     return viewCompleted ? workbook.progress === 100 : workbook.progress < 100
   })
 
-  const subjectColors = {
-    국어: '#9b51e0',
-    사회탐구: '#ff6b6b',
-    수학: '#76A6FF',
-    과학탐구: '#00b894',
-    영어: '#ff9f43',
-    한국사: '#fd79a8',
-    제2외국어: '#00cec9',
-  }
-
   const selectSubject = (subject) => {
     setSelectedSubject(subject)
   }
@@ -112,7 +102,6 @@ export default function Library() {
   return (
     <LibraryContainer>
       {/* 오른쪽 완료한 교재 목록 */}
-
       <Sidebar>
         <SearchContainer>
           <SearchIcon />
@@ -140,36 +129,45 @@ export default function Library() {
         </OngoingSubject>
         <SubjectContainer>
           <SubjectHeader>
-            <SubjectTitle>교재 추가</SubjectTitle>
+            <SubjectTitle>과목 추가</SubjectTitle>
             <AddSubjectButton onClick={openAddModal} />
           </SubjectHeader>
           <SubjectContent>
             {Array.from(new Set(workbooks.map((wb) => wb.subject))).map(
-              (subject) => (
-                <React.Fragment key={subject}>
-                  <SubjectTitleContainer onClick={() => selectSubject(subject)}>
-                    <SubjectCircle color={subjectColors[subject]} />
-                    <SubjectName>{subject}</SubjectName>
-                    <SubjectToggleIcon
-                      isopen={String(expandedSubjects[subject])}
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        toggleSubject(subject)
-                      }}
+              (subject) => {
+                // 해당 과목의 첫 번째 워크북에서 색상을 가져옵니다.
+                const subjectColor =
+                  workbooks.find((wb) => wb.subject === subject)
+                    ?.subjectColor || '#ccc'
+
+                return (
+                  <React.Fragment key={subject}>
+                    <SubjectTitleContainer
+                      onClick={() => selectSubject(subject)}
                     >
-                      ▸
-                    </SubjectToggleIcon>
-                  </SubjectTitleContainer>
-                  {expandedSubjects[subject] &&
-                    workbooks
-                      .filter((wb) => wb.subject === subject)
-                      .map((workbook, idx) => (
-                        <WorkbookItemStyled key={`${subject}-${idx}`}>
-                          {workbook.name}
-                        </WorkbookItemStyled>
-                      ))}
-                </React.Fragment>
-              ),
+                      <SubjectCircle color={subjectColor} />
+                      <SubjectName>{subject}</SubjectName>
+                      <SubjectToggleIcon
+                        isopen={String(expandedSubjects[subject])}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          toggleSubject(subject)
+                        }}
+                      >
+                        ▸
+                      </SubjectToggleIcon>
+                    </SubjectTitleContainer>
+                    {expandedSubjects[subject] &&
+                      workbooks
+                        .filter((wb) => wb.subject === subject)
+                        .map((workbook, idx) => (
+                          <WorkbookItemStyled key={`${subject}-${idx}`}>
+                            {workbook.name}
+                          </WorkbookItemStyled>
+                        ))}
+                  </React.Fragment>
+                )
+              },
             )}
           </SubjectContent>
         </SubjectContainer>

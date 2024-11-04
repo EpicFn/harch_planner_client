@@ -24,7 +24,7 @@ export const ModalLayout = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   gap: 20px;
   animation: fadeIn 0.3s ease-in-out;
 
@@ -165,4 +165,61 @@ export const Line = styled.hr`
   width: 100%;
   border: none;
   border-top: 1px solid #ddd;
+`
+
+export const ColorPickerContainer = styled.div`
+  position: absolute;
+  top: 50%;
+  bottom: 50%;
+  left: -200px;
+  //transform: translate(-50%, -50%);
+  width: 140px; /* Adjust width as needed */
+  height: 110px;
+  z-index: 10;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  text-align: center;
+
+  .react-colorful {
+    width: 100%;
+    height: 100%;
+  }
+`
+
+export const ColorPickerLabel = styled.div`
+  margin-top: 20px;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: pre-line;
+`
+
+export const SelectedColorBox = styled.div`
+  width: 20px;
+  height: 20px;
+  background-color: ${(props) => props.color || '#ffffff'};
+  border-radius: 4px;
+`
+
+export const SelectedColorCode = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100px;
+  height: auto;
+  margin-top: 10px;
+  padding: 5px;
+  font-size: 0.9rem;
+  color: #333;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  font-weight: bold;
+`
+
+export const ColorLabel = styled.span`
+  font-size: 1rem;
+  color: #333;
 `

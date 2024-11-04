@@ -1,7 +1,9 @@
 import {
   CloseButton,
+  ColorLabel,
+  ColorPickerContainer,
+  ColorPickerLabel,
   InputContainer,
-  Line,
   ModalButton,
   ModalButtonContainer,
   ModalContainer,
@@ -10,9 +12,12 @@ import {
   ModalLayout,
   ModalPageInput,
   ModalPageInputBox,
+  SelectedColorBox,
+  SelectedColorCode,
 } from '@components/Library/LibraryModal/LibraryAddModal/LibraryAddModal.style'
 import workbookContentStore from '@stores/workbookContentStore'
 import { useRef, useState } from 'react'
+import { HexColorPicker } from 'react-colorful'
 
 export default function LibraryAddModal({ onClose }) {
   const addWorkbook = workbookContentStore((state) => state.addWorkbook)
@@ -21,6 +26,7 @@ export default function LibraryAddModal({ onClose }) {
   const [subject, setSubject] = useState('')
   const [goalPages, setGoalPages] = useState('')
   const [studiedPages, setStudiedPages] = useState('') // 공부한 페이지 수
+  const [subjectColor, setSubjectColor] = useState('')
 
   const nameInputRef = useRef(null)
   const subjectInputRef = useRef(null)
@@ -38,6 +44,7 @@ export default function LibraryAddModal({ onClose }) {
       studiedPages: parseInt(studiedPages, 10),
       date: new Date().toISOString().split('T')[0],
       progress, // 계산된 성취도 추가
+      subjectColor,
     }
 
     addWorkbook(newWorkbook)
@@ -96,7 +103,21 @@ export default function LibraryAddModal({ onClose }) {
             </ModalPageInputBox>
           </InputContainer>
         </ModalContent>
-        <Line />
+        <SelectedColorCode>
+          <ColorLabel>과목 색상</ColorLabel>
+          <SelectedColorBox color={subjectColor} />
+        </SelectedColorCode>
+        <ColorPickerContainer>
+          <HexColorPicker
+            color={subjectColor ? subjectColor : '색상을 선택하세요'}
+            onChange={(newColor) => {
+              if (/^#[0-9A-F]{6}$/i.test(newColor)) {
+                setSubjectColor(newColor)
+              }
+            }}
+          />
+          <ColorPickerLabel>과목 색상을 {'\n'} 선택하세요.</ColorPickerLabel>
+        </ColorPickerContainer>
         <ModalButtonContainer>
           <ModalButton onClick={handleAddWorkbook}>추가 완료</ModalButton>
           <ModalButton onClick={onClose} style={{ backgroundColor: 'red' }}>
