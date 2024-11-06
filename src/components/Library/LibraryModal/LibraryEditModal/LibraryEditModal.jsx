@@ -36,6 +36,7 @@ export default function LibraryEditModal({ workbook, onClose, workbookIndex }) {
   const [updatedSubject, setUpdatedSubject] = useState(workbook.subject || '')
   const [goalPages, setGoalPages] = useState(workbook.goalPages || 0)
   const [studiedPages, setStudiedPages] = useState(workbook.studiedPages) // 공부한 페이지 수
+  const [progress, setProgress] = useState(workbook.progress || 0)
 
   const nameInputRef = useRef(null)
   const subjectInputRef = useRef(null)
@@ -49,18 +50,32 @@ export default function LibraryEditModal({ workbook, onClose, workbookIndex }) {
     }
   }, [workbook])
 
-  const handleUpdateWorkbook = () => {
-    const calculatedProgress =
-      goalPages > 0
-        ? Math.min(Math.round((studiedPages / goalPages) * 100), 100)
+  useEffect(() => {
+    // 성취도 계산 함수
+    const calculateProgress = () => {
+      const startPage = parseInt(studiedPages, 10)
+      const endPage = parseInt(goalPages, 10)
+
+      if (startPage > endPage) {
+        return 0
+      }
+
+      return endPage > 0
+        ? Math.min(Math.round((startPage / endPage) * 100), 100)
         : 0
+    }
+
+    setProgress(calculateProgress())
+  }, [goalPages, studiedPages])
+
+  const handleUpdateWorkbook = () => {
     const updatedWorkbook = {
       ...workbook,
       name: updatedName,
       subject: updatedSubject,
       goalPages,
       studiedPages,
-      progress: calculatedProgress,
+      progress,
     }
 
     updateWorkbook(workbookIndex, updatedWorkbook)
@@ -120,8 +135,8 @@ export default function LibraryEditModal({ workbook, onClose, workbookIndex }) {
           <ProgressContainer>
             {/* 성취도 표시 */}
             <CircularProgressbar
-              value={workbook.progress}
-              text={`${workbook.progress}%`}
+              value={progress}
+              text={`${progress}%`}
               styles={buildStyles({
                 pathColor: '#ff6b6b', // 진행도 색상
                 textColor: '#000',
