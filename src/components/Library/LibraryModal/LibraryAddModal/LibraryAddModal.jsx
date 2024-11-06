@@ -37,7 +37,7 @@ export default function LibraryAddModal({ onClose }) {
   const handleAddWorkbook = () => {
     if (!name || !subject || !goalPages || !studiedPages) {
       setIsShaking('true') // 진동 트리거
-      setTimeout(() => setIsShaking('false'), 300) // 애니메이션 후 상태 리셋
+      setTimeout(() => setIsShaking('false'), 300)
       return
     }
 
@@ -65,7 +65,14 @@ export default function LibraryAddModal({ onClose }) {
   }
 
   const calculateProgress = (studied, goal) => {
-    return goal > 0 ? Math.round((studied / goal) * 100) : 0
+    const startPage = parseInt(studied, 10)
+    const endPage = parseInt(goal, 10)
+
+    if (startPage > endPage) {
+      return 0
+    }
+
+    return endPage > 0 ? Math.round((startPage / endPage) * 100) : 0
   }
 
   return (
@@ -96,7 +103,7 @@ export default function LibraryAddModal({ onClose }) {
                 value={studiedPages}
                 onChange={(e) => setStudiedPages(e.target.value)}
                 onKeyDown={(e) => handleKeyDown(e, studiedPagesRef)}
-                placeholder="진행한 페이지"
+                placeholder="시작 페이지"
                 ref={studiedPagesRef}
               />
               <ModalPageInput
@@ -104,7 +111,7 @@ export default function LibraryAddModal({ onClose }) {
                 value={goalPages}
                 onChange={(e) => setGoalPages(e.target.value)}
                 onKeyDown={(e) => handleKeyDown(e, goalPagesRef)}
-                placeholder="목표 페이지"
+                placeholder="마지막 페이지"
                 ref={goalPagesRef}
               />
             </ModalPageInputBox>
