@@ -192,6 +192,9 @@ export const MovingPointForTaskItem = styled.div`
     border-radius: 5px;
     background-color: #c6c6c6;
 
+    transform: ${({ isSlid }) => (isSlid ? 'translateX(68px)' : 'translateX(0)')};
+    transition: all 0.3s ease;
+
     //position: relative;
     //transition: transform 0.3s ease;
     //transform: ${({ isSlid }) => (isSlid ? 'translateX(68px)' : 'translateX(0)')};
@@ -205,7 +208,8 @@ export const TaskItemContent = styled.div`
     width: 100%;
     position: relative;
 
-    
+    transform: ${({ isSlid }) => (isSlid ? 'translateX(68px)' : 'translateX(0)')};
+    transition: all 0.3s ease;
 
     overflow: hidden;
     color: var(--Font-03_Gray, #505050);
@@ -244,17 +248,31 @@ export const TaskItemCheckBox = styled.img`
     height: 24px;
 `
 
+export const SlidingTaskControlBox = styled.div`
+    display: flex;
+    flex-direction: row;
+
+    flex : 1;
+
+    position: relative;
+    overflow : hidden;
+`
+
 export const TaskControlMenu = styled.div`
-    //position: absolute;
+    position: absolute;
+    
 
     display: flex;
     flex-direction: row;
+    height: 100%;
     
     align-items: center;
     width:68px;
     
-    display: ${({ isSlid }) => (isSlid ? 'flex' : 'none')};
-    transition: display 0.3s ease;
+    //display: ${({ isSlid }) => (isSlid ? 'flex' : 'none')};
+    transform: ${({ isSlid }) => (isSlid ? 'translateX(0)' : 'translateX(-68px)')};
+    transition: all 0.3s ease;
+
 
     /* opacity: ${props => (props.visibility === 'visible' ? 1 : 0)};
     transform: ${props => (props.visibility === 'visible' ? 'scale(1)' : 'scale(0.8)')};
@@ -269,8 +287,9 @@ export const TaskControlMenuItem = styled.div`
     height: 100%;
     width: 34px;
     
-    display: ${({ isSlid }) => (isSlid ? 'flex' : 'none')};
-    transition: display 0.3s ease;
+    //display: ${({ isSlid }) => (isSlid ? 'flex' : 'none')};
+    display : flex;
+    //transition: display 0.3s ease;
 
     align-items: center;
     justify-content: center;

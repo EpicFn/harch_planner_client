@@ -2,6 +2,7 @@ import {
     CategoryBox,
     CategoryColorPoint,
     MovingPointForTaskItem,
+    SlidingTaskControlBox,
     TaskControlMenu,
     TaskControlMenuItem,
     TaskItem,
@@ -115,6 +116,7 @@ export default function TaskListByCategory({ category, tasks, setTasks }) {
                     };
 
                     const handleDragEnd = () => {
+                        setSlidIndex(null);
                         setDraggingIndex(null);
                     };
 
@@ -128,40 +130,36 @@ export default function TaskListByCategory({ category, tasks, setTasks }) {
                             onDragOver={handleDragOver}
                             onDragEnd={handleDragEnd}
                         >
-                            {/* <div style={{ position: 'absolute', visibility: menuVisible[index] ? 'visible' : 'hidden' }}>
-                                <TaskControlMenu visibility={menuVisible[index] ? 'visible' : 'hidden'}>
-                                    <TaskControlMenuItem>수정</TaskControlMenuItem>
-                                    <TaskControlMenuItem onClick={() => { handleDeleteTask(index) }}>삭제</TaskControlMenuItem>
+                            <SlidingTaskControlBox>
+                                <TaskControlMenu
+                                    isSlid={index === slidIndex}>
+                                    <TaskControlMenuItem
+                                        isSlid={index === slidIndex}
+                                        commentType="delete"
+                                        onClick={() => { handleDeleteTask(index) }}>
+                                        삭제
+                                    </TaskControlMenuItem>
+                                    <TaskControlMenuItem
+                                        isSlid={index === slidIndex}
+                                        commentType="edit"
+                                        onClick={() => { console.log("!!!!!!!") }}>
+                                        수정
+                                    </TaskControlMenuItem>
                                 </TaskControlMenu>
-                            </div> */}
-                            <TaskControlMenu
-                                isSlid={index === slidIndex}>
-                                <TaskControlMenuItem
-                                    isSlid={index === slidIndex}
-                                    commentType="delete"
-                                    onClick={() => { handleDeleteTask(index) }}>
-                                    삭제
-                                </TaskControlMenuItem>
-                                <TaskControlMenuItem
-                                    isSlid={index === slidIndex}
-                                    commentType="edit"
-                                    onClick={() => { console.log("!!!!!!!") }}>
-                                    수정
-                                </TaskControlMenuItem>
-                            </TaskControlMenu>
 
-                            <MovingPointForTaskItem
-                                onMouseDown={() => { setDraggingIndex(index) }}
-                                onMouseUp={() => { setDraggingIndex(null) }}
-                                isSlid={index === slidIndex}
-                            //onClick={() => { toggleMenu(index) }}
-                            />
-                            <TaskItemContent
-                                onClick={() => { toggleSlide(index) }}
-                                sledding={task.sledding}
-                                isSlid={index === slidIndex}>
-                                {task.contents}
-                            </TaskItemContent>
+                                <MovingPointForTaskItem
+                                    onMouseDown={() => { setDraggingIndex(index) }}
+                                    onMouseUp={() => { setDraggingIndex(null) }}
+                                    isSlid={index === slidIndex}
+                                //onClick={() => { toggleMenu(index) }}
+                                />
+                                <TaskItemContent
+                                    onClick={() => { toggleSlide(index) }}
+                                    sledding={task.sledding}
+                                    isSlid={index === slidIndex}>
+                                    {task.contents}
+                                </TaskItemContent>
+                            </SlidingTaskControlBox>
                             <TaskItemCheckBox src={checkBoxSrc} onClick={() => handleCheckBoxClick(index)} />
                         </TaskItem>
                     );
