@@ -51,7 +51,8 @@ export default function TaskListByCategory({ category, tasks, setTasks }) {
     };
 
     //TaskItem 스와이프 관련 상태 함수
-    const toggleSlide = (index) => {
+    const toggleSlide = (e, index) => {
+        e.preventDefault(); // 기본 우클릭 메뉴 방지
         setSlidIndex(slidIndex === index ? null : index);
     };
 
@@ -151,10 +152,10 @@ export default function TaskListByCategory({ category, tasks, setTasks }) {
                                     onMouseDown={() => { setDraggingIndex(index) }}
                                     onMouseUp={() => { setDraggingIndex(null) }}
                                     isSlid={index === slidIndex}
-                                //onClick={() => { toggleMenu(index) }}
                                 />
                                 <TaskItemContent
-                                    onClick={() => { toggleSlide(index) }}
+                                    onContextMenu={(e) => { toggleSlide(e, index) }}
+                                    onClick={() => handleCheckBoxClick(index)}
                                     sledding={task.sledding}
                                     isSlid={index === slidIndex}>
                                     {task.contents}
