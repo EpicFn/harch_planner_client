@@ -35,7 +35,7 @@ export default function LibraryEditModal({ workbook, onClose, workbookIndex }) {
   const [updatedName, setUpdatedName] = useState(workbook.name || '')
   const [updatedSubject, setUpdatedSubject] = useState(workbook.subject || '')
   const [goalPages, setGoalPages] = useState(workbook.goalPages || 0)
-  const [studiedPages, setStudiedPages] = useState(workbook.studiedPages) // 공부한 페이지 수
+  const [studiedPages, setStudiedPages] = useState(workbook.studiedPages || 0) // 공부한 페이지 수
   const [progress, setProgress] = useState(workbook.progress || 0)
 
   const nameInputRef = useRef(null)
