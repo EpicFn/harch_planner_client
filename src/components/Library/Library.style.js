@@ -16,7 +16,6 @@ export const OngoingSection = styled.div`
   background-color: white;
   padding: 5px 60px;
   box-sizing: border-box;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow-y: scroll;
   color: black;
 
@@ -119,7 +118,6 @@ export const CompletedSection = styled.div`
   background-color: white;
   padding: 5px 60px;
   box-sizing: border-box;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow-y: scroll;
   color: black;
 
