@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 export const MainContentBoxContainer = styled.div`
   margin: 0 146px;
-  margin-bottom : 40px;
+  margin-bottom: 40px;
 `
 
 export const MenuList = styled.ul`
@@ -17,7 +17,6 @@ export const MenuList = styled.ul`
 export const ContentBox = styled.div`
   height: 750px;
   flex-shrink: 0;
-  border-radius: 0px 0px 12px 12px;
   border: 1px solid #dedede;
   background: rgba(255, 255, 255, 0.8);
   text-align: center;
