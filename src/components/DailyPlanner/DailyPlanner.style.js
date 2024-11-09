@@ -20,7 +20,7 @@ export const Container = styled.div`
 export const PlanContainer = styled.div`
     display: flex;
     flex-direction: column;
-    justify-content:  start;
+    justify-content: start;
     align-items: center;
     flex: 4;
     width: 100%;
@@ -174,6 +174,9 @@ export const TaskItem = styled.li`
     border: 2px dashed #000;
     `}
 
+    overflow: hidden;
+    width: 100%;
+
 `
 
 export const MovingPointForTaskItem = styled.div`
@@ -207,13 +210,16 @@ export const TaskItemContent = styled.div`
     justify-content: start;
     width: 100%;
     position: relative;
+    //max-width: 200px;
 
     transform: ${({ isSlid }) => (isSlid ? 'translateX(68px)' : 'translateX(0)')};
     transition: all 0.3s ease;
 
+    white-space: nowrap;
     overflow: hidden;
-    color: var(--Font-03_Gray, #505050);
     text-overflow: ellipsis;
+
+    color: var(--Font-03_Gray, #505050);
     font-family: Pretendard;
     font-size: 14px;
     font-weight: 300;
@@ -221,9 +227,7 @@ export const TaskItemContent = styled.div`
 
     user-select: none;
 
-    //white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis; 
+    
 
     &::before {
         content: '';
@@ -321,8 +325,8 @@ export const TaskInput = styled.input`
     align-items: center;
     gap: 10px;
 
-    padding-top: 4px;
-    padding-bottom: 4px;
+    padding : 4px;
+    height: 40px;
 
     border-radius: 4px;
     border: 1px solid var(--Line-Disabled, #CACAD7);

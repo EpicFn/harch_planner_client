@@ -20,13 +20,10 @@ export default function TaskListByCategory({ category, tasks, setTasks }) {
     const [draggingIndex, setDraggingIndex] = useState(null);
     const [slidIndex, setSlidIndex] = useState(null);
 
-    const initialMenuVisibility = tasks.map(() => false);
-    const [menuVisible, setMenuVisible] = useState(initialMenuVisibility);
+    //TaskItem 값 수정 관련 상태값
+    const [editingIndex, setEditingIndex] = useState(null);
+    const [editingValue, setEditingValue] = useState('');
 
-    // const toggleMenu = (index) => {
-    //     const newMenuVisibility = tasks.map((_, i) => i === index ? !menuVisible[i] : false);
-    //     setMenuVisible(newMenuVisibility);
-    // };
 
     const handleCheckBoxClick = (index) => {
         const newTaskList = [...tasks];
@@ -44,10 +41,7 @@ export default function TaskListByCategory({ category, tasks, setTasks }) {
                 newTaskList[index].sledding = 'none';
         }
 
-
-
         setTasks(newTaskList);
-
     };
 
     //TaskItem 스와이프 관련 상태 함수
@@ -56,9 +50,8 @@ export default function TaskListByCategory({ category, tasks, setTasks }) {
         setSlidIndex(slidIndex === index ? null : index);
     };
 
+    //TaskItem 삭제 event handler
     const handleDeleteTask = (index) => {
-        const newMenuVisibility = tasks.map(() => false);
-        setMenuVisible(newMenuVisibility);
 
         const newTaskList = tasks.filter((_, i) => i !== index);
         setTasks(newTaskList);
@@ -66,6 +59,30 @@ export default function TaskListByCategory({ category, tasks, setTasks }) {
         setSlidIndex(null);
     };
 
+    //TaskItem 수정 event handler
+    const handleEditTask = (index) => {
+
+        // const newTaskList = tasks.filter((_, i) => i !== index);
+        // setTasks(newTaskList);
+
+        setSlidIndex(null);
+
+        setEditingIndex(index);
+        setEditingValue(tasks[index].contents);
+    }
+
+    const handleEditChange = (e) => {
+        setEditingValue(e.target.value);
+    };
+
+    const handleEditKeyDown = (e, index) => {
+        if (e.key === 'Enter') {
+            const newTaskList = [...tasks];
+            newTaskList[index].contents = editingValue;
+            setTasks(newTaskList);
+            setEditingIndex(null);
+        }
+    };
 
 
     return (
@@ -143,7 +160,7 @@ export default function TaskListByCategory({ category, tasks, setTasks }) {
                                     <TaskControlMenuItem
                                         isSlid={index === slidIndex}
                                         commentType="edit"
-                                        onClick={() => { console.log("!!!!!!!") }}>
+                                        onClick={() => { handleEditTask(index) }}>
                                         수정
                                     </TaskControlMenuItem>
                                 </TaskControlMenu>
@@ -153,13 +170,24 @@ export default function TaskListByCategory({ category, tasks, setTasks }) {
                                     onMouseUp={() => { setDraggingIndex(null) }}
                                     isSlid={index === slidIndex}
                                 />
-                                <TaskItemContent
-                                    onContextMenu={(e) => { toggleSlide(e, index) }}
-                                    onClick={() => handleCheckBoxClick(index)}
-                                    sledding={task.sledding}
-                                    isSlid={index === slidIndex}>
-                                    {task.contents}
-                                </TaskItemContent>
+
+                                {editingIndex === index ? (
+                                    <input
+                                        type="text"
+                                        value={editingValue}
+                                        onChange={handleEditChange}
+                                        onKeyDown={(e) => handleEditKeyDown(e, index)}
+                                        onBlur={() => setEditingIndex(null)} // 포커스를 잃으면 편집 모드 종료
+                                    />
+                                ) : (
+                                    <TaskItemContent
+                                        onContextMenu={(e) => { toggleSlide(e, index) }}
+                                        onClick={() => handleCheckBoxClick(index)}
+                                        sledding={task.sledding}
+                                        isSlid={index === slidIndex}>
+                                        {task.contents}
+                                    </TaskItemContent>
+                                )}
                             </SlidingTaskControlBox>
                             <TaskItemCheckBox src={checkBoxSrc} onClick={() => handleCheckBoxClick(index)} />
                         </TaskItem>
