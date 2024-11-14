@@ -1,10 +1,12 @@
 import Header from '@components/Header/Header' // Header 컴포넌트 불러오기
 import MenuTap from '@components/MenuTap/MenuTap'
+import Preferences from '@components/Preferences/Preferences'
 import useThemeStore from '@stores/themeStore'
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
   ContentBox,
+  ContextMenu,
   MainContentBoxContainer,
   MenuList,
 } from './MainContentBox.style'
@@ -14,6 +16,13 @@ export default function MainContentBox({ content }) {
   const location = useLocation()
   const { theme, setTheme } = useThemeStore()
   const [activeTab, setActiveTab] = useState(location.pathname)
+
+  //우측클릭을 통한 환경설정 로직 상태관리
+  const [showContextMenu, setShowContextMenu] = useState(false)
+  const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 })
+
+  //환경설정 컴포넌트 렌더링 상태관리
+  const [showPreferences, setShowPreferences] = useState(false)
 
   const tabs = [
     { path: '/calendarPage', label: '달력' },
@@ -26,6 +35,12 @@ export default function MainContentBox({ content }) {
     setTheme(selectedTheme)
   }
 
+  const handleRightClick = (e) => {
+    e.preventDefault()
+    setShowContextMenu(true)
+    setContextMenuPosition({ x: e.clientX, y: e.clientY })
+  }
+
   useEffect(() => {
     document.body.className = ''
     document.body.classList.add(`${theme}-theme`)
@@ -36,23 +51,54 @@ export default function MainContentBox({ content }) {
     navigate(path)
   }
 
+  const handleOpenPreferences = () => {
+    setShowPreferences(true)
+    setShowContextMenu(false)
+  }
+
+  const handleClosePreferences = () => {
+    setShowPreferences(false)
+  }
+
   return (
     <>
-      <Header onThemeChange={handleThemeChange} />
-      <MainContentBoxContainer className={`${theme}-theme`}>
-        <MenuList>
-          {tabs.map((tab) => (
-            <MenuTap
-              key={tab.path}
-              active={activeTab === tab.path ? 'true' : 'false'}
-              onClick={() => handleTabClick(tab.path)}
-            >
-              {tab.label}
-            </MenuTap>
-          ))}
-        </MenuList>
+      <Header
+        onThemeChange={handleThemeChange}
+        onContextMenu={handleRightClick}
+      />
+      <MainContentBoxContainer
+        className={`${theme}-theme`}
+        onClick={() => {
+          setShowContextMenu(false)
+        }}
+      >
+        {!showPreferences ? (
+          <>
+            <MenuList>
+              {tabs.map((tab) => (
+                <MenuTap
+                  key={tab.path}
+                  active={activeTab === tab.path ? 'true' : 'false'}
+                  onClick={() => handleTabClick(tab.path)}
+                >
+                  {tab.label}
+                </MenuTap>
+              ))}
+            </MenuList>
+            <ContentBox>{content}</ContentBox>
+          </>
+        ) : (
+          <Preferences onClose={handleClosePreferences} />
+        )}
 
-        <ContentBox>{content}</ContentBox>
+        {showContextMenu && (
+          <ContextMenu
+            style={{ top: contextMenuPosition.y, left: contextMenuPosition.x }}
+            onClick={handleOpenPreferences} // 환경설정 메뉴 클릭 시 Preferences 열기
+          >
+            환경설정
+          </ContextMenu>
+        )}
       </MainContentBoxContainer>
     </>
   )

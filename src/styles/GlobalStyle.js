@@ -12,7 +12,7 @@ const GlobalStyle = createGlobalStyle`
   body {
     position: relative;
     margin: 0 auto;
-    height: 100%;
+    height: 100vh;
     min-height: 99vh;
     display: flex;
     flex-direction: column;

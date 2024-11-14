@@ -30,7 +30,7 @@ import {
   WorkbookItemStyled,
 } from './Library.style'
 
-import WorkbookItem from '@components/Library/WorkBook/WorkbookItem/WorkbookItem'
+import WorkbookItem from '@components/Library/WorkBook/WorkBookItem/WorkBookItem'
 import LoadingSpinner from '@components/Loading/LoadingSpinner'
 import workbookContentStore from '@stores/workbookContentStore'
 
