@@ -11,11 +11,11 @@ import {
     TaskItemList,
     TasksByCategoryBox,
 } from "./DailyPlanner.style"
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 
 
-export default function TaskListByCategory({ category, tasks, setTasks }) {
+export default function TaskListByCategory({ category, tasks, setTasks, categoryColor, setSelectedColor }) {
     //TaskItem 드래그 앤 드롭 관련 상태
     const [draggingIndex, setDraggingIndex] = useState(null);
     const [slidIndex, setSlidIndex] = useState(null);
@@ -84,10 +84,16 @@ export default function TaskListByCategory({ category, tasks, setTasks }) {
         }
     };
 
+    const handleCategoryBoxClick = () => {
+        setSelectedColor(categoryColor);
+    };
 
     return (
         <TasksByCategoryBox>
-            <CategoryBox bgColor='rgba(255, 0, 0, 0.10)'>
+            <CategoryBox
+                bgColor={categoryColor}
+                onClick={handleCategoryBoxClick}
+            >
                 <CategoryColorPoint color="red" />
                 {category}
             </CategoryBox>

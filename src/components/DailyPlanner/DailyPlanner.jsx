@@ -29,13 +29,14 @@ import TaskListByCategory from "./TaskListByCategory";
 import TimeTable from "./TimeTable/TimeTable";
 import WorkBookItem from "./WorkBookItem/WorkBookItem";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 
 //tasks dummy data
 const dummyTasksList = [
     {
         category: "국어",
+        color: '#FFE0E0',
         tasks: [
             { contents: "나비효과 30p", sledding: "checked" },
             { contents: "매3비 6지문", sledding: "x" },
@@ -44,6 +45,7 @@ const dummyTasksList = [
     },
     {
         category: "수학",
+        color: "#FFFEE0",
         tasks: [
             { contents: "쎈 10p", sledding: "none" },
             { contents: "블랙라벨 1챕터", sledding: "none" },
@@ -51,6 +53,7 @@ const dummyTasksList = [
     },
     {
         category: "영어",
+        color: "#E0F9FF",
         tasks: [
             { contents: "단어 100개 암기", sledding: "none" },
             { contents: "영어 수특 1문단 풀이", sledding: "none" },
@@ -65,7 +68,7 @@ const dummyWorkbookList = [
         name: "나혼자 풀기",
         subject: "국어",
         date: "2021.09.01",
-        progress : 76,
+        progress: 76,
     },
     {
         name: "수학의 정석",
@@ -113,14 +116,14 @@ const dummyStudyTimeData = [
 //Task 달성률 dummy data
 const dummyTaskAchievementData = [
     {
-        category : 'success',
-        size : 12,
-        color : '#8F8F8F',
+        category: 'success',
+        size: 12,
+        color: '#8F8F8F',
     },
     {
-        category : 'fail',
-        size : 8,
-        color : '#D9D9D9',
+        category: 'fail',
+        size: 8,
+        color: '#D9D9D9',
     }
 ]
 
@@ -147,6 +150,10 @@ const DailyPlanner = () => {
     const [workbooks, setWorkbooks] = useState(dummyWorkbookList);
     const [studyTimeData, setStudyTimeData] = useState(dummyStudyTimeData);
     const [taskAchievementData, setTaskAchievementData] = useState(dummyTaskAchievementData);
+
+    //timetable에서 선택된 색상
+    //나중에 category 자체를 관리하는 방식으로 변경해야 함
+    const [selectedColor, setSelectedColor] = useState(null);
 
     //---------------------------------Event Handlers---------------------------------
 
@@ -192,6 +199,9 @@ const DailyPlanner = () => {
         setTaskInput("");
     };
 
+
+
+
     //---------------------------------Rendering---------------------------------
 
     return (
@@ -214,11 +224,13 @@ const DailyPlanner = () => {
                                 key={index}
                                 category={tasksForCategory.category}
                                 tasks={tasksForCategory.tasks}
-                                setTasks = {(newTasks) => {
+                                setTasks={(newTasks) => {
                                     const newTasksList = [...tasksList];
                                     newTasksList[index].tasks = newTasks;
                                     setTasksList(newTasksList);
                                 }}
+                                categoryColor={tasksForCategory.color}
+                                setSelectedColor={setSelectedColor}
                             />
                         ))}
                     </TaskListBox>
@@ -242,12 +254,14 @@ const DailyPlanner = () => {
                 </TaskInfoBox>
             </PlanContainer>
             <TimeTableContainer>
-                <TimeTable />
+                <TimeTable
+                    selectedColor={selectedColor}
+                />
                 <EraserIcon src="/src/assets/Eraser.svg" />
             </TimeTableContainer>
             <AchievementInfoContainer>
                 <AchievementTextBox>오늘의 학습 성취도</AchievementTextBox>
-                
+
                 <RecordChartContainer>
                     <MultiValueBarDiscriptionBox>
                         <MultiValueBarTextBox>공부시간</MultiValueBarTextBox>
@@ -266,11 +280,11 @@ const DailyPlanner = () => {
                             }
                         }>
                             <MultiValueBarTextBox>{`${taskAchievementData[0].size + taskAchievementData[1].size}개 중 ${taskAchievementData[0].size}개`}</MultiValueBarTextBox>
-                            <MultiValueBarLargeTextBox>{`${parseInt(taskAchievementData[0].size/(taskAchievementData[0].size + taskAchievementData[1].size) * 100)}%`}</MultiValueBarLargeTextBox>
+                            <MultiValueBarLargeTextBox>{`${parseInt(taskAchievementData[0].size / (taskAchievementData[0].size + taskAchievementData[1].size) * 100)}%`}</MultiValueBarLargeTextBox>
                         </div>
                     </MultiValueBarDiscriptionBox>
                     <MultiValueBar datas={taskAchievementData} />
-                
+
                 </RecordChartContainer>
 
                 <WorkBookItemContainer>
