@@ -18,34 +18,49 @@ const images = [
   '/src/assets/studying4.jpg',
 ]
 
-function preloadImages(imageArray) {
+function preloadImages(imageArray, callback) {
+  let loadedCount = 0
   imageArray.forEach((image) => {
     const img = new Image()
     img.src = image
+    img.onload = () => {
+      loadedCount++
+      if (loadedCount === imageArray.length) {
+        callback() // 모든 이미지가 로드되면 콜백 실행
+      }
+    }
+    img.onerror = () => console.error(`Failed to load image: ${image}`)
   })
 }
 
 export default function MainPage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [isLoaded, setIsLoaded] = useState(false)
   const openModal = loginModalStore((state) => state.openModal)
   const isModalOpen = loginModalStore((state) => state.isModalOpen)
   const user = useUserStore((state) => state.user)
   const logout = useUserStore((state) => state.logout)
 
   useEffect(() => {
-    preloadImages(images)
-    const intervalId = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length)
-    }, 5000)
-
-    return () => clearInterval(intervalId)
+    preloadImages(images, () => setIsLoaded(true)) // 프리로딩 완료되면 로딩 상태 업데이트
   }, [])
+
+  useEffect(() => {
+    if (isLoaded) {
+      const intervalId = setInterval(() => {
+        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length)
+      }, 5000)
+      return () => clearInterval(intervalId) // 메모리 누수 방지
+    }
+  }, [isLoaded])
 
   useEffect(() => {
     if (!user.id) {
       openModal()
     }
   }, [user.id])
+
+  if (!isLoaded) return null
 
   return (
     <MainPageContainer backgroundimage={images[currentImageIndex]}>
