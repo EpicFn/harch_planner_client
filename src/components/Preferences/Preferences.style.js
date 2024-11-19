@@ -55,17 +55,15 @@ export const SidebarItem = styled.div`
   width: 100%;
   padding: 15px;
   font-size: 18px;
+  font-weight: 600;
   cursor: pointer;
   box-sizing: border-box;
-
-  &:hover {
-    background-color: #f0f0f0;
-  }
+  background-color: ${(props) => (props.selected ? '#f0f0f0' : 'transparent')};
 `
 
 export const Content = styled.div`
   flex: 4;
-  padding: 20px;
+  padding: 10px 20px;
 `
 
 export const UserInfo = styled.div`
@@ -92,5 +90,88 @@ export const UserInfo = styled.div`
   .icon {
     font-size: 30px;
     margin-top: 20px;
+  }
+`
+export const SubjectCircle = styled.div`
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: ${(props) => props.color || '#ccc'};
+  margin-right: 8px;
+`
+
+export const StudyEnvironmentContainer = styled.div`
+  h3 {
+    margin-bottom: 25px;
+    margin-top: 0px;
+    font-size: 26px;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+`
+
+export const WorkbookContainer = styled.div`
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+`
+
+export const WorkbookHeader = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+
+  span {
+    margin-left: 8px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+`
+
+export const WorkbookDetails = styled.div`
+  font-size: 16px;
+  margin-top: 4px;
+`
+
+export const UserInfoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+
+  h3 {
+    margin-bottom: 25px;
+    margin-top: 0px;
+    font-size: 26px;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .user-name {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .user-info {
+    margin-bottom: 8px;
+  }
+`
+
+export const ThemeContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+
+  h3 {
+    margin-bottom: 25px;
+    margin-top: 0px;
+    font-size: 26px;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    width: 100%;
+    box-sizing: border-box;
   }
 `
