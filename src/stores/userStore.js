@@ -17,8 +17,17 @@ const useUserStore = create(
         name: '정준영',
       },
       setUser: (newUser) => set({ user: newUser }),
-      login: () => {
-        set((state) => ({ user: state.dummyUser })) // 로그인하면 dummyUser를 유저로 설정
+      login: (inputId, inputPassword) => {
+        set((state) => {
+          if (
+            inputId === state.dummyUser.id &&
+            inputPassword === state.dummyUser.password
+          ) {
+            return { user: state.dummyUser } // 입력값이 일치하면 dummyUser로 설정
+          } else {
+            return state // 입력값이 일치하지 않으면 상태 변경하지 않음
+          }
+        })
       },
       logout: () =>
         set({

@@ -26,7 +26,6 @@ import loginModalStore from '@stores/modalStore'
 import useUserStore from '@stores/userStore'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios';
 
 export default function LoginModal() {
   const { isModalOpen, closeModal } = loginModalStore()
@@ -50,34 +49,32 @@ export default function LoginModal() {
     setErrorMessage('')
   }
 
-
   const handleNaverIconClick = () => {
     fetch('https://218.239.229.119:1500/account/oauth2/naver/get_state', {
       method: 'GET',
       credentials: 'include', // 쿠키를 포함하도록 설정
-      mode: 'cors'
+      mode: 'cors',
     })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then(data => {
-      const state = data.state; // data 객체에서 state 값을 가져옴
-      const expires = new Date();
-      expires.setMinutes(expires.getMinutes() + 10); // 10분 후 만료 (원하는 시간으로 변경 가능)
-      document.cookie = `state=${state}; expires=${expires.toUTCString()}; path=/; SameSite=Lax`;
-      const clientId = 'ilzHH8TQYwF9UE92H7Ak'; // 네이버 클라이언트 ID
-      const redirectUri = encodeURIComponent('http://localhost:5173/loading'); // 리디렉션 URI
-      const naverAuthUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&state=${state}`;
-      window.location.href = naverAuthUrl;
-    })
-    .catch(error => {
-      console.error('Error fetching state:', error);
-    });
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        return response.json()
+      })
+      .then((data) => {
+        const state = data.state // data 객체에서 state 값을 가져옴
+        const expires = new Date()
+        expires.setMinutes(expires.getMinutes() + 10) // 10분 후 만료 (원하는 시간으로 변경 가능)
+        document.cookie = `state=${state}; expires=${expires.toUTCString()}; path=/; SameSite=Lax`
+        const clientId = 'ilzHH8TQYwF9UE92H7Ak' // 네이버 클라이언트 ID
+        const redirectUri = encodeURIComponent('http://localhost:5173/loading') // 리디렉션 URI
+        const naverAuthUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&state=${state}`
+        window.location.href = naverAuthUrl
+      })
+      .catch((error) => {
+        console.error('Error fetching state:', error)
+      })
   }
-  
 
   useEffect(() => {
     if (isModalOpen) {
@@ -102,7 +99,7 @@ export default function LoginModal() {
         profileImage: DefaultProfileImage,
         name: dummyUser.name, // 로그인 성공 시 dummyUser의 이름을 설정
       })
-      login() // 로그인 성공 시 login 함수 호출
+      login(inputIdValue, inputPasswordValue) // 로그인 성공 시 login 함수 호출
     } else {
       setErrorMessage('아이디 또는 비밀번호가 일치하지 않습니다.')
     }
@@ -115,8 +112,6 @@ export default function LoginModal() {
       navigate('/dailyPlannerPage')
     }
   }, [user.id, navigate, closeModal])
-
-  
 
   if (!isModalOpen) return null
   return (
@@ -133,7 +128,11 @@ export default function LoginModal() {
           </ProfileImageContainer>
           <IconWrapper>
             <IconImage src={GoogleIcon} alt="Google"></IconImage>
-            <IconImage src={NaverIcon} alt="Naver" onClick={handleNaverIconClick}></IconImage>
+            <IconImage
+              src={NaverIcon}
+              alt="Naver"
+              onClick={handleNaverIconClick}
+            ></IconImage>
             <IconImage src={KakaoIcon} alt="Kakao"></IconImage>
           </IconWrapper>
           <Form onSubmit={handleSubmit}>
