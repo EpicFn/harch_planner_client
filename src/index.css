@@ -34,6 +34,10 @@ body.light-pink-theme {
   );
 }
 
+body.default-theme {
+  background-color: #f1f1f1;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
