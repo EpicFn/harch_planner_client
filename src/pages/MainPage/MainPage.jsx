@@ -32,6 +32,7 @@ export default function MainPage() {
   const openModal = loginModalStore((state) => state.openModal)
   const isModalOpen = loginModalStore((state) => state.isModalOpen)
   const user = useUserStore((state) => state.user)
+  const login = useUserStore((state) => state.login)
 
   const queryClient = useQueryClient()
 
@@ -49,6 +50,15 @@ export default function MainPage() {
       console.error('로그아웃 실패:', error.message || error)
     }
   }
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user')
+    if (storedUser) {
+      login(JSON.parse(storedUser))
+    } else {
+      openModal()
+    }
+  }, [])
 
   useEffect(() => {
     preloadImages(images)
