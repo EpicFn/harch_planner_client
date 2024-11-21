@@ -6,7 +6,7 @@ import {
   BookTitle,
   DateText,
   StyledWorkbookItem,
-} from '@components/Library/WorkBook/WorkbookItem/WorkbookItem.style'
+} from '@components/Library/WorkBook/WorkBookItem/WorkBookItem.style'
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 

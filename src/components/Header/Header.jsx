@@ -39,7 +39,7 @@ export default function Header({ onThemeChange }) {
       </ThemeButtonContainer>
       <UserProfileBox>
         <DdayBox>D-154</DdayBox>
-        <UserNicknameBox>{user.name}</UserNicknameBox>
+        <UserNicknameBox>{user.username}</UserNicknameBox>
       </UserProfileBox>
     </HeaderContainer>
   )
