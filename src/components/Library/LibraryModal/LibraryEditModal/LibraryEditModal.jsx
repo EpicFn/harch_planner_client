@@ -32,10 +32,10 @@ export default function LibraryEditModal({ workbook, onClose, workbookIndex }) {
   const updateWorkbook = workbookContentStore((state) => state.updateWorkbook)
   const removeWorkbook = workbookContentStore((state) => state.removeWorkbook)
 
-  const [updatedName, setUpdatedName] = useState(workbook.name || '')
+  const [updatedName, setUpdatedName] = useState(workbook.title || '')
   const [updatedSubject, setUpdatedSubject] = useState(workbook.subject || '')
-  const [goalPages, setGoalPages] = useState(workbook.goalPages || 0)
-  const [studiedPages, setStudiedPages] = useState(workbook.studiedPages || 0) // 공부한 페이지 수
+  const [goalPages, setGoalPages] = useState(workbook.end_page || 0)
+  const [studiedPages, setStudiedPages] = useState(workbook.start_page || 0) // 공부한 페이지 수
   const [progress, setProgress] = useState(workbook.progress || 0)
 
   const nameInputRef = useRef(null)
@@ -45,7 +45,7 @@ export default function LibraryEditModal({ workbook, onClose, workbookIndex }) {
 
   useEffect(() => {
     if (workbook) {
-      setUpdatedName(workbook.name || '')
+      setUpdatedName(workbook.title || '')
       setUpdatedSubject(workbook.subject || '')
     }
   }, [workbook])

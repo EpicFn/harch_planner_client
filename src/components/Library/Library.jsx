@@ -84,7 +84,7 @@ export default function Library() {
   }
 
   const filteredWorkbooks = workbooks.filter((workbook) =>
-    workbook.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
+    workbook.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
   )
 
   const displayedWorkbooks = filteredWorkbooks.filter((workbook) => {
@@ -129,7 +129,7 @@ export default function Library() {
         </OngoingSubject>
         <SubjectContainer>
           <SubjectHeader>
-            <SubjectTitle>과목 추가</SubjectTitle>
+            <SubjectTitle>교재 추가</SubjectTitle>
             <AddSubjectButton onClick={openAddModal} />
           </SubjectHeader>
           <SubjectContent>
@@ -162,7 +162,7 @@ export default function Library() {
                         .filter((wb) => wb.subject === subject)
                         .map((workbook, idx) => (
                           <WorkbookItemStyled key={`${subject}-${idx}`}>
-                            {workbook.name}
+                            {workbook.title}
                           </WorkbookItemStyled>
                         ))}
                   </React.Fragment>

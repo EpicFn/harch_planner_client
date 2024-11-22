@@ -46,7 +46,7 @@ export default function WorkbookItem({ workbook, onClick, status }) {
         />
       </div>
       <BookInfo>
-        <BookTitle>{workbook.name}</BookTitle>
+        <BookTitle>{workbook.title}</BookTitle>
         <BookSubject>{workbook.subject}</BookSubject>
         <DateText>{workbook.date}</DateText>
       </BookInfo>

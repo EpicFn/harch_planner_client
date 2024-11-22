@@ -1,7 +1,7 @@
+import addBook from '@apis/book/addBook'
 import fetchSubjects from '@apis/subject/fetchSubject'
 import {
   CloseButton,
-  ColorLabel,
   InputContainer,
   ModalButton,
   ModalButtonContainer,
@@ -11,13 +11,8 @@ import {
   ModalLayout,
   ModalPageInput,
   ModalPageInputBox,
-  SelectedColorBox,
-  SelectedColorCode,
-  SubjectColorBox,
-  SubjectItem,
-  SubjectListContainer,
-  SubjectName,
 } from '@components/Library/LibraryModal/LibraryAddModal/LibraryAddModal.style'
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import workbookContentStore from '@stores/workbookContentStore'
 import { useEffect, useRef, useState } from 'react'
 
@@ -29,6 +24,7 @@ export default function LibraryAddModal({ onClose }) {
   const [goalPages, setGoalPages] = useState('')
   const [studiedPages, setStudiedPages] = useState('') // 공부한 페이지 수
   const [subjectColor, setSubjectColor] = useState('')
+  const [memo, setMemo] = useState('')
   const [subjectList, setSubjectList] = useState([])
 
   const [shaking, setIsShaking] = useState('false')
@@ -51,7 +47,7 @@ export default function LibraryAddModal({ onClose }) {
     loadSubjects()
   }, [])
 
-  const handleAddWorkbook = () => {
+  const handleAddWorkbook = async () => {
     if (!name || !subject || !goalPages || !studiedPages) {
       setIsShaking('true') // 진동 트리거
       setTimeout(() => setIsShaking('false'), 300)
@@ -60,19 +56,29 @@ export default function LibraryAddModal({ onClose }) {
 
     const progress = calculateProgress(studiedPages, goalPages) // 성취도 계산
 
-    const newWorkbook = {
-      id: Date.now(),
-      name,
-      subject,
-      goalPages: parseInt(goalPages, 10),
-      studiedPages: parseInt(studiedPages, 10),
-      date: new Date().toISOString().split('T')[0],
-      progress, // 계산된 성취도 추가
-      subjectColor,
+    const newBook = {
+      title: name,
+      start_page: parseInt(studiedPages, 10),
+      end_page: parseInt(goalPages, 10),
+      memo,
+      status: true, // 기본값으로 true 설정
+      subject_id: subject.id, // subject는 id로 보냄
     }
 
-    addWorkbook(newWorkbook)
-    onClose()
+    const stateData = {
+      ...newBook,
+      subject: subject.title, // UI 표시용 과목 이름
+      subjectColor, // UI 표시용 과목 색상
+      progress, // 성취도
+    }
+
+    try {
+      await addBook(newBook)
+      addWorkbook(stateData)
+      onClose()
+    } catch (error) {
+      console.error('Failed to add book:', error)
+    }
   }
 
   const handleKeyDown = (e, ref) => {
@@ -92,9 +98,15 @@ export default function LibraryAddModal({ onClose }) {
     return endPage > 0 ? Math.round((startPage / endPage) * 100) : 0
   }
 
-  const handleSubjectClick = (subjectItem) => {
-    setSubject(subjectItem.title)
-    setSubjectColor(subjectItem.color)
+  const handleSubjectChange = (event) => {
+    const selectedSubject = subjectList.find(
+      (item) => item.title === event.target.value,
+    )
+    setSubject({
+      id: selectedSubject.id,
+      title: selectedSubject.title,
+    })
+    setSubjectColor(selectedSubject.color)
   }
 
   return (
@@ -108,21 +120,41 @@ export default function LibraryAddModal({ onClose }) {
               value={name}
               onChange={(e) => setName(e.target.value)}
               onKeyDown={(e) => handleKeyDown(e, nameInputRef)}
-              placeholder="문제집 이름을 입력하세요"
+              placeholder="교재 이름을 입력하세요"
               ref={nameInputRef}
             />
-            <SubjectListContainer>
-              {subjectList.map((item) => (
-                <SubjectItem
-                  key={item.id}
-                  onClick={() => handleSubjectClick(item)}
-                  selected={subject === item.title}
-                >
-                  <SubjectColorBox color={item.color} />
-                  <SubjectName>{item.title}</SubjectName>
-                </SubjectItem>
-              ))}
-            </SubjectListContainer>
+            <FormControl fullWidth style={{ marginTop: '20px' }}>
+              <InputLabel id="subject-select-label">과목 선택</InputLabel>
+              <Select
+                labelId="subject-select-label"
+                value={subject?.title || ''}
+                onChange={handleSubjectChange}
+                displayEmpty
+                style={{ backgroundColor: '#fff' }}
+              >
+                {subjectList.map((item) => (
+                  <MenuItem key={item.id} value={item.title}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: '12px',
+                          height: '12px',
+                          borderRadius: '50%',
+                          backgroundColor: item.color,
+                          marginRight: '8px',
+                        }}
+                      ></div>
+                      {item.title}
+                    </div>
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <ModalPageInputBox>
               <ModalPageInput
                 type="number"
@@ -141,12 +173,15 @@ export default function LibraryAddModal({ onClose }) {
                 ref={goalPagesRef}
               />
             </ModalPageInputBox>
+            <ModalInput
+              type="text"
+              value={memo}
+              onChange={(e) => setMemo(e.target.value)}
+              placeholder="메모를 입력하세요"
+            />
           </InputContainer>
         </ModalContent>
-        <SelectedColorCode>
-          <ColorLabel>과목 색상</ColorLabel>
-          <SelectedColorBox color={subjectColor} />
-        </SelectedColorCode>
+
         <ModalButtonContainer>
           <ModalButton onClick={handleAddWorkbook}>추가 완료</ModalButton>
           <ModalButton onClick={onClose} style={{ backgroundColor: 'red' }}>
