@@ -88,8 +88,8 @@ export default function LibraryAddModal({ onClose }) {
   }
 
   const calculateProgress = (studied, goal) => {
-    const startPage = parseInt(studied, 10)
-    const endPage = parseInt(goal, 10)
+    const startPage = parseInt(studied || 0, 10)
+    const endPage = parseInt(goal || 0, 10)
 
     if (startPage > endPage) {
       return 0

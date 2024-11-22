@@ -53,8 +53,8 @@ export default function LibraryEditModal({ workbook, onClose, workbookIndex }) {
   useEffect(() => {
     // 성취도 계산 함수
     const calculateProgress = () => {
-      const startPage = parseInt(studiedPages, 10)
-      const endPage = parseInt(goalPages, 10)
+      const startPage = parseInt(studiedPages || 0, 10)
+      const endPage = parseInt(goalPages || 0, 10)
 
       if (startPage > endPage) {
         return 0
