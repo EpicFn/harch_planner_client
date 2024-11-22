@@ -19,7 +19,7 @@ import { useEffect, useRef, useState } from 'react'
 export default function LibraryAddModal({ onClose }) {
   const addWorkbook = workbookContentStore((state) => state.addWorkbook)
 
-  const [name, setName] = useState('')
+  const [bookName, setBookName] = useState('')
   const [subject, setSubject] = useState('')
   const [goalPages, setGoalPages] = useState('')
   const [studiedPages, setStudiedPages] = useState('') // 공부한 페이지 수
@@ -48,7 +48,7 @@ export default function LibraryAddModal({ onClose }) {
   }, [])
 
   const handleAddWorkbook = async () => {
-    if (!name || !subject || !goalPages || !studiedPages) {
+    if (!bookName || !subject || !goalPages || !studiedPages) {
       setIsShaking('true') // 진동 트리거
       setTimeout(() => setIsShaking('false'), 300)
       return
@@ -57,19 +57,19 @@ export default function LibraryAddModal({ onClose }) {
     const progress = calculateProgress(studiedPages, goalPages) // 성취도 계산
 
     const newBook = {
-      title: name,
+      title: bookName,
       start_page: parseInt(studiedPages, 10),
       end_page: parseInt(goalPages, 10),
       memo,
       status: true, // 기본값으로 true 설정
-      subject_id: subject.id, // subject는 id로 보냄
+      subject_id: subject.id,
     }
 
     const stateData = {
       ...newBook,
-      subject: subject.title, // UI 표시용 과목 이름
-      subjectColor, // UI 표시용 과목 색상
-      progress, // 성취도
+      subject: subject.title,
+      subjectColor,
+      progress,
     }
 
     try {
@@ -117,8 +117,8 @@ export default function LibraryAddModal({ onClose }) {
           <InputContainer>
             <ModalInput
               type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={bookName}
+              onChange={(e) => setBookName(e.target.value)}
               onKeyDown={(e) => handleKeyDown(e, nameInputRef)}
               placeholder="교재 이름을 입력하세요"
               ref={nameInputRef}

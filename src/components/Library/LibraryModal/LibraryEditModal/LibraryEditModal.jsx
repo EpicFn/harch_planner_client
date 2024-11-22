@@ -32,7 +32,7 @@ export default function LibraryEditModal({ workbook, onClose, workbookIndex }) {
   const updateWorkbook = workbookContentStore((state) => state.updateWorkbook)
   const removeWorkbook = workbookContentStore((state) => state.removeWorkbook)
 
-  const [updatedName, setUpdatedName] = useState(workbook.title || '')
+  const [updatedBookName, setUpdatedBookName] = useState(workbook.title || '')
   const [updatedSubject, setUpdatedSubject] = useState(workbook.subject || '')
   const [goalPages, setGoalPages] = useState(workbook.end_page || 0)
   const [studiedPages, setStudiedPages] = useState(workbook.start_page || 0) // 공부한 페이지 수
@@ -45,7 +45,7 @@ export default function LibraryEditModal({ workbook, onClose, workbookIndex }) {
 
   useEffect(() => {
     if (workbook) {
-      setUpdatedName(workbook.title || '')
+      setUpdatedBookName(workbook.title || '')
       setUpdatedSubject(workbook.subject || '')
     }
   }, [workbook])
@@ -71,7 +71,7 @@ export default function LibraryEditModal({ workbook, onClose, workbookIndex }) {
   const handleUpdateWorkbook = () => {
     const updatedWorkbook = {
       ...workbook,
-      name: updatedName,
+      title: updatedBookName,
       subject: updatedSubject,
       goalPages,
       studiedPages,
@@ -148,8 +148,8 @@ export default function LibraryEditModal({ workbook, onClose, workbookIndex }) {
           <InputContainer>
             <ModalInput
               type="text"
-              value={updatedName}
-              onChange={(e) => setUpdatedName(e.target.value)}
+              value={updatedBookName}
+              onChange={(e) => setUpdatedBookName(e.target.value)}
               onKeyDown={(e) => handleKeyDown(e, nameInputRef)}
               placeholder="문제집 이름을 입력하세요"
               ref={nameInputRef}
