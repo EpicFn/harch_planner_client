@@ -1,8 +1,7 @@
+import fetchSubjects from '@apis/subject/fetchSubject'
 import {
   CloseButton,
   ColorLabel,
-  ColorPickerContainer,
-  ColorPickerLabel,
   InputContainer,
   ModalButton,
   ModalButtonContainer,
@@ -14,10 +13,13 @@ import {
   ModalPageInputBox,
   SelectedColorBox,
   SelectedColorCode,
+  SubjectColorBox,
+  SubjectItem,
+  SubjectListContainer,
+  SubjectName,
 } from '@components/Library/LibraryModal/LibraryAddModal/LibraryAddModal.style'
 import workbookContentStore from '@stores/workbookContentStore'
-import { useRef, useState } from 'react'
-import { HexColorPicker } from 'react-colorful'
+import { useEffect, useRef, useState } from 'react'
 
 export default function LibraryAddModal({ onClose }) {
   const addWorkbook = workbookContentStore((state) => state.addWorkbook)
@@ -27,12 +29,27 @@ export default function LibraryAddModal({ onClose }) {
   const [goalPages, setGoalPages] = useState('')
   const [studiedPages, setStudiedPages] = useState('') // 공부한 페이지 수
   const [subjectColor, setSubjectColor] = useState('')
+  const [subjectList, setSubjectList] = useState([])
+
   const [shaking, setIsShaking] = useState('false')
 
   const nameInputRef = useRef(null)
-  const subjectInputRef = useRef(null)
   const goalPagesRef = useRef(null)
   const studiedPagesRef = useRef(null)
+
+  //과목 색상 리스트 반환 API
+  useEffect(() => {
+    const loadSubjects = async () => {
+      try {
+        const data = await fetchSubjects()
+        setSubjectList(data)
+      } catch (error) {
+        console.error('Failed to load subjects:', error)
+      }
+    }
+
+    loadSubjects()
+  }, [])
 
   const handleAddWorkbook = () => {
     if (!name || !subject || !goalPages || !studiedPages) {
@@ -75,6 +92,11 @@ export default function LibraryAddModal({ onClose }) {
     return endPage > 0 ? Math.round((startPage / endPage) * 100) : 0
   }
 
+  const handleSubjectClick = (subjectItem) => {
+    setSubject(subjectItem.title)
+    setSubjectColor(subjectItem.color)
+  }
+
   return (
     <ModalContainer>
       <ModalLayout shaking={shaking}>
@@ -89,14 +111,18 @@ export default function LibraryAddModal({ onClose }) {
               placeholder="문제집 이름을 입력하세요"
               ref={nameInputRef}
             />
-            <ModalInput
-              type="text"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-              onKeyDown={(e) => handleKeyDown(e, subjectInputRef)}
-              placeholder="과목 이름을 입력하세요"
-              ref={subjectInputRef}
-            />
+            <SubjectListContainer>
+              {subjectList.map((item) => (
+                <SubjectItem
+                  key={item.id}
+                  onClick={() => handleSubjectClick(item)}
+                  selected={subject === item.title}
+                >
+                  <SubjectColorBox color={item.color} />
+                  <SubjectName>{item.title}</SubjectName>
+                </SubjectItem>
+              ))}
+            </SubjectListContainer>
             <ModalPageInputBox>
               <ModalPageInput
                 type="number"
@@ -121,17 +147,6 @@ export default function LibraryAddModal({ onClose }) {
           <ColorLabel>과목 색상</ColorLabel>
           <SelectedColorBox color={subjectColor} />
         </SelectedColorCode>
-        <ColorPickerContainer>
-          <HexColorPicker
-            color={subjectColor ? subjectColor : '색상을 선택하세요'}
-            onChange={(newColor) => {
-              if (/^#[0-9A-F]{6}$/i.test(newColor)) {
-                setSubjectColor(newColor)
-              }
-            }}
-          />
-          <ColorPickerLabel>과목 색상을 {'\n'} 선택하세요.</ColorPickerLabel>
-        </ColorPickerContainer>
         <ModalButtonContainer>
           <ModalButton onClick={handleAddWorkbook}>추가 완료</ModalButton>
           <ModalButton onClick={onClose} style={{ backgroundColor: 'red' }}>

@@ -190,27 +190,6 @@ export const Line = styled.hr`
   border-top: 1px solid #ddd;
 `
 
-export const ColorPickerContainer = styled.div`
-  position: absolute;
-  top: 50%;
-  bottom: 50%;
-  left: -200px;
-  //transform: translate(-50%, -50%);
-  width: 140px; /* Adjust width as needed */
-  height: 110px;
-  z-index: 10;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
-  text-align: center;
-
-  .react-colorful {
-    width: 100%;
-    height: 100%;
-  }
-`
-
 export const ColorPickerLabel = styled.div`
   margin-top: 20px;
   color: white;
@@ -244,5 +223,40 @@ export const SelectedColorCode = styled.div`
 
 export const ColorLabel = styled.span`
   font-size: 1rem;
+  color: #333;
+`
+
+export const SubjectListContainer = styled.div`
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  gap: 12px;
+  margin-top: 15px;
+`
+
+export const SubjectItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  box-sizing: border-box;
+  border: 1px solid ${(props) => (props.selected ? '#6a5acd' : '#ccc')};
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: ${(props) => (props.selected ? '#f0f0ff' : 'white')};
+  &:hover {
+    background-color: #f9f9f9;
+  }
+`
+
+export const SubjectColorBox = styled.div`
+  width: 15px;
+  height: 15px;
+  background-color: ${(props) => props.color};
+  border-radius: 50%;
+`
+
+export const SubjectName = styled.span`
+  font-size: 16px;
   color: #333;
 `
