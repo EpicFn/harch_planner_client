@@ -55,6 +55,8 @@ export default function LibraryEditModal({ workbook, onClose, workbookIndex }) {
     const calculateProgress = () => {
       const startPage = parseInt(studiedPages || 0, 10)
       const endPage = parseInt(goalPages || 0, 10)
+      setGoalPages(endPage)
+      setStudiedPages(startPage)
 
       if (startPage > endPage) {
         return 0
@@ -73,8 +75,8 @@ export default function LibraryEditModal({ workbook, onClose, workbookIndex }) {
       ...workbook,
       title: updatedBookName,
       subject: updatedSubject,
-      goalPages,
-      studiedPages,
+      end_page: goalPages, // 필드 이름 확인
+      start_page: studiedPages, // 필드 이름 확인
       progress,
     }
 
@@ -94,7 +96,6 @@ export default function LibraryEditModal({ workbook, onClose, workbookIndex }) {
   }
 
   const data = {
-    labels: [workbook.date], // X축 레이블
     datasets: [
       {
         label: '주간 진행률',
