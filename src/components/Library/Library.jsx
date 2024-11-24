@@ -73,7 +73,7 @@ export default function Library() {
         const fetchedBooks = await fetchBooks()
         const processedBooks = fetchedBooks.map((book) => ({
           ...book,
-          subject: book.subject?.title || 'Unknown Subject',
+          subject: book.subject?.title || '미 분류',
           subjectColor: book.subject?.color || '#ccc',
           progress: calculateProgress(book.start_page, book.end_page),
         }))
@@ -173,7 +173,9 @@ export default function Library() {
                       onClick={() => selectSubject(subject)}
                     >
                       <SubjectCircle color={subjectColor} />
-                      <SubjectName>{subject}</SubjectName>
+                      <SubjectName>
+                        {subject === 'Unknown Subject' ? '미 분류' : subject}
+                      </SubjectName>
                       <SubjectToggleIcon
                         isopen={String(expandedSubjects[subject])}
                         onClick={(e) => {
