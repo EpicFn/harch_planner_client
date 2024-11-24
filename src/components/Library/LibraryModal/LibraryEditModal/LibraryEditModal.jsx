@@ -25,6 +25,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Bar } from 'react-chartjs-2'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
+import deleteBook from '@apis/book/deleteBook'
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 
@@ -84,9 +85,14 @@ export default function LibraryEditModal({ workbook, onClose, workbookIndex }) {
     onClose()
   }
 
-  const handleWorkBookDelete = () => {
-    removeWorkbook(workbookIndex)
-    onClose()
+  const handleWorkBookDelete = async () => {
+    try {
+      await deleteBook(workbook.id)
+      removeWorkbook(workbookIndex)
+      onClose() // 모달 닫기
+    } catch (error) {
+      console.error('Failed to delete the workbook:', error)
+    }
   }
 
   const handleKeyDown = (e, ref) => {
