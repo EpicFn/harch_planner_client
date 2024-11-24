@@ -87,21 +87,17 @@ export default function Library() {
   }, [setWorkbooks]) // 초기 로딩 시만 실행
 
   const openEditModal = (index) => {
-    // viewCompleted 상태에 따라 필터링된 교재 목록 가져오기
-    const filteredBooks = workbooks.filter((book) =>
-      viewCompleted ? book.progress === 100 : book.progress < 100,
-    )
+    const targetBook = viewCompleted
+      ? workbooks.filter((book) => book.progress === 100)[index]
+      : workbooks.filter((book) => book.progress < 100)[index]
 
-    // 현재 선택된 교재 ID를 기준으로 실제 workbooks 배열에서 인덱스 찾기
-    const actualIndex = workbooks.findIndex(
-      (workbook) => workbook.id === filteredBooks[index]?.id,
-    )
+    const actualIndex = workbooks.findIndex((book) => book.id === targetBook.id)
 
     if (actualIndex !== -1) {
-      setSelectedWorkbookIndex(actualIndex) // 선택된 교재의 인덱스 설정
-      setIsEditModalOpen(true) // 모달 열기
+      setSelectedWorkbookIndex(actualIndex)
+      setIsEditModalOpen(true)
     } else {
-      console.error('Workbook not found in store') // 교재를 찾지 못한 경우 에러 출력
+      console.error('Workbook not found in store')
     }
   }
 

@@ -84,7 +84,7 @@ export const CompletedSectionHeader = styled.div`
   align-items: center;
   width: 100%;
   height: 80px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 `
 
 export const Sidebar = styled.div`

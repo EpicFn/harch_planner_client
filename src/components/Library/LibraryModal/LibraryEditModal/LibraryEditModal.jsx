@@ -29,6 +29,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 import deleteBook from '@apis/book/deleteBook'
 import { ModalPageInputBox } from '@components/Library/LibraryModal/LibraryAddModal/LibraryAddModal.style'
+import useCalculateProgressColor from '@hooks/useCalculateProgressColor'
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 
@@ -104,19 +105,13 @@ export default function LibraryEditModal({ workbook, onClose, workbookIndex }) {
     }
   }
 
-  const progressColor = (progress) => {
-    if (progress < 30) return '#ff6b6b'
-    if (progress < 70) return '#ffca3a'
-    return '#8ac926'
-  }
-
   const data = {
     labels: ['진행률'],
     datasets: [
       {
         label: '주간 진행률',
         data: [workbook.progress], // Y축 데이터, 처음엔 하나만
-        backgroundColor: [progressColor(workbook.progress)],
+        backgroundColor: [useCalculateProgressColor(workbook.progress)],
       },
     ],
   }
@@ -157,7 +152,7 @@ export default function LibraryEditModal({ workbook, onClose, workbookIndex }) {
               value={progress}
               text={`${progress}%`}
               styles={buildStyles({
-                pathColor: progressColor(progress), // 진행도 색상
+                pathColor: useCalculateProgressColor(progress), // 진행도 색상
                 textColor: '#000',
                 trailColor: '#d6d6d6', // 남은 진행도 색상
                 textSize: '1.5rem',
