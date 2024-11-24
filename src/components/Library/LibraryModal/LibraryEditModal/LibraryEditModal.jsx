@@ -1,6 +1,7 @@
 import {
+  BookInfoContainer,
   CloseButton,
-  InputContainer,
+  InputLabel,
   Line,
   ModalButton,
   ModalButtonContainer,
@@ -9,6 +10,7 @@ import {
   ModalInput,
   ModalLayout,
   ModalPageInput,
+  PagesInfoContainer,
   ProgressContainer,
 } from '@components/Library/LibraryModal/LibraryEditModal/LibraryEditModal.style'
 import workbookContentStore from '@stores/workbookContentStore'
@@ -26,6 +28,7 @@ import { Bar } from 'react-chartjs-2'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 import deleteBook from '@apis/book/deleteBook'
+import { ModalPageInputBox } from '@components/Library/LibraryModal/LibraryAddModal/LibraryAddModal.style'
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 
@@ -101,12 +104,19 @@ export default function LibraryEditModal({ workbook, onClose, workbookIndex }) {
     }
   }
 
+  const progressColor = (progress) => {
+    if (progress < 30) return '#ff6b6b'
+    if (progress < 70) return '#ffca3a'
+    return '#8ac926'
+  }
+
   const data = {
+    labels: ['진행률'],
     datasets: [
       {
         label: '주간 진행률',
         data: [workbook.progress], // Y축 데이터, 처음엔 하나만
-        backgroundColor: '#ff6b6b', // 막대 색상
+        backgroundColor: [progressColor(workbook.progress)],
       },
     ],
   }
@@ -128,7 +138,9 @@ export default function LibraryEditModal({ workbook, onClose, workbookIndex }) {
       y: {
         ticks: {
           beginAtZero: true, // Y축이 0부터 시작하도록 설정
+          callback: (value) => `${value}%`,
         },
+        max: 100,
       },
     },
     barThickness: 20, // 막대 두께 설정
@@ -145,45 +157,56 @@ export default function LibraryEditModal({ workbook, onClose, workbookIndex }) {
               value={progress}
               text={`${progress}%`}
               styles={buildStyles({
-                pathColor: '#ff6b6b', // 진행도 색상
+                pathColor: progressColor(progress), // 진행도 색상
                 textColor: '#000',
                 trailColor: '#d6d6d6', // 남은 진행도 색상
                 textSize: '1.5rem',
               })}
             />
           </ProgressContainer>
-          <InputContainer>
-            <ModalInput
-              type="text"
-              value={updatedBookName}
-              onChange={(e) => setUpdatedBookName(e.target.value)}
-              onKeyDown={(e) => handleKeyDown(e, nameInputRef)}
-              placeholder="문제집 이름을 입력하세요"
-              ref={nameInputRef}
+          <BookInfoContainer>
+            <ModalPageInputBox>
+              <InputLabel>교재 이름</InputLabel>
+              <ModalInput
+                type="text"
+                value={updatedBookName}
+                onChange={(e) => setUpdatedBookName(e.target.value)}
+                onKeyDown={(e) => handleKeyDown(e, nameInputRef)}
+                placeholder="교재 이름을 입력하세요"
+                ref={nameInputRef}
+              />
+            </ModalPageInputBox>
+
+            <ModalPageInputBox>
+              <InputLabel>과목</InputLabel>
+              <ModalInput
+                type="text"
+                value={updatedSubject}
+                onChange={(e) => setUpdatedSubject(e.target.value)}
+                onKeyDown={(e) => handleKeyDown(e, subjectInputRef)}
+                placeholder="과목 이름을 입력하세요"
+                ref={subjectInputRef}
+              />
+            </ModalPageInputBox>
+          </BookInfoContainer>
+          <PagesInfoContainer>
+            <InputLabel>시작 페이지</InputLabel>
+            <ModalPageInput
+              type="number"
+              value={studiedPages}
+              onChange={(e) => setStudiedPages(e.target.value)}
+              onKeyDown={(e) => handleKeyDown(e, studiedPagesRef)}
+              ref={studiedPagesRef}
             />
-            <ModalInput
-              type="text"
-              value={updatedSubject}
-              onChange={(e) => setUpdatedSubject(e.target.value)}
-              onKeyDown={(e) => handleKeyDown(e, subjectInputRef)}
-              placeholder="과목 이름을 입력하세요"
-              ref={subjectInputRef}
+            <InputLabel>마지막 페이지</InputLabel>
+            <ModalPageInput
+              type="number"
+              value={goalPages}
+              onChange={(e) => setGoalPages(e.target.value)}
+              onKeyDown={(e) => handleKeyDown(e, goalPagesRef)}
+              ref={goalPagesRef}
             />
-          </InputContainer>
-          <ModalPageInput
-            type="number"
-            value={studiedPages}
-            onChange={(e) => setStudiedPages(e.target.value)}
-            onKeyDown={(e) => handleKeyDown(e, studiedPagesRef)}
-            ref={studiedPagesRef}
-          />
-          <ModalPageInput
-            type="number"
-            value={goalPages}
-            onChange={(e) => setGoalPages(e.target.value)}
-            onKeyDown={(e) => handleKeyDown(e, goalPagesRef)}
-            ref={goalPagesRef}
-          />
+          </PagesInfoContainer>
         </ModalContent>
         <Line />
         <div style={{ width: '100%', height: '300px' }}>

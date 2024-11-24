@@ -13,6 +13,12 @@ import 'react-circular-progressbar/dist/styles.css'
 export default function WorkbookItem({ workbook, onClick, status }) {
   const [animatedProgress, setAnimatedProgress] = useState(0)
 
+  const progressColor = (progress) => {
+    if (progress < 30) return '#ff6b6b'
+    if (progress < 70) return '#ffca3a'
+    return '#8ac926'
+  }
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       setAnimatedProgress(workbook.progress)
@@ -35,7 +41,7 @@ export default function WorkbookItem({ workbook, onClick, status }) {
           value={animatedProgress}
           text={`${animatedProgress}%`}
           styles={buildStyles({
-            pathColor: '#ff6b6b', // 진행도 색상
+            pathColor: progressColor(animatedProgress), // 진행도 색상
             textColor: '#000',
             trailColor: '#d6d6d6', // 남은 진행도 색상
             textSize: '1.5rem',
