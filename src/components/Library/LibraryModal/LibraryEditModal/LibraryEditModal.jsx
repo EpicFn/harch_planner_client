@@ -49,13 +49,6 @@ export default function LibraryEditModal({ workbook, onClose, workbookIndex }) {
   const studiedPagesRef = useRef(null)
 
   useEffect(() => {
-    if (workbook) {
-      setUpdatedBookName(workbook.title || '')
-      setUpdatedSubject(workbook.subject || '')
-    }
-  }, [workbook])
-
-  useEffect(() => {
     // 성취도 계산 함수
     const calculateProgress = () => {
       const startPage = parseInt(studiedPages || 0, 10)
