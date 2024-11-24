@@ -44,6 +44,7 @@ export default function Library() {
   const [selectedWorkbookIndex, setSelectedWorkbookIndex] = useState(null)
   const [searchTerm, setSearchTerm] = useState('') // 검색어 상태
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
+  const [filteredWorkbooks, setFilteredWorkbooks] = useState([])
 
   const [expandedSubjects, setExpandedSubjects] = useState({})
   const [selectedSubject, setSelectedSubject] = useState(null)
@@ -66,6 +67,13 @@ export default function Library() {
     // workbooks 상태가 변경될 때 필터링된 교재 리스트 다시 계산
     console.log('Workbooks updated:', workbooks)
   }, [workbooks])
+
+  useEffect(() => {
+    const filtered = workbooks.filter((workbook) =>
+      workbook.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
+    )
+    setFilteredWorkbooks(filtered)
+  }, [debouncedSearchTerm, workbooks])
 
   useEffect(() => {
     const loadBooks = async () => {
@@ -207,16 +215,27 @@ export default function Library() {
           </CompletedSectionHeader>
           <Suspense fallback={<LoadingSpinner />}>
             <CompletedSectionContent>
-              {workbooks
-                .filter((book) => book.progress === 100)
-                .map((book, index) => (
-                  <WorkbookItem
-                    key={book.subject_id + book.title}
-                    workbook={book}
-                    status="completed"
-                    onClick={() => openEditModal(index)}
-                  />
-                ))}
+              {filteredWorkbooks.length > 0
+                ? filteredWorkbooks
+                    .filter((book) => book.progress === 100)
+                    .map((book, index) => (
+                      <WorkbookItem
+                        key={book.subject_id + book.title}
+                        workbook={book}
+                        status="completed"
+                        onClick={() => openEditModal(index)}
+                      />
+                    ))
+                : workbooks
+                    .filter((book) => book.progress === 100)
+                    .map((book, index) => (
+                      <WorkbookItem
+                        key={book.subject_id + book.title}
+                        workbook={book}
+                        status="completed"
+                        onClick={() => openEditModal(index)}
+                      />
+                    ))}
             </CompletedSectionContent>
           </Suspense>
         </CompletedSection>
@@ -229,16 +248,27 @@ export default function Library() {
           </OngoingSectionHeader>
           <Suspense fallback={<LoadingSpinner />}>
             <OngoingSectionContent>
-              {workbooks
-                .filter((book) => book.progress < 100)
-                .map((book, index) => (
-                  <WorkbookItem
-                    key={book.subject_id + book.title}
-                    workbook={book}
-                    status="ongoing"
-                    onClick={() => openEditModal(index)}
-                  />
-                ))}
+              {filteredWorkbooks.length > 0
+                ? filteredWorkbooks
+                    .filter((book) => book.progress < 100)
+                    .map((book, index) => (
+                      <WorkbookItem
+                        key={book.subject_id + book.title}
+                        workbook={book}
+                        status="ongoing"
+                        onClick={() => openEditModal(index)}
+                      />
+                    ))
+                : workbooks
+                    .filter((book) => book.progress < 100)
+                    .map((book, index) => (
+                      <WorkbookItem
+                        key={book.subject_id + book.title}
+                        workbook={book}
+                        status="ongoing"
+                        onClick={() => openEditModal(index)}
+                      />
+                    ))}
             </OngoingSectionContent>
           </Suspense>
         </OngoingSection>
