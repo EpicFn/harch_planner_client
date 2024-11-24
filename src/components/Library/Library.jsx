@@ -37,16 +37,13 @@ import workbookContentStore from '@stores/workbookContentStore'
 
 export default function Library() {
   const workbooks = workbookContentStore((state) => state.workbooks)
+  const setWorkbooks = workbookContentStore((state) => state.setWorkbooks)
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false) // 추가 모달 상태
   const [isEditModalOpen, setIsEditModalOpen] = useState(false) // 편집 모달 상태
   const [selectedWorkbookIndex, setSelectedWorkbookIndex] = useState(null)
   const [searchTerm, setSearchTerm] = useState('') // 검색어 상태
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
-
-  const [books, setBooks] = useState([]) // 전체 책 데이터
-  const [ongoingBooks, setOngoingBooks] = useState([]) // 학습 중인 교재
-  const [completedBooks, setCompletedBooks] = useState([]) // 완료한 교재
 
   const [expandedSubjects, setExpandedSubjects] = useState({})
   const [selectedSubject, setSelectedSubject] = useState(null)
@@ -74,28 +71,37 @@ export default function Library() {
     const loadBooks = async () => {
       try {
         const fetchedBooks = await fetchBooks()
-        setBooks(fetchedBooks)
-        filterBooks(fetchedBooks) // 상태 업데이트
+        const processedBooks = fetchedBooks.map((book) => ({
+          ...book,
+          subject: book.subject?.title || 'Unknown Subject',
+          subjectColor: book.subject?.color || '#ccc',
+          progress: calculateProgress(book.start_page, book.end_page),
+        }))
+        setWorkbooks(processedBooks)
       } catch (error) {
         console.error('Failed to load books:', error)
       }
     }
 
     loadBooks()
-  }, [workbooks])
+  }, [setWorkbooks]) // 초기 로딩 시만 실행
 
   const openEditModal = (index) => {
-    //성취도가 100퍼센트 인지 vs 아닌지에 따라 적절한 배열 세팅
-    const currentBooks = viewCompleted ? completedBooks : ongoingBooks
+    // viewCompleted 상태에 따라 필터링된 교재 목록 가져오기
+    const filteredBooks = workbooks.filter((book) =>
+      viewCompleted ? book.progress === 100 : book.progress < 100,
+    )
+
+    // 현재 선택된 교재 ID를 기준으로 실제 workbooks 배열에서 인덱스 찾기
     const actualIndex = workbooks.findIndex(
-      (workbook) => workbook.id === currentBooks[index].id,
+      (workbook) => workbook.id === filteredBooks[index]?.id,
     )
 
     if (actualIndex !== -1) {
-      setSelectedWorkbookIndex(actualIndex)
-      setIsEditModalOpen(true)
+      setSelectedWorkbookIndex(actualIndex) // 선택된 교재의 인덱스 설정
+      setIsEditModalOpen(true) // 모달 열기
     } else {
-      console.error('Workbook not found in store')
+      console.error('Workbook not found in store') // 교재를 찾지 못한 경우 에러 출력
     }
   }
 
@@ -118,25 +124,6 @@ export default function Library() {
     if (!endPage || endPage <= 0) return 0 // 총 페이지가 0이거나 음수인 경우 진행률은 0%
     if (startPage >= endPage) return 100 // 시작 페이지가 총 페이지 이상인 경우 100%
     return Math.round((startPage / endPage) * 100) // 진행률 계산
-  }
-
-  const filterBooks = (books) => {
-    const processedBooks = books.map((book) => ({
-      ...book,
-      subject: book.subject?.title || 'Unknown Subject',
-      subjectColor: book.subject?.color || '#ccc',
-      progress: calculateProgress(book.start_page, book.end_page),
-    }))
-
-    workbookContentStore.setState({ workbooks: processedBooks })
-    //성취도 계산 한거 스토어에 업데이트
-
-    setOngoingBooks(
-      workbooks.filter((book) => book.progress < 100), // 진행 중인 교재 필터링
-    )
-    setCompletedBooks(
-      workbooks.filter((book) => book.progress === 100), // 완료한 교재 필터링
-    )
   }
 
   return (
@@ -222,14 +209,16 @@ export default function Library() {
           </CompletedSectionHeader>
           <Suspense fallback={<LoadingSpinner />}>
             <CompletedSectionContent>
-              {completedBooks.map((book, index) => (
-                <WorkbookItem
-                  key={book.id}
-                  workbook={book}
-                  status="completed"
-                  onClick={() => openEditModal(index)}
-                />
-              ))}
+              {workbooks
+                .filter((book) => book.progress === 100)
+                .map((book, index) => (
+                  <WorkbookItem
+                    key={book.subject_id + book.title}
+                    workbook={book}
+                    status="completed"
+                    onClick={() => openEditModal(index)}
+                  />
+                ))}
             </CompletedSectionContent>
           </Suspense>
         </CompletedSection>
@@ -242,14 +231,16 @@ export default function Library() {
           </OngoingSectionHeader>
           <Suspense fallback={<LoadingSpinner />}>
             <OngoingSectionContent>
-              {ongoingBooks.map((book, index) => (
-                <WorkbookItem
-                  key={book.id}
-                  workbook={book}
-                  status="ongoing"
-                  onClick={() => openEditModal(index)}
-                />
-              ))}
+              {workbooks
+                .filter((book) => book.progress < 100)
+                .map((book, index) => (
+                  <WorkbookItem
+                    key={book.subject_id + book.title}
+                    workbook={book}
+                    status="ongoing"
+                    onClick={() => openEditModal(index)}
+                  />
+                ))}
             </OngoingSectionContent>
           </Suspense>
         </OngoingSection>
