@@ -1,3 +1,4 @@
+import fetchSubjects from '@apis/subject/fetchSubject'
 import {
   BookInfoContainer,
   CloseButton,
@@ -13,6 +14,7 @@ import {
   PagesInfoContainer,
   ProgressContainer,
 } from '@components/Library/LibraryModal/LibraryEditModal/LibraryEditModal.style'
+import { FormControl, MenuItem, Select } from '@mui/material'
 import workbookContentStore from '@stores/workbookContentStore'
 import {
   BarElement,
@@ -38,15 +40,35 @@ export default function LibraryEditModal({ workbook, onClose }) {
   const removeWorkbook = workbookContentStore((state) => state.removeWorkbook)
 
   const [updatedBookName, setUpdatedBookName] = useState(workbook.title || '')
-  const [updatedSubject, setUpdatedSubject] = useState(workbook.subject || '')
+
+  //DropDown menu 가공을 위한 상태값
+  const [updatedSubject, setUpdatedSubject] = useState(null)
+  const [currentSubject, setCurrentSubject] = useState(workbook.subject || '')
+
   const [goalPages, setGoalPages] = useState(workbook.end_page || 0)
   const [studiedPages, setStudiedPages] = useState(workbook.start_page || 0) // 공부한 페이지 수
   const [progress, setProgress] = useState(workbook.progress || 0)
 
+  const [subjectList, setSubjectList] = useState([])
+  console.log(subjectList)
+
   const nameInputRef = useRef(null)
-  const subjectInputRef = useRef(null)
   const goalPagesRef = useRef(null)
   const studiedPagesRef = useRef(null)
+
+  //과목 색상 리스트 반환 API
+  useEffect(() => {
+    const loadSubjects = async () => {
+      try {
+        const data = await fetchSubjects()
+        setSubjectList(data)
+      } catch (error) {
+        console.error('Failed to load subjects:', error)
+      }
+    }
+
+    loadSubjects()
+  }, [])
 
   useEffect(() => {
     // 성취도 계산 함수
@@ -72,7 +94,7 @@ export default function LibraryEditModal({ workbook, onClose }) {
     const updatedWorkbook = {
       ...workbook,
       title: updatedBookName,
-      subject: updatedSubject,
+      subject: updatedSubject || currentSubject,
       end_page: goalPages, // 필드 이름 확인
       start_page: studiedPages, // 필드 이름 확인
       progress,
@@ -98,11 +120,19 @@ export default function LibraryEditModal({ workbook, onClose }) {
     }
   }
 
+  const handleSubjectChange = (event) => {
+    const selectedSubject = subjectList.find(
+      (item) => item.title === event.target.value,
+    )
+    //mui dropdown 메뉴에 객체는 안되서 단일값으로 세팅
+    setUpdatedSubject(selectedSubject.title)
+  }
+
   const data = {
     labels: ['진행률'],
     datasets: [
       {
-        label: '주간 진행률',
+        label: '진행률',
         data: [workbook.progress], // Y축 데이터, 처음엔 하나만
         backgroundColor: [useCalculateProgressColor(workbook.progress)],
       },
@@ -165,17 +195,49 @@ export default function LibraryEditModal({ workbook, onClose }) {
               />
             </ModalPageInputBox>
 
-            <ModalPageInputBox>
-              <InputLabel>과목</InputLabel>
-              <ModalInput
-                type="text"
-                value={updatedSubject}
-                onChange={(e) => setUpdatedSubject(e.target.value)}
-                onKeyDown={(e) => handleKeyDown(e, subjectInputRef)}
-                placeholder="과목 이름을 입력하세요"
-                ref={subjectInputRef}
-              />
-            </ModalPageInputBox>
+            <FormControl
+              fullWidth
+              style={{
+                marginTop: '20px',
+                width: '100%',
+                alignItems: 'flex-start',
+              }}
+            >
+              <InputLabel id="subject-select-label">과목 선택</InputLabel>
+              <Select
+                labelId="subject-select-label"
+                value={updatedSubject || currentSubject || ''}
+                onChange={handleSubjectChange}
+                displayEmpty
+                style={{
+                  backgroundColor: '#fff',
+                  width: '100%',
+                  marginTop: '10px',
+                }}
+              >
+                {subjectList.map((item) => (
+                  <MenuItem key={item.id} value={item.title}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: '12px',
+                          height: '12px',
+                          borderRadius: '50%',
+                          backgroundColor: item.color,
+                          marginRight: '8px',
+                        }}
+                      ></div>
+                      {item.title}
+                    </div>
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </BookInfoContainer>
           <PagesInfoContainer>
             <InputLabel>시작 페이지</InputLabel>
