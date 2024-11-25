@@ -65,15 +65,15 @@ export default function LibraryAddModal({ onClose }) {
       subject_id: subject.id,
     }
 
-    const stateData = {
-      ...newBook,
-      subject: subject.title,
-      subjectColor,
-      progress,
-    }
-
     try {
-      await addBook(newBook)
+      const response = await addBook(newBook) // 서버로 데이터 전송 후 응답 받기
+      const savedBook = response
+      const stateData = {
+        ...savedBook,
+        subject: subject.title,
+        subjectColor,
+        progress,
+      }
       addWorkbook(stateData)
       onClose()
     } catch (error) {
