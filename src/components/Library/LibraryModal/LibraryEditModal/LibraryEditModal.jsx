@@ -33,7 +33,7 @@ import useCalculateProgressColor from '@hooks/useCalculateProgressColor'
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 
-export default function LibraryEditModal({ workbook, onClose, workbookIndex }) {
+export default function LibraryEditModal({ workbook, onClose }) {
   const updateWorkbook = workbookContentStore((state) => state.updateWorkbook)
   const removeWorkbook = workbookContentStore((state) => state.removeWorkbook)
 
@@ -78,14 +78,14 @@ export default function LibraryEditModal({ workbook, onClose, workbookIndex }) {
       progress,
     }
 
-    updateWorkbook(workbookIndex, updatedWorkbook)
+    updateWorkbook(workbook.id, updatedWorkbook)
     onClose()
   }
 
   const handleWorkBookDelete = async () => {
     try {
       await deleteBook(workbook.id)
-      removeWorkbook(workbookIndex)
+      removeWorkbook(workbook.id)
       onClose() // 모달 닫기
     } catch (error) {
       console.error('Failed to delete the workbook:', error)

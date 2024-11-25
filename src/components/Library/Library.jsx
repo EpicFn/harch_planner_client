@@ -42,6 +42,9 @@ export default function Library() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false) // 추가 모달 상태
   const [isEditModalOpen, setIsEditModalOpen] = useState(false) // 편집 모달 상태
   const [selectedWorkbookIndex, setSelectedWorkbookIndex] = useState(null)
+  const [selectedWorkbook, setSelectedWorkbook] = useState(null)
+
+  //검색 관련 상태 값들
   const [searchTerm, setSearchTerm] = useState('') // 검색어 상태
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [filteredWorkbooks, setFilteredWorkbooks] = useState([])
@@ -64,16 +67,21 @@ export default function Library() {
   }, [searchTerm])
 
   useEffect(() => {
+    if (debouncedSearchTerm.trim() === '') {
+      setFilteredWorkbooks([]) // 검색어가 없으면 필터링된 문제집 초기화
+      return
+    }
+
+    const results = workbooks.filter((book) =>
+      book.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
+    )
+    setFilteredWorkbooks(results)
+  }, [debouncedSearchTerm, workbooks])
+
+  useEffect(() => {
     // workbooks 상태가 변경될 때 필터링된 교재 리스트 다시 계산
     console.log('Workbooks updated:', workbooks)
   }, [workbooks])
-
-  useEffect(() => {
-    const filtered = workbooks.filter((workbook) =>
-      workbook.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
-    )
-    setFilteredWorkbooks(filtered)
-  }, [debouncedSearchTerm, workbooks])
 
   useEffect(() => {
     const loadBooks = async () => {
@@ -94,15 +102,15 @@ export default function Library() {
     loadBooks()
   }, [setWorkbooks]) // 초기 로딩 시만 실행
 
-  const openEditModal = (index) => {
-    const targetBook = viewCompleted
-      ? workbooks.filter((book) => book.progress === 100)[index]
-      : workbooks.filter((book) => book.progress < 100)[index]
+  const openEditModal = (index, isFiltered = false) => {
+    const targetBook = isFiltered
+      ? filteredWorkbooks[index]
+      : viewCompleted
+        ? workbooks.filter((book) => book.progress === 100)[index]
+        : workbooks.filter((book) => book.progress < 100)[index]
 
-    const actualIndex = workbooks.findIndex((book) => book.id === targetBook.id)
-
-    if (actualIndex !== -1) {
-      setSelectedWorkbookIndex(actualIndex)
+    if (targetBook) {
+      setSelectedWorkbook(targetBook) // 선택된 workbook 저장
       setIsEditModalOpen(true)
     } else {
       console.error('Workbook not found in store')
@@ -215,27 +223,16 @@ export default function Library() {
           </CompletedSectionHeader>
           <Suspense fallback={<LoadingSpinner />}>
             <CompletedSectionContent>
-              {filteredWorkbooks.length > 0
-                ? filteredWorkbooks
-                    .filter((book) => book.progress === 100)
-                    .map((book, index) => (
-                      <WorkbookItem
-                        key={book.subject_id + book.title}
-                        workbook={book}
-                        status="completed"
-                        onClick={() => openEditModal(index)}
-                      />
-                    ))
-                : workbooks
-                    .filter((book) => book.progress === 100)
-                    .map((book, index) => (
-                      <WorkbookItem
-                        key={book.subject_id + book.title}
-                        workbook={book}
-                        status="completed"
-                        onClick={() => openEditModal(index)}
-                      />
-                    ))}
+              {(filteredWorkbooks.length > 0 ? filteredWorkbooks : workbooks)
+                .filter((book) => book.progress === 100)
+                .map((book, index) => (
+                  <WorkbookItem
+                    key={book.id}
+                    workbook={book}
+                    status="completed"
+                    onClick={() => openEditModal(index, !!debouncedSearchTerm)}
+                  />
+                ))}
             </CompletedSectionContent>
           </Suspense>
         </CompletedSection>
@@ -248,27 +245,16 @@ export default function Library() {
           </OngoingSectionHeader>
           <Suspense fallback={<LoadingSpinner />}>
             <OngoingSectionContent>
-              {filteredWorkbooks.length > 0
-                ? filteredWorkbooks
-                    .filter((book) => book.progress < 100)
-                    .map((book, index) => (
-                      <WorkbookItem
-                        key={book.subject_id + book.title}
-                        workbook={book}
-                        status="ongoing"
-                        onClick={() => openEditModal(index)}
-                      />
-                    ))
-                : workbooks
-                    .filter((book) => book.progress < 100)
-                    .map((book, index) => (
-                      <WorkbookItem
-                        key={book.subject_id + book.title}
-                        workbook={book}
-                        status="ongoing"
-                        onClick={() => openEditModal(index)}
-                      />
-                    ))}
+              {(filteredWorkbooks.length > 0 ? filteredWorkbooks : workbooks)
+                .filter((book) => book.progress < 100)
+                .map((book, index) => (
+                  <WorkbookItem
+                    key={book.id}
+                    workbook={book}
+                    status="ongoing"
+                    onClick={() => openEditModal(index, !!debouncedSearchTerm)}
+                  />
+                ))}
             </OngoingSectionContent>
           </Suspense>
         </OngoingSection>
@@ -280,11 +266,13 @@ export default function Library() {
         />
       )}
 
-      {isEditModalOpen && (
+      {isEditModalOpen && selectedWorkbook && (
         <LibraryEditModal
-          workbook={workbooks[selectedWorkbookIndex]}
-          onClose={() => setIsEditModalOpen(false)} // 편집 모달 닫기
-          workbookIndex={selectedWorkbookIndex}
+          workbook={selectedWorkbook}
+          onClose={() => {
+            setIsEditModalOpen(false)
+            setSelectedWorkbook(null) // 모달 닫을 때 초기화
+          }}
         />
       )}
     </LibraryContainer>
