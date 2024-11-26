@@ -106,8 +106,8 @@ export default function LoginModal() {
       })
 
       queryClient.setQueryData(['user'], responseData, {
-        staleTime: 3600000,
-        cacheTime: 3600000,
+        staleTime: 3 * 60 * 60 * 1000, // 3시간
+        cacheTime: 3 * 60 * 60 * 1000,
       }) // React Query 캐시에 저장
 
       //로컬스토리지에도 저장
