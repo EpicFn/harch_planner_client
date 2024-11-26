@@ -78,15 +78,6 @@ export const OngoingSectionHeader = styled.div`
   margin-bottom: 20px;
 `
 
-export const CompletedSectionHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  height: 80px;
-  margin-bottom: 20px;
-`
-
 export const Sidebar = styled.div`
   flex-grow: 0.5;
   max-width: 28%; /* 1:3 비율 설정 */
@@ -103,44 +94,6 @@ export const OngoingSectionContent = styled.div`
   display: flex;
   flex-wrap: wrap; /* 줄 바꿈을 허용 */
   gap: 40px;
-`
-
-export const CompletedSectionContent = styled.div`
-  display: flex;
-  flex-wrap: wrap; /* 줄 바꿈을 허용 */
-  gap: 40px;
-`
-
-export const CompletedSection = styled.div`
-  flex-grow: 2;
-  width: 1024px;
-  height: 100%;
-  background-color: white;
-  padding: 12px 60px;
-  box-sizing: border-box;
-  overflow-y: scroll;
-  color: black;
-
-  &::-webkit-scrollbar {
-    width: 12px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: #b0b0b0;
-    background: linear-gradient(180deg, #c4c4c4, #8e8e8e);
-    border-radius: 10px;
-    border: 2px solid transparent;
-    background-clip: content-box;
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, #b0b0b0, #7a7a7a);
-  }
-
-  &::-webkit-scrollbar-track {
-    background-color: #e0e0e0;
-    border-radius: 10px;
-  }
 `
 
 export const CompletedBookItem = styled.div`
@@ -334,3 +287,15 @@ export const WorkbookItemStyled = styled.div`
   font-size: 0.9rem;
   color: #333;
 `
+
+export const CompletedSection = styled(OngoingSection)``
+
+export const CompletedSectionHeader = styled(OngoingSectionHeader)``
+
+export const CompletedSectionContent = styled(OngoingSectionContent)``
+
+export const SubjectSection = styled(OngoingSection)``
+
+export const SubjectSectionHeader = styled(OngoingSectionHeader)``
+
+export const SubjectSectionContent = styled(OngoingSectionContent)``

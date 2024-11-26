@@ -71,9 +71,11 @@ export default function LibraryAddModal({ onClose }) {
       const stateData = {
         ...savedBook,
         subject: subject.title,
+        subject_id: subject.id,
         subjectColor,
         progress,
       }
+      console.log(stateData)
       addWorkbook(stateData)
       onClose()
     } catch (error) {

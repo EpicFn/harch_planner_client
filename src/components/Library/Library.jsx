@@ -1,6 +1,7 @@
 import { debounce } from 'lodash'
 import React, { Suspense, useEffect, useState } from 'react'
 
+import fetchBookBySubject from '@apis/book/fetchBookBySubject'
 import LibraryAddModal from '@components/Library/LibraryModal/LibraryAddModal/LibraryAddModal'
 import LibraryEditModal from '@components/Library/LibraryModal/LibraryEditModal/LibraryEditModal'
 import {
@@ -24,6 +25,9 @@ import {
   SubjectContent,
   SubjectHeader,
   SubjectName,
+  SubjectSection,
+  SubjectSectionContent,
+  SubjectSectionHeader,
   SubjectTitle,
   SubjectTitleContainer,
   SubjectToggleIcon,
@@ -43,6 +47,7 @@ export default function Library() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false) // 편집 모달 상태
   const [selectedWorkbookIndex, setSelectedWorkbookIndex] = useState(null)
   const [selectedWorkbook, setSelectedWorkbook] = useState(null)
+  const [selectedSubjectId, setSelectedSubjectId] = useState(null)
 
   //검색 관련 상태 값들
   const [searchTerm, setSearchTerm] = useState('') // 검색어 상태
@@ -90,6 +95,7 @@ export default function Library() {
         const processedBooks = fetchedBooks.map((book) => ({
           ...book,
           subject: book.subject?.title || '미 분류',
+          subject_id: book.subject?.id,
           subjectColor: book.subject?.color || '#ccc',
           progress: calculateProgress(book.start_page, book.end_page),
         }))
@@ -102,19 +108,9 @@ export default function Library() {
     loadBooks()
   }, [setWorkbooks]) // 초기 로딩 시만 실행
 
-  const openEditModal = (index, isFiltered = false) => {
-    const targetBook = isFiltered
-      ? filteredWorkbooks[index]
-      : viewCompleted
-        ? workbooks.filter((book) => book.progress === 100)[index]
-        : workbooks.filter((book) => book.progress < 100)[index]
-
-    if (targetBook) {
-      setSelectedWorkbook(targetBook) // 선택된 workbook 저장
-      setIsEditModalOpen(true)
-    } else {
-      console.error('Workbook not found in store')
-    }
+  const openEditModal = (book) => {
+    setSelectedWorkbook(book) // 선택된 workbook 저장
+    setIsEditModalOpen(true)
   }
 
   const openAddModal = () => {
@@ -128,8 +124,27 @@ export default function Library() {
     }))
   }
 
-  const selectSubject = (subject) => {
-    setSelectedSubject(subject)
+  const selectSubject = async (subject, subjectId) => {
+    setSelectedSubject(subject) // 과목 이름 저장
+    setSelectedSubjectId(subjectId) // 과목 ID 저장
+    setViewCompleted(null) // 완료 상태 초기화
+
+    try {
+      const response = await fetchBookBySubject(subjectId) // subject_id를 이용한 API 호출
+      console.log(response)
+      const books = response.books // 응답에서 books 배열 추출
+
+      const processedBooks = books.map((book) => ({
+        ...book,
+        subject: subject, // 상위 subject 값을 재활용
+        subjectColor: response.subject.color || '#ccc', // 상위 subject의 color
+        progress: calculateProgress(book.start_page, book.end_page),
+      }))
+
+      setFilteredWorkbooks(processedBooks) // 선택된 과목의 교재 저장
+    } catch (error) {
+      console.error(`Failed to fetch books for subject ID ${subjectId}:`, error)
+    }
   }
 
   const calculateProgress = (startPage, endPage) => {
@@ -137,6 +152,21 @@ export default function Library() {
     if (startPage >= endPage) return 100 // 시작 페이지가 총 페이지 이상인 경우 100%
     return Math.round((startPage / endPage) * 100) // 진행률 계산
   }
+
+  const booksToRender = workbooks.filter((book) => {
+    // 선택된 과목이 있으면 해당 과목의 책만 포함
+    if (selectedSubject && book.subject !== selectedSubject) {
+      return false
+    }
+    // 검색어가 있으면 제목에 검색어가 포함된 책만 포함
+    if (
+      debouncedSearchTerm.trim() !== '' &&
+      !book.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
+    ) {
+      return false
+    }
+    return true
+  })
 
   return (
     <LibraryContainer>
@@ -172,87 +202,107 @@ export default function Library() {
             <AddSubjectButton onClick={openAddModal} />
           </SubjectHeader>
           <SubjectContent>
-            {Array.from(new Set(workbooks.map((wb) => wb.subject))).map(
-              (subject) => {
-                // 해당 과목의 첫 번째 워크북에서 색상을 가져옵니다.
-                const subjectColor =
-                  workbooks.find((wb) => wb.subject === subject)
-                    ?.subjectColor || '#ccc'
+            {Array.from(
+              new Map(
+                workbooks.map((wb) => [
+                  wb.subject, // Key로 subject 이름 사용
+                  { subject: wb.subject, subjectId: wb.subject_id }, // Value로 subject와 subject_id 저장
+                ]),
+              ).values(),
+            ).map(({ subject, subjectId }) => {
+              const subjectColor =
+                workbooks.find((wb) => wb.subject === subject)?.subjectColor ||
+                '#ccc'
 
-                return (
-                  <React.Fragment key={subject}>
-                    <SubjectTitleContainer
-                      onClick={() => selectSubject(subject)}
+              return (
+                <React.Fragment key={subject}>
+                  <SubjectTitleContainer
+                    onClick={() => selectSubject(subject, subjectId)}
+                  >
+                    <SubjectCircle color={subjectColor} />
+                    <SubjectName>
+                      {subject === 'Unknown Subject' ? '미 분류' : subject}
+                    </SubjectName>
+                    <SubjectToggleIcon
+                      isopen={String(expandedSubjects[subject])}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        toggleSubject(subject)
+                      }}
                     >
-                      <SubjectCircle color={subjectColor} />
-                      <SubjectName>
-                        {subject === 'Unknown Subject' ? '미 분류' : subject}
-                      </SubjectName>
-                      <SubjectToggleIcon
-                        isopen={String(expandedSubjects[subject])}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          toggleSubject(subject)
-                        }}
-                      >
-                        ▸
-                      </SubjectToggleIcon>
-                    </SubjectTitleContainer>
-                    {expandedSubjects[subject] &&
-                      workbooks
-                        .filter((wb) => wb.subject === subject)
-                        .map((workbook, idx) => (
-                          <WorkbookItemStyled key={`${subject}-${idx}`}>
-                            {workbook.title}
-                          </WorkbookItemStyled>
-                        ))}
-                  </React.Fragment>
-                )
-              },
-            )}
+                      ▸
+                    </SubjectToggleIcon>
+                  </SubjectTitleContainer>
+                  {expandedSubjects[subject] &&
+                    workbooks
+                      .filter((wb) => wb.subject === subject)
+                      .map((workbook, idx) => (
+                        <WorkbookItemStyled key={`${subject}-${idx}`}>
+                          {workbook.title}
+                        </WorkbookItemStyled>
+                      ))}
+                </React.Fragment>
+              )
+            })}
           </SubjectContent>
         </SubjectContainer>
       </Sidebar>
 
-      {viewCompleted ? (
+      {selectedSubject ? (
+        // 과목이 선택된 경우: OngoingSection과 같은 구조로 렌더링
+        <SubjectSection>
+          <SubjectSectionHeader>
+            <SectionTitle>{selectedSubject}</SectionTitle>
+          </SubjectSectionHeader>
+          <Suspense fallback={<LoadingSpinner />}>
+            <SubjectSectionContent>
+              {booksToRender.map((book) => (
+                <WorkbookItem
+                  key={book.id}
+                  workbook={book}
+                  onClick={() => openEditModal(book)}
+                />
+              ))}
+            </SubjectSectionContent>
+          </Suspense>
+        </SubjectSection>
+      ) : viewCompleted ? (
+        // 과목이 선택되지 않고, 완료한 교재를 보는 경우
         <CompletedSection>
           <CompletedSectionHeader>
-            <SectionTitle>
-              {selectedSubject ? `${selectedSubject}` : '완료한 교재'}
-            </SectionTitle>
+            <SectionTitle>완료한 교재</SectionTitle>
           </CompletedSectionHeader>
           <Suspense fallback={<LoadingSpinner />}>
             <CompletedSectionContent>
-              {(filteredWorkbooks.length > 0 ? filteredWorkbooks : workbooks)
+              {booksToRender
                 .filter((book) => book.progress === 100)
-                .map((book, index) => (
+                .map((book) => (
                   <WorkbookItem
                     key={book.id}
                     workbook={book}
                     status="completed"
-                    onClick={() => openEditModal(index, !!debouncedSearchTerm)}
+                    onClick={() => openEditModal(book)}
                   />
                 ))}
             </CompletedSectionContent>
           </Suspense>
         </CompletedSection>
       ) : (
+        // 과목이 선택되지 않고, 학습 중인 교재를 보는 경우
         <OngoingSection>
           <OngoingSectionHeader>
-            <SectionTitle>
-              {selectedSubject ? `${selectedSubject}` : '학습 중인 교재'}
-            </SectionTitle>
+            <SectionTitle>학습 중인 교재</SectionTitle>
           </OngoingSectionHeader>
           <Suspense fallback={<LoadingSpinner />}>
             <OngoingSectionContent>
-              {(filteredWorkbooks.length > 0 ? filteredWorkbooks : workbooks)
+              {booksToRender
                 .filter((book) => book.progress < 100)
-                .map((book, index) => (
+                .map((book) => (
                   <WorkbookItem
                     key={book.id}
                     workbook={book}
                     status="ongoing"
-                    onClick={() => openEditModal(index, !!debouncedSearchTerm)}
+                    onClick={() => openEditModal(book)}
                   />
                 ))}
             </OngoingSectionContent>
