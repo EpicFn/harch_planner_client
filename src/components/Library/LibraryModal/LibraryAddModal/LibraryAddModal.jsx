@@ -1,4 +1,5 @@
 import addBook from '@apis/book/addBook'
+import addSubject from '@apis/subject/addSubject'
 import fetchSubjects from '@apis/subject/fetchSubject'
 import {
   CloseButton,
@@ -11,6 +12,9 @@ import {
   ModalLayout,
   ModalPageInput,
   ModalPageInputBox,
+  SubjectAddButton,
+  SubjectBox,
+  SubjectInputWrapper,
 } from '@components/Library/LibraryModal/LibraryAddModal/LibraryAddModal.style'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import workbookContentStore from '@stores/workbookContentStore'
@@ -23,6 +27,9 @@ export default function LibraryAddModal({ onClose }) {
   const [subject, setSubject] = useState('')
   const [goalPages, setGoalPages] = useState('')
   const [studiedPages, setStudiedPages] = useState('') // 공부한 페이지 수
+
+  const [showSubjectInput, setShowSubjectInput] = useState(false)
+  const [addedSubject, setAddedSubject] = useState('')
   const [subjectColor, setSubjectColor] = useState('')
   const [memo, setMemo] = useState('')
   const [subjectList, setSubjectList] = useState([])
@@ -111,6 +118,31 @@ export default function LibraryAddModal({ onClose }) {
     setSubjectColor(selectedSubject.color)
   }
 
+  // 과목 추가
+  const handleAddSubject = async () => {
+    if (!addedSubject.trim()) return
+    try {
+      const addedSubjectData = await addSubject(addedSubject) // 분리된 API 호출 함수 사용
+      console.log('Subject added successfully:', addedSubjectData)
+
+      setAddedSubject('')
+      setShowSubjectInput(false)
+
+      // 새로 추가된 과목 포함한 목록 다시 불러오기
+      const data = await fetchSubjects()
+      setSubjectList(data)
+    } catch (error) {
+      console.error('Error adding subject:', error)
+    }
+  }
+
+  // 엔터 키 입력 처리
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      handleAddSubject()
+    }
+  }
+
   return (
     <ModalContainer>
       <ModalLayout shaking={shaking}>
@@ -125,38 +157,62 @@ export default function LibraryAddModal({ onClose }) {
               placeholder="교재 이름을 입력하세요"
               ref={nameInputRef}
             />
-            <FormControl fullWidth style={{ marginTop: '20px' }}>
-              <InputLabel id="subject-select-label">과목 선택</InputLabel>
-              <Select
-                labelId="subject-select-label"
-                value={subject?.title || ''}
-                onChange={handleSubjectChange}
-                displayEmpty
-                style={{ backgroundColor: '#fff' }}
-              >
-                {subjectList.map((item) => (
-                  <MenuItem key={item.id} value={item.title}>
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                      }}
-                    >
+            <SubjectBox>
+              <FormControl fullWidth>
+                <InputLabel id="subject-select-label">과목 선택</InputLabel>
+                <Select
+                  labelId="subject-select-label"
+                  value={subject?.title || ''}
+                  onChange={handleSubjectChange}
+                  displayEmpty
+                  style={{ backgroundColor: '#fff', width: '90%' }}
+                >
+                  {subjectList.map((item) => (
+                    <MenuItem key={item.id} value={item.title}>
                       <div
                         style={{
-                          width: '12px',
-                          height: '12px',
-                          borderRadius: '50%',
-                          backgroundColor: item.color,
-                          marginRight: '8px',
+                          display: 'flex',
+                          alignItems: 'center',
                         }}
-                      ></div>
-                      {item.title}
-                    </div>
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+                      >
+                        <div
+                          style={{
+                            width: '12px',
+                            height: '12px',
+                            borderRadius: '50%',
+                            backgroundColor: item.color,
+                            marginRight: '8px',
+                          }}
+                        ></div>
+                        {item.title}
+                      </div>
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <SubjectAddButton
+                onClick={() => setShowSubjectInput((prev) => !prev)}
+              >
+                과목 추가
+              </SubjectAddButton>
+              {showSubjectInput && (
+                <SubjectInputWrapper style={{ marginTop: '10px' }}>
+                  <input
+                    type="text"
+                    value={addedSubject}
+                    onChange={(e) => setAddedSubject(e.target.value)}
+                    onKeyDown={handleKeyPress}
+                    placeholder="새 과목 입력"
+                    style={{
+                      width: '90%',
+                      padding: '15px 8px',
+                      border: '1px solid #ccc',
+                      borderRadius: '8px',
+                    }}
+                  />
+                </SubjectInputWrapper>
+              )}
+            </SubjectBox>
             <ModalPageInputBox>
               <ModalPageInput
                 type="number"

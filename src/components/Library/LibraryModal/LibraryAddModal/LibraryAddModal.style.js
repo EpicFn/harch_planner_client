@@ -15,6 +15,17 @@ const shake = keyframes`
   }
 `
 
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`
+
 export const ModalContainer = styled.div`
   position: fixed;
   top: 0;
@@ -259,4 +270,58 @@ export const SubjectColorBox = styled.div`
 export const SubjectName = styled.span`
   font-size: 16px;
   color: #333;
+`
+
+export const SubjectBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: auto;
+  margin-top: 25px;
+  position: relative;
+`
+
+export const SubjectAddButton = styled.button`
+  width: 80px;
+  height: 53px;
+  border-radius: 20px;
+  background-color: #f5f5f5;
+  border: none;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 버튼 그림자 */
+  cursor: pointer;
+  transition: all 0.3s ease; /* 호버 효과 추가 */
+
+  &:hover {
+    background-color: #e0e0e0;
+    transform: translateY(-3px);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+`
+
+export const SubjectInputWrapper = styled.div`
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 8px;
+
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 10;
+
+  animation: ${fadeIn} 0.3s ease-in-out;
 `
