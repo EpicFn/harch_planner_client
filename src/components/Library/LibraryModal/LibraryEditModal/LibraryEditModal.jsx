@@ -214,6 +214,33 @@ export default function LibraryEditModal({ workbook, onClose }) {
                   width: '100%',
                   marginTop: '10px',
                 }}
+                MenuProps={{
+                  PaperProps: {
+                    style: {
+                      maxHeight: 200, // 드롭다운 최대 높이 (픽셀)
+                      overflow: 'auto',
+                      scrollbarWidth: 'thin',
+                    },
+                  },
+                  sx: {
+                    '&::-webkit-scrollbar': {
+                      width: '12px',
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                      background: 'linear-gradient(180deg, #c4c4c4, #8e8e8e)',
+                      borderRadius: '10px',
+                      border: '2px solid transparent',
+                      backgroundClip: 'content-box',
+                    },
+                    '&::-webkit-scrollbar-thumb:hover': {
+                      background: 'linear-gradient(180deg, #b0b0b0, #7a7a7a)',
+                    },
+                    '&::-webkit-scrollbar-track': {
+                      backgroundColor: '#e0e0e0',
+                      borderRadius: '10px',
+                    },
+                  },
+                }}
               >
                 {subjectList.map((item) => (
                   <MenuItem key={item.id} value={item.title}>
