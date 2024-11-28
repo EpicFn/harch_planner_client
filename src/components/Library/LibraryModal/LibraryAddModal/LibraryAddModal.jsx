@@ -1,6 +1,8 @@
 import addBook from '@apis/book/addBook'
+import checkBookName from '@apis/book/checkBookName'
 import addSubject from '@apis/subject/addSubject'
 import fetchSubjects from '@apis/subject/fetchSubject'
+import CheckIcon from '@components/CheckIcon'
 import {
   CloseButton,
   InputContainer,
@@ -18,12 +20,18 @@ import {
 } from '@components/Library/LibraryModal/LibraryAddModal/LibraryAddModal.style'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import workbookContentStore from '@stores/workbookContentStore'
-import { useEffect, useRef, useState } from 'react'
+import { useDeferredValue, useEffect, useRef, useState } from 'react'
 
 export default function LibraryAddModal({ onClose }) {
   const addWorkbook = workbookContentStore((state) => state.addWorkbook)
 
   const [bookName, setBookName] = useState('')
+  const deferredBookName = useDeferredValue(bookName)
+
+  const [isDuplicate, setIsDuplicate] = useState(false) // 중복 여부
+  const [apiMessage, setApiMessage] = useState('') // API 메시지
+  const [loading, setLoading] = useState(false) // 로딩 상태
+
   const [subject, setSubject] = useState('')
   const [goalPages, setGoalPages] = useState('')
   const [studiedPages, setStudiedPages] = useState('') // 공부한 페이지 수
@@ -53,6 +61,51 @@ export default function LibraryAddModal({ onClose }) {
 
     loadSubjects()
   }, [])
+
+  useEffect(() => {
+    let isCancelled = false
+
+    const checkDuplicate = async () => {
+      if (!deferredBookName.trim()) {
+        setIsDuplicate(false)
+        setApiMessage('')
+        return
+      }
+
+      setLoading(true) // 로딩 상태 시작
+      try {
+        const result = await checkBookName(deferredBookName) // API 호출
+        if (!isCancelled) {
+          if (result.message === 'Title is available') {
+            setIsDuplicate(false)
+            setApiMessage(result.message) // 사용 가능 메시지 설정
+          } else if (result.message === 'Book already exists') {
+            setIsDuplicate(true)
+            setApiMessage(result.message) // 중복 메시지 설정
+          }
+        }
+      } catch (error) {
+        if (!isCancelled) {
+          setApiMessage('Error occurred while checking title') // 에러 메시지 처리
+        }
+      } finally {
+        if (!isCancelled) {
+          setLoading(false) // 로딩 상태 종료
+        }
+      }
+    }
+
+    checkDuplicate()
+
+    return () => {
+      isCancelled = true // 비동기 작업 취소
+    }
+  }, [deferredBookName])
+
+  const handleBookNameChange = (e) => {
+    const value = e.target.value
+    setBookName(value)
+  }
 
   const handleAddWorkbook = async () => {
     if (!bookName || !subject || !goalPages || !studiedPages) {
@@ -152,11 +205,34 @@ export default function LibraryAddModal({ onClose }) {
             <ModalInput
               type="text"
               value={bookName}
-              onChange={(e) => setBookName(e.target.value)}
+              onChange={handleBookNameChange}
               onKeyDown={(e) => handleKeyDown(e, nameInputRef)}
               placeholder="교재 이름을 입력하세요"
+              style={{
+                borderColor: !bookName ? null : isDuplicate ? 'red' : 'green',
+                paddingRight: '30px',
+                position: 'relative',
+              }}
               ref={nameInputRef}
             />
+            <CheckIcon
+              loading={loading}
+              isDuplicate={isDuplicate}
+              deferredBookName={deferredBookName}
+              bookName={bookName}
+            />
+            {isDuplicate && (
+              <span
+                style={{
+                  position: 'absolute',
+                  top: '90px',
+                  color: 'red',
+                  fontSize: '12px',
+                }}
+              >
+                중복된 이름입니다
+              </span>
+            )}
             <SubjectBox>
               <FormControl fullWidth>
                 <InputLabel id="subject-select-label">과목 선택</InputLabel>

@@ -100,7 +100,7 @@ export const ModalInput = styled.input`
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 1rem;
-  width: 100%;
+  width: 95%;
   box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.1); // 내부 그림자
   transition: border-color 0.3s ease;
   box-sizing: border-box;
