@@ -6,7 +6,8 @@ import {
   BookTitle,
   DateText,
   StyledWorkbookItem,
-} from '@components/Library/WorkBook/WorkbookItem/WorkbookItem.style'
+} from '@components/Library/WorkBook/WorkBookItem/WorkBookItem.style'
+import useCalculateProgressColor from '@hooks/useCalculateProgressColor'
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 
@@ -35,7 +36,7 @@ export default function WorkbookItem({ workbook, onClick, status }) {
           value={animatedProgress}
           text={`${animatedProgress}%`}
           styles={buildStyles({
-            pathColor: '#ff6b6b', // 진행도 색상
+            pathColor: useCalculateProgressColor(animatedProgress), // 진행도 색상
             textColor: '#000',
             trailColor: '#d6d6d6', // 남은 진행도 색상
             textSize: '1.5rem',
@@ -46,7 +47,7 @@ export default function WorkbookItem({ workbook, onClick, status }) {
         />
       </div>
       <BookInfo>
-        <BookTitle>{workbook.name}</BookTitle>
+        <BookTitle>{workbook.title}</BookTitle>
         <BookSubject>{workbook.subject}</BookSubject>
         <DateText>{workbook.date}</DateText>
       </BookInfo>

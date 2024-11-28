@@ -15,6 +15,17 @@ const shake = keyframes`
   }
 `
 
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`
+
 export const ModalContainer = styled.div`
   position: fixed;
   top: 0;
@@ -89,7 +100,7 @@ export const ModalInput = styled.input`
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 1rem;
-  width: 100%;
+  width: 95%;
   box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.1); // 내부 그림자
   transition: border-color 0.3s ease;
   box-sizing: border-box;
@@ -190,27 +201,6 @@ export const Line = styled.hr`
   border-top: 1px solid #ddd;
 `
 
-export const ColorPickerContainer = styled.div`
-  position: absolute;
-  top: 50%;
-  bottom: 50%;
-  left: -200px;
-  //transform: translate(-50%, -50%);
-  width: 140px; /* Adjust width as needed */
-  height: 110px;
-  z-index: 10;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
-  text-align: center;
-
-  .react-colorful {
-    width: 100%;
-    height: 100%;
-  }
-`
-
 export const ColorPickerLabel = styled.div`
   margin-top: 20px;
   color: white;
@@ -245,4 +235,93 @@ export const SelectedColorCode = styled.div`
 export const ColorLabel = styled.span`
   font-size: 1rem;
   color: #333;
+`
+
+export const SubjectListContainer = styled.div`
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  gap: 12px;
+  margin-top: 15px;
+`
+
+export const SubjectItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  box-sizing: border-box;
+  border: 1px solid ${(props) => (props.selected ? '#6a5acd' : '#ccc')};
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: ${(props) => (props.selected ? '#f0f0ff' : 'white')};
+  &:hover {
+    background-color: #f9f9f9;
+  }
+`
+
+export const SubjectColorBox = styled.div`
+  width: 15px;
+  height: 15px;
+  background-color: ${(props) => props.color};
+  border-radius: 50%;
+`
+
+export const SubjectName = styled.span`
+  font-size: 16px;
+  color: #333;
+`
+
+export const SubjectBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: auto;
+  margin-top: 25px;
+  position: relative;
+`
+
+export const SubjectAddButton = styled.button`
+  width: 80px;
+  height: 53px;
+  border-radius: 20px;
+  background-color: #f5f5f5;
+  border: none;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 버튼 그림자 */
+  cursor: pointer;
+  transition: all 0.3s ease; /* 호버 효과 추가 */
+
+  &:hover {
+    background-color: #e0e0e0;
+    transform: translateY(-3px);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+`
+
+export const SubjectInputWrapper = styled.div`
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 8px;
+
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 10;
+
+  animation: ${fadeIn} 0.3s ease-in-out;
 `
