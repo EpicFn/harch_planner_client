@@ -230,7 +230,7 @@ export default function LibraryAddModal({ onClose }) {
                   fontSize: '12px',
                 }}
               >
-                중복된 이름입니다
+                중복된 교재 제목 입니다
               </span>
             )}
             <SubjectBox>
