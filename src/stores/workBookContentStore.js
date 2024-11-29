@@ -7,16 +7,19 @@ const workBookContentStore = create((set) => ({
     set((state) => ({
       workbooks: [...state.workbooks, newWorkbook],
     })),
-  updateWorkbook: (index, updatedWorkbook) =>
+  updateWorkbook: (id, updatedWorkbook) =>
     set((state) => {
-      const newWorkbooks = [...state.workbooks]
-      newWorkbooks[index] = updatedWorkbook
+      const newWorkbooks = state.workbooks.map((workbook) =>
+        workbook.id === id ? updatedWorkbook : workbook,
+      )
       return { workbooks: newWorkbooks }
     }),
-  removeWorkbook: (index) =>
+  removeWorkbook: (id) =>
     set((state) => {
-      const newWorkbooks = state.workbooks.filter((_, i) => i !== index)
-      return { workbooks: [...newWorkbooks] }
+      const newWorkbooks = state.workbooks.filter(
+        (workbook) => workbook.id !== id,
+      )
+      return { workbooks: newWorkbooks }
     }),
 }))
 

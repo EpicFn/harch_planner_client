@@ -1,7 +1,9 @@
+import logoutApi from '@apis/logout/logoutApi'
 import LoginModal from '@components/LoginModal/LoginModal'
 import MainHeader from '@components/MainHeader/MainHeader'
 import loginModalStore from '@stores/modalStore'
 import useUserStore from '@stores/userStore'
+import { useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import {
   LoginButton,
@@ -39,7 +41,33 @@ export default function MainPage() {
   const openModal = loginModalStore((state) => state.openModal)
   const isModalOpen = loginModalStore((state) => state.isModalOpen)
   const user = useUserStore((state) => state.user)
-  const logout = useUserStore((state) => state.logout)
+  const login = useUserStore((state) => state.login)
+
+  const queryClient = useQueryClient()
+
+  const logout = async () => {
+    try {
+      await logoutApi()
+
+      // 상태 및 캐시 초기화
+      useUserStore.getState().logout()
+      queryClient.removeQueries(['user'])
+      localStorage.removeItem('user')
+
+      console.log('로그아웃 성공')
+    } catch (error) {
+      console.error('로그아웃 실패:', error.message || error)
+    }
+  }
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user')
+    if (storedUser) {
+      login(JSON.parse(storedUser))
+    } else {
+      openModal()
+    }
+  }, [])
 
   useEffect(() => {
     preloadImages(images, () => setIsLoaded(true)) // 프리로딩 완료되면 로딩 상태 업데이트

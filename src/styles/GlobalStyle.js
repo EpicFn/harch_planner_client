@@ -20,6 +20,7 @@ const GlobalStyle = createGlobalStyle`
     background-color: #E1E1E1;
     border-color: black;
     align-items: center;
+    overflow-y: hidden;
   }
 `
 
