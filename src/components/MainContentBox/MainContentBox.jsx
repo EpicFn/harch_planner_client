@@ -1,3 +1,4 @@
+import logoutApi from '@apis/logout/logoutApi'
 import Header from '@components/Header/Header' // Header 컴포넌트 불러오기
 import MenuTap from '@components/MenuTap/MenuTap'
 import Preferences from '@components/Preferences/Preferences'
@@ -16,7 +17,10 @@ import {
 export default function MainContentBox({ content }) {
   const navigate = useNavigate()
   const login = useUserStore((state) => state.login)
+  const logout = useUserStore((state) => state.logout)
   const setUser = useUserStore((state) => state.setUser)
+  const checkUser = useUserStore((state) => state.user)
+  const [cookie, setCookie] = useState(null)
   const queryClient = useQueryClient()
 
   const { data: user } = useQuery({
@@ -83,6 +87,34 @@ export default function MainContentBox({ content }) {
     document.body.className = ''
     document.body.classList.add(`${theme}-theme`)
   }, [theme])
+
+  const handleLogout = async () => {
+    try {
+      await logoutApi()
+
+      console.log('로그아웃 성공')
+    } catch (error) {
+      console.error('로그아웃 실패:', error.message || error)
+    }
+  }
+
+  useEffect(() => {
+    // 3시간 만료시간 기준 타이머 설정
+    const expireTime = 3 * 60 * 60 * 1000 // 3시간 = 10,800,000ms
+    const timeout = setTimeout(() => {
+      localStorage.removeItem('user') // 로컬스토리지 초기화
+      logout()
+      handleLogout()
+      navigate('/') // 메인 페이지로 이동
+      console.log('쿠키 만료로 인해 로그아웃 처리되었습니다.')
+    }, expireTime)
+
+    return () => {
+      clearTimeout(timeout) // 컴포넌트 언마운트 시 타이머 정리
+    }
+  }, [logout, navigate])
+
+  console.log(checkUser)
 
   const handleTabClick = (path) => {
     setActiveTab(path)
