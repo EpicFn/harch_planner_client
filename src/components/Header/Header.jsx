@@ -39,7 +39,9 @@ export default function Header({ onThemeChange, onContextMenu }) {
       </ThemeButtonContainer>
       <UserProfileBox>
         <DdayBox>D-154</DdayBox>
-        <UserNicknameBox>{user.username}</UserNicknameBox>
+        <UserNicknameBox onContextMenu={onContextMenu}>
+          {user.username}
+        </UserNicknameBox>
       </UserProfileBox>
     </HeaderContainer>
   )

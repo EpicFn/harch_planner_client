@@ -61,20 +61,25 @@ export default function Preferences({ onClose }) {
             <UserInfoContainer>
               <h3>내 정보</h3>
               <div className="user-name">이름: {user.name}</div>
-              <div className="user-info">이메일: {user.id}</div>
+              <div className="user-info">이메일: {user.email}</div>
             </UserInfoContainer>
           )}
           {selectedTap === '공부환경' && (
             <StudyEnvironmentContainer>
               <h3>공부환경</h3>
-              {workbooks.map((workbook) => (
-                <WorkbookContainer key={workbook.id}>
-                  <WorkbookHeader>
-                    <SubjectCircle color={workbook.subjectColor} />
-                    <span>{workbook.subject}</span>
-                  </WorkbookHeader>
-                </WorkbookContainer>
-              ))}
+              {Array.from(
+                new Set(workbooks.map((workbook) => workbook.subject)),
+              ).map((subject) => {
+                const workbook = workbooks.find((wb) => wb.subject === subject)
+                return (
+                  <WorkbookContainer key={workbook.id}>
+                    <WorkbookHeader>
+                      <SubjectCircle color={workbook.subjectColor} />
+                      <span>{workbook.subject}</span>
+                    </WorkbookHeader>
+                  </WorkbookContainer>
+                )
+              })}
             </StudyEnvironmentContainer>
           )}
           {selectedTap === '테마' && (
