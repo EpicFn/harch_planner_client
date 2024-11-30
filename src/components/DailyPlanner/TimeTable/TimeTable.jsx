@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { TimeTableWrapper, Table, TableRow, TableData, TimeSign, TimeSignWrapper } from './TimeTable.style';
-import { s } from '@fullcalendar/core/internal-common';
+
 
 
 
@@ -46,15 +46,6 @@ const TimeTable = (selectedColor) => {
     const handleMouseEnter = (row, col) => {
         if (isDragging) {
             setEndCell({ row, col });
-
-            const newCellData = [...cellData];
-            const { row: startRow, col: startCol } = startCell;
-            const { row: endRow, col: endCol } = endCell;
-
-            newCellData[startRow][startCol] = 1;
-            newCellData[endRow][endCol] = 1;
-
-            setCellData(newCellData);
         }
     };
 
@@ -63,8 +54,14 @@ const TimeTable = (selectedColor) => {
 
         if (startCell && endCell && selectedColor.selectedColor) {
             const newCellData = [...cellData];
-            const { row: startRow, col: startCol } = startCell;
-            const { row: endRow, col: endCol } = endCell;
+            var { row: startRow, col: startCol } = startCell;
+            var { row: endRow, col: endCol } = endCell;
+
+            if (startRow > endRow) {
+
+                startRow, endRow = endRow, startRow;
+                startCol, endCol = endCol, startCol;
+            }
 
             if (startRow > endRow) {
                 [startRow, endRow] = [endRow, startRow];
@@ -116,13 +113,20 @@ const TimeTable = (selectedColor) => {
                         {row.map((cell, colIndex) => {
                             let cellColor;
                             let selected = false; // 채워진 셀인지 여부
-                            let isDraged = false; //드래그 중인 셀인지 여부
+                            let isDragged = false; //드래그 중인 셀인지 여부
                             if (cell == 0)
                                 cellColor = 'transparent';
-
                             else {
                                 cellColor = cell;
                                 selected = true;
+                            }
+
+                            if (startCell && endCell) {
+                                const { row: startRow, col: startCol } = startCell;
+                                const { row: endRow, col: endCol } = endCell;
+                                if ((rowIndex == startRow && rowIndex == endRow) || (colIndex == startCol && colIndex == endCol)) {
+                                    isDragged = true;
+                                }
                             }
 
                             return (
@@ -130,7 +134,7 @@ const TimeTable = (selectedColor) => {
                                     key={colIndex}
                                     isselected={selected}
                                     color={cellColor}
-                                    isDraged={isDraged}
+                                    isDraged={isDragged}
                                     onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
                                     onMouseEnter={() => handleMouseEnter(rowIndex, colIndex)}
                                     onMouseUp={handleMouseUp}

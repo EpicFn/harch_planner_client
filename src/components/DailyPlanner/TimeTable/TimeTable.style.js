@@ -34,7 +34,9 @@ export const TableColumn = styled.div`
 
 export const TableData = styled.td`
     border: 1px solid #e0e0e0;
+    border-color: ${({ isDragged }) => (isDragged ? 'gold' : '#e0e0e0')};
     background-color: ${({ isselected, color }) => (isselected ? color : 'transparent')};
+
 `;
 
 export const TimeSignWrapper = styled.div`
