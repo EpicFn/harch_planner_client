@@ -1,16 +1,7 @@
 import { useState, useEffect } from 'react';
 import { TimeTableWrapper, Table, TableRow, TableData, TimeSign, TimeSignWrapper } from './TimeTable.style';
 
-const dummyData = [
-    { row: 2, col: 2, color: '#f7d8d8' },
-    { row: 2, col: 3, color: '#f7d8d8' },
-    { row: 2, col: 4, color: '#f7d8d8' },
-    { row: 11, col: 3, color: '#FFFEE0' },
-    { row: 11, col: 4, color: '#FFFEE0' },
-    { row: 11, col: 5, color: '#FFFEE0' },
-    { row: 20, col: 3, color: '#E0F9FF' },
-    { row: 20, col: 2, color: '#E0F9FF' }
-];
+
 
 const dummyInitialGrid = Array.from({ length: 24 }, () => Array(6).fill(0));
 
@@ -26,22 +17,13 @@ dummyInitialGrid[20][3] = '영어';
 
 const TimeTable = (selectedColor) => {
 
-    const [cellData, setCellData] = useState(dummyData);
+    const [cellData, setCellData] = useState(dummyInitialGrid);
+
 
     // 드래그 상태 관리
     const [startCell, setStartCell] = useState(null);
     const [endCell, setEndCell] = useState(null);
     const [isDragging, setIsDragging] = useState(false);
-
-
-    useEffect(() => {
-        console.log('startCell:', startCell);
-        console.log('endCell:', endCell);
-    }, [startCell, endCell]);
-
-    useEffect(() => {
-        // Trigger re-render when cellData changes
-    }, [cellData]);
 
 
     const handleMouseDown = (row, col) => {
@@ -84,17 +66,6 @@ const TimeTable = (selectedColor) => {
     };
 
 
-    // 선택된 셀 표시
-    const isSelected = (row, col) => {
-        return cellData.some(data => data.row === row && data.col === col);
-    };
-
-    //선택된 셀의 색 가져오기
-    const getColor = (row, col) => {
-        const selectedCellData = cellData.find(data => data.row === row && data.col === col);
-        return selectedCellData ? selectedCellData.color : 'transparent';
-    };
-
     return (
         <TimeTableWrapper>
             <TimeSignWrapper>
@@ -106,23 +77,43 @@ const TimeTable = (selectedColor) => {
                         </TimeSign>
                     );
                 })}
+
             </TimeSignWrapper>
             <Table>
-                {[...Array(24)].map((_, row) => (
-                    <TableRow key={row}>
-                        {[...Array(6)].map((_, col) => (
-                            <TableData
-                                key={col}
-                                isselected={isSelected(row, col)}
-                                color={getColor(row, col)}
-                                onMouseDown={() => handleMouseDown(row, col)}
-                                onMouseEnter={() => handleMouseEnter(row, col)}
-                                onMouseUp={handleMouseUp}
-                            />
-                        ))}
 
+                {cellData.map((row, rowIndex) => (
+                    <TableRow key={rowIndex}>
+                        {row.map((cell, colIndex) => {
+                            let cellColor = 'transparent';
+                            let selected = false;
+                            if (cell === '국어') {
+                                cellColor = '#f7d8d8';
+                                selected = true;
+                            }
+                            else if (cell === '수학') {
+                                cellColor = '#FFFEE0';
+                                selected = true;
+                            }
+                            else if (cell === '영어') {
+                                cellColor = '#E0F9FF';
+                                selected = true;
+                            }
+                            return (
+                                <TableData
+                                    key={colIndex}
+                                    isselected={selected}
+                                    color={cellColor}
+                                    onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
+                                    onMouseEnter={() => handleMouseEnter(rowIndex, colIndex)}
+                                    onMouseUp={handleMouseUp}
+                                >
+                                </TableData>
+                            );
+                        })}
                     </TableRow>
                 ))}
+
+
             </Table>
         </TimeTableWrapper>
     );
