@@ -257,7 +257,15 @@ const DailyPlanner = () => {
                 <TimeTable
                     selectedColor={selectedColor}
                 />
-                <EraserIcon src="/src/assets/Eraser.svg" />
+                <EraserIcon
+                    src="/src/assets/Eraser.svg"
+                    onClick={
+                        () => {
+                            console.log("Eraser clicked");
+                            setSelectedColor(1)
+                        }
+                    }
+                />
             </TimeTableContainer>
             <AchievementInfoContainer>
                 <AchievementTextBox>오늘의 학습 성취도</AchievementTextBox>

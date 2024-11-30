@@ -4,7 +4,7 @@ import { TimeTableWrapper, Table, TableRow, TableData, TimeSign, TimeSignWrapper
 
 
 
-const dummyInitialGrid = Array.from({ length: 24 }, () => Array(6).fill(0));
+const dummyInitialGrid = Array.from({ length: 24 }, () => Array(6).fill(1));
 
 // Set some cells 
 dummyInitialGrid[2][2] = '#f7d8d8';
@@ -36,6 +36,7 @@ const TimeTable = (selectedColor) => {
     const handleMouseDown = (row, col) => {
         //선택된 색이 없으면 리턴
         if (!selectedColor.selectedColor) return;
+        console.log('handleMouseDown:');
 
         setStartCell({ row, col });
         setEndCell({ row, col });
@@ -58,7 +59,6 @@ const TimeTable = (selectedColor) => {
             var { row: endRow, col: endCol } = endCell;
 
             if (startRow > endRow) {
-
                 startRow, endRow = endRow, startRow;
                 startCol, endCol = endCol, startCol;
             }
@@ -114,7 +114,7 @@ const TimeTable = (selectedColor) => {
                             let cellColor;
                             let selected = false; // 채워진 셀인지 여부
                             let isDragged = false; //드래그 중인 셀인지 여부
-                            if (cell == 0)
+                            if (cell == 1)
                                 cellColor = 'transparent';
                             else {
                                 cellColor = cell;
