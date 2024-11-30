@@ -6,14 +6,14 @@ import { TimeTableWrapper, Table, TableRow, TableData, TimeSign, TimeSignWrapper
 const dummyInitialGrid = Array.from({ length: 24 }, () => Array(6).fill(0));
 
 // Set some cells 
-dummyInitialGrid[2][2] = '국어';
-dummyInitialGrid[2][3] = '국어';
-dummyInitialGrid[2][4] = '국어';
-dummyInitialGrid[11][3] = '수학';
-dummyInitialGrid[11][4] = '수학';
-dummyInitialGrid[11][5] = '수학';
-dummyInitialGrid[20][2] = '영어';
-dummyInitialGrid[20][3] = '영어';
+dummyInitialGrid[2][2] = '#f7d8d8';
+dummyInitialGrid[2][3] = '#f7d8d8';
+dummyInitialGrid[2][4] = '#f7d8d8';
+dummyInitialGrid[11][3] = '#FFFEE0';
+dummyInitialGrid[11][4] = '#FFFEE0';
+dummyInitialGrid[11][5] = '#FFFEE0';
+dummyInitialGrid[20][2] = '#E0F9FF';
+dummyInitialGrid[20][3] = '#E0F9FF';
 
 const TimeTable = (selectedColor) => {
 
@@ -25,12 +25,20 @@ const TimeTable = (selectedColor) => {
     const [endCell, setEndCell] = useState(null);
     const [isDragging, setIsDragging] = useState(false);
 
+    useEffect(() => {
+        console.log('startCell:', startCell);
+        console.log('endCell:', endCell);
+    }, [startCell, endCell]);
+
+
 
     const handleMouseDown = (row, col) => {
-        if (!selectedColor) return;
+        //선택된 색이 없으면 리턴
+        if (!selectedColor.selectedColor) return;
 
         setStartCell({ row, col });
         setEndCell({ row, col });
+
         setIsDragging(true);
     };
 
@@ -43,20 +51,25 @@ const TimeTable = (selectedColor) => {
     const handleMouseUp = () => {
         setIsDragging(false);
 
-        if (startCell && endCell && selectedColor) {
-            const newCellData = [];
-            const startRow = Math.min(startCell.row, endCell.row);
-            const endRow = Math.max(startCell.row, endCell.row);
-            const startCol = Math.min(startCell.col, endCell.col);
-            const endCol = Math.max(startCell.col, endCell.col);
+        if (startCell && endCell && selectedColor.selectedColor) {
+            const newCellData = [...cellData];
+            const { row: startRow, col: startCol } = startCell;
+            const { row: endRow, col: endCol } = endCell;
 
-            for (let row = startRow; row <= endRow; row++) {
-                for (let col = startCol; col <= endCol; col++) {
-                    newCellData.push({ row, col, color: selectedColor });
+            let i = startRow;
+            let j = startCol;
+            while (i !== endRow || j !== endCol) {
+                newCellData[i][j] = selectedColor.selectedColor;
+                j++;
+                if (j >= 6) {
+                    j = 0;
+                    i++;
                 }
             }
+            newCellData[endRow][endCol] = selectedColor.selectedColor;
 
-            setCellData(prevCellData => [...prevCellData, ...newCellData]);
+            setCellData(newCellData);
+
         }
 
         setStartCell(null);
@@ -84,20 +97,15 @@ const TimeTable = (selectedColor) => {
                 {cellData.map((row, rowIndex) => (
                     <TableRow key={rowIndex}>
                         {row.map((cell, colIndex) => {
-                            let cellColor = 'transparent';
+                            let cellColor;
                             let selected = false;
-                            if (cell === '국어') {
-                                cellColor = '#f7d8d8';
+                            if (cell == 0)
+                                cellColor = 'transparent';
+                            else {
+                                cellColor = cell;
                                 selected = true;
                             }
-                            else if (cell === '수학') {
-                                cellColor = '#FFFEE0';
-                                selected = true;
-                            }
-                            else if (cell === '영어') {
-                                cellColor = '#E0F9FF';
-                                selected = true;
-                            }
+
                             return (
                                 <TableData
                                     key={colIndex}
@@ -107,6 +115,7 @@ const TimeTable = (selectedColor) => {
                                     onMouseEnter={() => handleMouseEnter(rowIndex, colIndex)}
                                     onMouseUp={handleMouseUp}
                                 >
+
                                 </TableData>
                             );
                         })}
