@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { TimeTableWrapper, Table, TableRow, TableData, TimeSign, TimeSignWrapper } from './TimeTable.style';
+import { s } from '@fullcalendar/core/internal-common';
 
 
 
@@ -45,6 +46,15 @@ const TimeTable = (selectedColor) => {
     const handleMouseEnter = (row, col) => {
         if (isDragging) {
             setEndCell({ row, col });
+
+            const newCellData = [...cellData];
+            const { row: startRow, col: startCol } = startCell;
+            const { row: endRow, col: endCol } = endCell;
+
+            newCellData[startRow][startCol] = 1;
+            newCellData[endRow][endCol] = 1;
+
+            setCellData(newCellData);
         }
     };
 
@@ -55,6 +65,13 @@ const TimeTable = (selectedColor) => {
             const newCellData = [...cellData];
             const { row: startRow, col: startCol } = startCell;
             const { row: endRow, col: endCol } = endCell;
+
+            if (startRow > endRow) {
+                [startRow, endRow] = [endRow, startRow];
+            }
+            if (startCol > endCol) {
+                [startCol, endCol] = [endCol, startCol];
+            }
 
             let i = startRow;
             let j = startCol;
@@ -98,9 +115,11 @@ const TimeTable = (selectedColor) => {
                     <TableRow key={rowIndex}>
                         {row.map((cell, colIndex) => {
                             let cellColor;
-                            let selected = false;
+                            let selected = false; // 채워진 셀인지 여부
+                            let isDraged = false; //드래그 중인 셀인지 여부
                             if (cell == 0)
                                 cellColor = 'transparent';
+
                             else {
                                 cellColor = cell;
                                 selected = true;
@@ -111,6 +130,7 @@ const TimeTable = (selectedColor) => {
                                     key={colIndex}
                                     isselected={selected}
                                     color={cellColor}
+                                    isDraged={isDraged}
                                     onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
                                     onMouseEnter={() => handleMouseEnter(rowIndex, colIndex)}
                                     onMouseUp={handleMouseUp}
