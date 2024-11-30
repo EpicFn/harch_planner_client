@@ -84,10 +84,9 @@ export default function TaskListByCategory({ category, tasks, setTasks, category
         }
     };
 
-    const handleCategoryBoxClick = () => {
-        console.log('setColor : ', categoryColor);
+    const handleCategoryBoxClick = () =>
         setSelectedColor(categoryColor);
-    };
+
 
     return (
         <TasksByCategoryBox>

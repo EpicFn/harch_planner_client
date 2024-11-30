@@ -259,12 +259,7 @@ const DailyPlanner = () => {
                 />
                 <EraserIcon
                     src="/src/assets/Eraser.svg"
-                    onClick={
-                        () => {
-                            console.log("Eraser clicked");
-                            setSelectedColor(1)
-                        }
-                    }
+                    onClick={() => setSelectedColor(1)}
                 />
             </TimeTableContainer>
             <AchievementInfoContainer>

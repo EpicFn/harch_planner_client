@@ -26,17 +26,10 @@ const TimeTable = (selectedColor) => {
     const [endCell, setEndCell] = useState(null);
     const [isDragging, setIsDragging] = useState(false);
 
-    useEffect(() => {
-        console.log('startCell:', startCell);
-        console.log('endCell:', endCell);
-    }, [startCell, endCell]);
-
-
 
     const handleMouseDown = (row, col) => {
         //선택된 색이 없으면 리턴
         if (!selectedColor.selectedColor) return;
-        console.log('handleMouseDown:');
 
         setStartCell({ row, col });
         setEndCell({ row, col });
@@ -88,8 +81,6 @@ const TimeTable = (selectedColor) => {
 
         setStartCell(null);
         setEndCell(null);
-
-
     };
 
 
