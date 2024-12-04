@@ -139,7 +139,7 @@ export const ModalButtonContainer = styled.div`
 `
 
 export const ModalButton = styled.button`
-  padding: 10px 20px;
+  padding: 10px 15px;
   background-color: white;
   color: black;
   border: none;
@@ -150,6 +150,7 @@ export const ModalButton = styled.button`
   &:last-child {
     background-color: #ff6b6b;
     color: white;
+    padding: 10px 15px;
   }
 `
 export const CloseButton = styled.button`

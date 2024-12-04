@@ -135,35 +135,103 @@ export const WorkbookDetails = styled.div`
 export const UserInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  justify-content: center;
+  align-items: center;
   width: 100%;
+`
 
-  h3 {
-    margin-bottom: 25px;
-    margin-top: 0px;
-    font-size: 26px;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-    width: 100%;
-    box-sizing: border-box;
-  }
+export const UserInfoHeader = styled.h3`
+  margin-bottom: 25px;
+  margin-top: 0px;
+  font-size: 26px;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  width: 100%;
+  box-sizing: border-box;
+`
 
-  .user-name {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
+export const UserInfoCard = styled.div`
+  width: 100%;
+  max-width: 600px;
+  padding: 50px 40px;
+  margin-top: 80px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  position: relative;
+`
 
-  .user-info {
-    margin-bottom: 8px;
+export const InfoItem = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+`
+
+export const InfoIcon = styled.span`
+  font-size: 20px;
+  color: #777;
+  margin-right: 10px;
+`
+
+export const InfoText = styled.span`
+  font-size: 18px;
+  color: #555;
+  margin-right: 15px;
+  width: 80px;
+  max-width: 80px;
+`
+
+export const StyledInput = styled.input`
+  width: 70%;
+  padding: 10px 15px;
+  font-size: 16px;
+  color: #555;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  outline: none;
+
+  &::placeholder {
+    color: #aaa;
   }
+`
+
+export const ProfilePic = styled.div`
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: #ddd;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 40px;
+  color: #555;
+`
+
+export const EditButton = styled.button`
+  padding: 10px 15px;
+  background-color: #ff6b6b;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100px;
+  position: absolute;
+  right: 20px;
+  bottom: 10px;
 `
 
 export const ThemeContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
   width: 100%;
+  height: 100%;
 
   h3 {
     margin-bottom: 25px;
@@ -173,5 +241,47 @@ export const ThemeContainer = styled.div`
     border-bottom: 1px solid #ddd;
     width: 100%;
     box-sizing: border-box;
+  }
+
+  span {
+    margin-bottom: 20px;
+    font-size: 30px;
+    font-weight: bold;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+`
+export const ThemeBoxContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: flex-start;
+  margin-top: 20px;
+  box-sizing: border-box;
+`
+
+export const ThemeBox = styled.div`
+  width: 150px;
+  height: 150px;
+  border-radius: 8px;
+  border: 0.5px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff;
+  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5); //가독성 향상 시키기
+  cursor: pointer;
+  background-color: ${(props) => props.bgcolor};
+  box-shadow: ${(props) =>
+    props.selected ? '0 4px 8px rgba(0, 0, 0, 0.2)' : 'none'};
+  outline: none;
+
+  &:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: scale(1.05);
+    transition: all 0.3s ease-in-out;
   }
 `

@@ -71,7 +71,7 @@ export default function MainContentBox({ content }) {
       isIconTab: 'true',
       icon: 'src/assets/Ellipse1.png',
     },
-    { path: '/calendarPage', label: '달력' },
+    { path: '/calendarPage', label: '달력', isIconTab: 'false' },
     { path: '/dailyPlannerPage', label: '일일 플래너', isIconTab: 'false' },
     { path: '/RecordPage', label: '공부 기록', isIconTab: 'false' },
     { path: '/LibraryPage', label: '서재', isIconTab: 'false' },
