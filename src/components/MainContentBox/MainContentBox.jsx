@@ -66,11 +66,6 @@ export default function MainContentBox({ content }) {
       isIconTab: 'true',
       icon: 'src/assets/Ellipse.png',
     },
-    {
-      label: 'Icon2',
-      isIconTab: 'true',
-      icon: 'src/assets/Ellipse1.png',
-    },
     { path: '/calendarPage', label: '달력', isIconTab: 'false' },
     { path: '/dailyPlannerPage', label: '일일 플래너', isIconTab: 'false' },
     { path: '/RecordPage', label: '공부 기록', isIconTab: 'false' },
@@ -115,7 +110,7 @@ export default function MainContentBox({ content }) {
   console.log(checkUser)
 
   const handleTabClick = (tab) => {
-    if (tab.isIconTab === 'true') {
+    if (tab.isIconTab === 'true' && tab.label === 'Icon1') {
       setShowPreferences(true)
     } else if (tab.isIconTab === 'false') {
       setShowPreferences(false)
