@@ -92,40 +92,6 @@ export const UserInfo = styled.div`
     margin-top: 20px;
   }
 `
-export const SubjectCircle = styled.div`
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background-color: ${(props) => props.color || '#ccc'};
-  margin-right: 8px;
-`
-
-export const StudyEnvironmentContainer = styled.div`
-  h3 {
-    margin-bottom: 25px;
-    margin-top: 0px;
-    font-size: 26px;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-  }
-`
-
-export const WorkbookContainer = styled.div`
-  margin-bottom: 16px;
-  padding-bottom: 8px;
-`
-
-export const WorkbookHeader = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 8px;
-
-  span {
-    margin-left: 8px;
-    font-size: 18px;
-    font-weight: 600;
-  }
-`
 
 export const WorkbookDetails = styled.div`
   font-size: 16px;

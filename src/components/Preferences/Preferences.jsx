@@ -11,17 +11,13 @@ import {
   ProfilePic,
   Sidebar,
   SidebarItem,
-  StudyEnvironmentContainer,
   StyledInput,
-  SubjectCircle,
   ThemeBox,
   ThemeBoxContainer,
   ThemeContainer,
   UserInfoCard,
   UserInfoContainer,
   UserInfoHeader,
-  WorkbookContainer,
-  WorkbookHeader,
 } from '@components/Preferences/Preferences.style'
 import useThemeStore from '@stores/themeStore'
 import useUserStore from '@stores/userStore'
@@ -67,12 +63,6 @@ export default function Preferences({ onClose }) {
             selected={selectedTap === '내 정보'}
           >
             내 정보
-          </SidebarItem>
-          <SidebarItem
-            onClick={() => handleSidebarItemClick('공부환경')}
-            selected={selectedTap === '공부환경'}
-          >
-            공부환경
           </SidebarItem>
           <SidebarItem
             onClick={() => handleSidebarItemClick('테마')}
@@ -126,24 +116,7 @@ export default function Preferences({ onClose }) {
               </UserInfoCard>
             </UserInfoContainer>
           )}
-          {selectedTap === '공부환경' && (
-            <StudyEnvironmentContainer>
-              <h3>나의 공부 과목</h3>
-              {Array.from(
-                new Set(workbooks.map((workbook) => workbook.subject)),
-              ).map((subject) => {
-                const workbook = workbooks.find((wb) => wb.subject === subject)
-                return (
-                  <WorkbookContainer key={workbook.id}>
-                    <WorkbookHeader>
-                      <SubjectCircle color={workbook.subjectColor} />
-                      <span>{workbook.subject}</span>
-                    </WorkbookHeader>
-                  </WorkbookContainer>
-                )
-              })}
-            </StudyEnvironmentContainer>
-          )}
+
           {selectedTap === '테마' && (
             <ThemeContainer>
               <span>테마 선택</span>
