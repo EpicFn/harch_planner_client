@@ -1,6 +1,7 @@
 import logoutApi from '@apis/logout/logoutApi'
 import Header from '@components/Header/Header' // Header 컴포넌트 불러오기
 import MenuTap from '@components/MenuTap/MenuTap'
+import Preferences from '@components/Preferences/Preferences'
 import useThemeStore from '@stores/themeStore'
 import useUserStore from '@stores/userStore'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
@@ -14,6 +15,12 @@ import {
 
 export default function MainContentBox({ content }) {
   const navigate = useNavigate()
+
+  const location = useLocation()
+  const { theme, setTheme } = useThemeStore()
+  const [activeTab, setActiveTab] = useState(location.pathname)
+  const [showPreferences, setShowPreferences] = useState(false)
+
   const login = useUserStore((state) => state.login)
   const logout = useUserStore((state) => state.logout)
   const setUser = useUserStore((state) => state.setUser)
@@ -53,34 +60,21 @@ export default function MainContentBox({ content }) {
     },
   })
 
-  const location = useLocation()
-  const { theme, setTheme } = useThemeStore()
-  const [activeTab, setActiveTab] = useState(location.pathname)
-
-  //우측클릭을 통한 환경설정 로직 상태관리
-  const [showContextMenu, setShowContextMenu] = useState(false)
-  const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 })
-
-  //환경설정 컴포넌트 렌더링 상태관리
-  const [showPreferences, setShowPreferences] = useState(false)
-
   const tabs = [
     {
-      path: '/Preferences',
       label: 'Icon1',
-      isIconTab: true,
+      isIconTab: 'true',
       icon: 'src/assets/Ellipse.png',
     },
     {
-      path: '/Preferences',
       label: 'Icon2',
-      isIconTab: true,
+      isIconTab: 'true',
       icon: 'src/assets/Ellipse1.png',
     },
     { path: '/calendarPage', label: '달력' },
-    { path: '/dailyPlannerPage', label: '일일 플래너', isIconTab: false },
-    { path: '/RecordPage', label: '공부 기록', isIconTab: false },
-    { path: '/LibraryPage', label: '서재', isIconTab: false },
+    { path: '/dailyPlannerPage', label: '일일 플래너', isIconTab: 'false' },
+    { path: '/RecordPage', label: '공부 기록', isIconTab: 'false' },
+    { path: '/LibraryPage', label: '서재', isIconTab: 'false' },
   ]
 
   const handleThemeChange = (selectedTheme) => {
@@ -120,36 +114,51 @@ export default function MainContentBox({ content }) {
 
   console.log(checkUser)
 
-  const handleTabClick = (path) => {
-    setActiveTab(path)
-    navigate(path)
+  const handleTabClick = (tab) => {
+    if (tab.isIconTab === 'true') {
+      setShowPreferences(true)
+    } else if (tab.isIconTab === 'false') {
+      setShowPreferences(false)
+      setActiveTab(tab.path)
+      navigate(tab.path)
+    }
+  }
+
+  const handlePreferencesClose = () => {
+    setShowPreferences(false)
   }
 
   return (
     <>
       <Header onThemeChange={handleThemeChange} />
       <MainContentBoxContainer className={`${theme}-theme`}>
-        <MenuList>
-          {tabs.map((tab) => (
-            <MenuTap
-              key={tab.path}
-              active={activeTab === tab.path ? 'true' : 'false'}
-              icontab={tab.isIconTab}
-              onClick={() => handleTabClick(tab.path)}
-            >
-              {tab.isIconTab && tab.icon ? (
-                <img
-                  src={tab.icon}
-                  alt={`${tab.label} icon`}
-                  style={{ width: '18px', height: '18px' }}
-                />
-              ) : (
-                tab.label
-              )}
-            </MenuTap>
-          ))}
-        </MenuList>
-        <ContentBox>{content}</ContentBox>
+        {showPreferences ? (
+          <Preferences onClose={handlePreferencesClose} />
+        ) : (
+          <>
+            <MenuList>
+              {tabs.map((tab) => (
+                <MenuTap
+                  key={tab.path || tab.label}
+                  active={activeTab === tab.path ? 'true' : 'false'}
+                  icontab={tab.isIconTab}
+                  onClick={() => handleTabClick(tab)}
+                >
+                  {tab.isIconTab && tab.icon ? (
+                    <img
+                      src={tab.icon}
+                      alt={`${tab.label} icon`}
+                      style={{ width: '18px', height: '18px' }}
+                    />
+                  ) : (
+                    tab.label
+                  )}
+                </MenuTap>
+              ))}
+            </MenuList>
+            <ContentBox>{content}</ContentBox>
+          </>
+        )}
       </MainContentBoxContainer>
     </>
   )
