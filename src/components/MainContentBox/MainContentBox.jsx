@@ -1,7 +1,6 @@
 import logoutApi from '@apis/logout/logoutApi'
 import Header from '@components/Header/Header' // Header 컴포넌트 불러오기
 import MenuTap from '@components/MenuTap/MenuTap'
-import Preferences from '@components/Preferences/Preferences'
 import useThemeStore from '@stores/themeStore'
 import useUserStore from '@stores/userStore'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
@@ -9,7 +8,6 @@ import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
   ContentBox,
-  ContextMenu,
   MainContentBoxContainer,
   MenuList,
 } from './MainContentBox.style'
@@ -67,20 +65,26 @@ export default function MainContentBox({ content }) {
   const [showPreferences, setShowPreferences] = useState(false)
 
   const tabs = [
+    {
+      path: '/Preferences',
+      label: 'Icon1',
+      isIconTab: true,
+      icon: 'src/assets/Ellipse.png',
+    },
+    {
+      path: '/Preferences',
+      label: 'Icon2',
+      isIconTab: true,
+      icon: 'src/assets/Ellipse1.png',
+    },
     { path: '/calendarPage', label: '달력' },
-    { path: '/dailyPlannerPage', label: '일일 플래너' },
-    { path: '/RecordPage', label: '공부 기록' },
-    { path: '/LibraryPage', label: '서재' },
+    { path: '/dailyPlannerPage', label: '일일 플래너', isIconTab: false },
+    { path: '/RecordPage', label: '공부 기록', isIconTab: false },
+    { path: '/LibraryPage', label: '서재', isIconTab: false },
   ]
 
   const handleThemeChange = (selectedTheme) => {
     setTheme(selectedTheme)
-  }
-
-  const handleRightClick = (e) => {
-    e.preventDefault()
-    setShowContextMenu(true)
-    setContextMenuPosition({ x: e.clientX, y: e.clientY })
   }
 
   useEffect(() => {
@@ -121,54 +125,31 @@ export default function MainContentBox({ content }) {
     navigate(path)
   }
 
-  const handleOpenPreferences = () => {
-    setShowPreferences(true)
-    setShowContextMenu(false)
-  }
-
-  const handleClosePreferences = () => {
-    setShowPreferences(false)
-  }
-
   return (
     <>
-      <Header
-        onThemeChange={handleThemeChange}
-        onContextMenu={handleRightClick}
-      />
-      <MainContentBoxContainer
-        className={`${theme}-theme`}
-        onClick={() => {
-          setShowContextMenu(false)
-        }}
-      >
-        {!showPreferences ? (
-          <>
-            <MenuList>
-              {tabs.map((tab) => (
-                <MenuTap
-                  key={tab.path}
-                  active={activeTab === tab.path ? 'true' : 'false'}
-                  onClick={() => handleTabClick(tab.path)}
-                >
-                  {tab.label}
-                </MenuTap>
-              ))}
-            </MenuList>
-            <ContentBox>{content}</ContentBox>
-          </>
-        ) : (
-          <Preferences onClose={handleClosePreferences} />
-        )}
-
-        {showContextMenu && (
-          <ContextMenu
-            style={{ top: contextMenuPosition.y, left: contextMenuPosition.x }}
-            onClick={handleOpenPreferences} // 환경설정 메뉴 클릭 시 Preferences 열기
-          >
-            환경설정
-          </ContextMenu>
-        )}
+      <Header onThemeChange={handleThemeChange} />
+      <MainContentBoxContainer className={`${theme}-theme`}>
+        <MenuList>
+          {tabs.map((tab) => (
+            <MenuTap
+              key={tab.path}
+              active={activeTab === tab.path ? 'true' : 'false'}
+              icontab={tab.isIconTab}
+              onClick={() => handleTabClick(tab.path)}
+            >
+              {tab.isIconTab && tab.icon ? (
+                <img
+                  src={tab.icon}
+                  alt={`${tab.label} icon`}
+                  style={{ width: '18px', height: '18px' }}
+                />
+              ) : (
+                tab.label
+              )}
+            </MenuTap>
+          ))}
+        </MenuList>
+        <ContentBox>{content}</ContentBox>
       </MainContentBoxContainer>
     </>
   )

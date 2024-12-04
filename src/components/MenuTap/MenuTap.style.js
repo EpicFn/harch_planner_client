@@ -5,7 +5,8 @@ export const MenuTapStyled = styled.li`
   justify-content: center;
   align-items: center;
   gap: 10px;
-  flex: 1 0 0;
+  flex: ${(props) => (props.icontab ? '0 0 50px' : '1 0 0')};
+  width: ${(props) => (props.icontab ? '50px' : 'auto')};
   align-self: stretch;
   border-radius: 8px 8px 0px 0px;
   border-top: 1px solid rgba(222, 222, 222, 0.5);

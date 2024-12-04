@@ -1,3 +1,4 @@
+import Preferences from '@components/Preferences/Preferences'
 import CalendarPage from '@pages/Calendar/CalendarPage'
 import DailyPlanner from '@pages/DailyPlanner/DailyPlannerPage'
 import LibraryPage from '@pages/Library/LibraryPage'
@@ -19,6 +20,7 @@ function App() {
           <Route path="/LibraryPage" element={<LibraryPage />} />
           <Route path="/RecordPage" element={<RecordPage />} />
           <Route path="/loading" element={<LoadingPage />} />
+          <Route path="/Preferences" element={<Preferences />} />
         </Routes>
       </Router>
     </>
