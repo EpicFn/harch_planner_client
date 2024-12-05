@@ -50,6 +50,30 @@ export default function Preferences({ onClose }) {
     setTheme(themeName)
   }
 
+  const userInfoItems = [
+    {
+      icon: '👤',
+      label: '이름: ',
+      type: 'text',
+      value: user.username,
+      placeholder: '이름을 입력하세요',
+    },
+    {
+      icon: '📧',
+      label: '아이디: ',
+      type: 'text',
+      value: user.userid,
+      placeholder: '아이디를 입력하세요',
+    },
+    {
+      icon: '🔑',
+      label: '이메일: ',
+      type: 'email',
+      value: user.email,
+      placeholder: '이메일을 입력하세요',
+    },
+  ]
+
   return (
     <PreferencesContainer>
       <PreferencesHeader>
@@ -79,39 +103,18 @@ export default function Preferences({ onClose }) {
                 <span>👤</span>
               </ProfilePic>
               <UserInfoCard>
-                <InfoItem>
-                  <InfoIcon>👤</InfoIcon>
-                  <InfoText>이름: </InfoText>
-                  <StyledInput
-                    type="text"
-                    value={user.username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    readOnly={true}
-                    placeholder="이름을 입력하세요"
-                  />
-                </InfoItem>
-                <InfoItem>
-                  <InfoIcon>📧</InfoIcon>
-                  <InfoText>아이디: </InfoText>
-                  <StyledInput
-                    type="email"
-                    value={user.email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    readOnly={true}
-                    placeholder="아이디를 입력하세요"
-                  />
-                </InfoItem>
-                <InfoItem>
-                  <InfoIcon>🔑</InfoIcon>
-                  <InfoText>패스워드: </InfoText>
-                  <StyledInput
-                    type="password"
-                    value={user.username}
-                    onChange={(e) => setPassword(e.target.value)}
-                    readOnly={true}
-                    placeholder="패스워드를 입력하세요"
-                  />
-                </InfoItem>
+                {userInfoItems.map((item, index) => (
+                  <InfoItem key={index}>
+                    <InfoIcon>{item.icon}</InfoIcon>
+                    <InfoText>{item.label}</InfoText>
+                    <StyledInput
+                      type={item.type}
+                      value={item.value}
+                      readOnly={true}
+                      placeholder={item.placeholder}
+                    />
+                  </InfoItem>
+                ))}
                 <EditButton>수정</EditButton>
               </UserInfoCard>
             </UserInfoContainer>
