@@ -11,8 +11,8 @@ import {
   UserProfileBox,
 } from './Header.style'
 
-export default function Header({ onThemeChange }) {
-  const { setTheme } = useThemeStore()
+export default function Header({ onThemeChange, onContextMenu }) {
+  const setTheme = useThemeStore((state) => state.setTheme)
   const user = useUserStore((state) => state.user)
   const navigate = useNavigate()
 
@@ -39,7 +39,9 @@ export default function Header({ onThemeChange }) {
       </ThemeButtonContainer>
       <UserProfileBox>
         <DdayBox>D-154</DdayBox>
-        <UserNicknameBox>{user.username}</UserNicknameBox>
+        <UserNicknameBox onContextMenu={onContextMenu}>
+          {user.username}
+        </UserNicknameBox>
       </UserProfileBox>
     </HeaderContainer>
   )

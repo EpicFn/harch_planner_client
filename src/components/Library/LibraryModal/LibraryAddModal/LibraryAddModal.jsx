@@ -216,10 +216,8 @@ export default function LibraryAddModal({ onClose }) {
               ref={nameInputRef}
             />
             <CheckIcon
-              loading={loading}
-              isDuplicate={isDuplicate}
               deferredBookName={deferredBookName}
-              bookName={bookName}
+              isDuplicate={isDuplicate}
             />
             {isDuplicate && (
               <span

@@ -23,12 +23,19 @@ export const UserProfileBox = styled.div`
 
 export const DdayBox = styled.div`
   padding-right: 8px;
+  margin-right: 40px;
 `
 
 export const UserNicknameBox = styled.div`
-  border: 1px solid black;
-  border-radius: 5px;
+  position: relative;
   padding: 10px;
+  font-weight: 400;
+  transition: transform 0.2s ease-in-out;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.1);
+  }
 `
 
 export const NavLinks = styled.nav`

@@ -45,6 +45,9 @@ export default function LibraryEditModal({ workbook, onClose }) {
   const [updatedSubject, setUpdatedSubject] = useState(null)
   const [currentSubject, setCurrentSubject] = useState(workbook.subject || '')
 
+  //편집, 수정 중인지를 관리하는 상태
+  const [isEditing, setIsEditing] = useState(false) // 수정 상태 관리
+
   const [goalPages, setGoalPages] = useState(workbook.end_page || 0)
   const [studiedPages, setStudiedPages] = useState(workbook.start_page || 0) // 공부한 페이지 수
   const [progress, setProgress] = useState(workbook.progress || 0)
@@ -55,6 +58,10 @@ export default function LibraryEditModal({ workbook, onClose }) {
   const nameInputRef = useRef(null)
   const goalPagesRef = useRef(null)
   const studiedPagesRef = useRef(null)
+
+  const toggleEditing = () => {
+    setIsEditing((prev) => !prev)
+  }
 
   //과목 색상 리스트 반환 API
   useEffect(() => {
@@ -91,17 +98,21 @@ export default function LibraryEditModal({ workbook, onClose }) {
   }, [goalPages, studiedPages])
 
   const handleUpdateWorkbook = () => {
-    const updatedWorkbook = {
-      ...workbook,
-      title: updatedBookName,
-      subject: updatedSubject || currentSubject,
-      end_page: goalPages, // 필드 이름 확인
-      start_page: studiedPages, // 필드 이름 확인
-      progress,
+    // 수정 완료 시 데이터 저장 로직
+    if (isEditing) {
+      const updatedWorkbook = {
+        ...workbook,
+        title: updatedBookName,
+        subject: updatedSubject || currentSubject,
+        end_page: goalPages,
+        start_page: studiedPages,
+        progress,
+      }
+      updateWorkbook(workbook.id, updatedWorkbook)
+      onClose()
+    } else {
+      toggleEditing() // 수정 시작이 가능한 상태로 설정
     }
-
-    updateWorkbook(workbook.id, updatedWorkbook)
-    onClose()
   }
 
   const handleWorkBookDelete = async () => {
@@ -192,6 +203,7 @@ export default function LibraryEditModal({ workbook, onClose }) {
                 onKeyDown={(e) => handleKeyDown(e, nameInputRef)}
                 placeholder="교재 이름을 입력하세요"
                 ref={nameInputRef}
+                disabled={!isEditing}
               />
             </ModalPageInputBox>
 
@@ -208,6 +220,7 @@ export default function LibraryEditModal({ workbook, onClose }) {
                 labelId="subject-select-label"
                 value={updatedSubject || currentSubject || ''}
                 onChange={handleSubjectChange}
+                disabled={!isEditing}
                 displayEmpty
                 style={{
                   backgroundColor: '#fff',
@@ -274,6 +287,7 @@ export default function LibraryEditModal({ workbook, onClose }) {
               onChange={(e) => setStudiedPages(e.target.value)}
               onKeyDown={(e) => handleKeyDown(e, studiedPagesRef)}
               ref={studiedPagesRef}
+              disabled={!isEditing}
             />
             <InputLabel>마지막 페이지</InputLabel>
             <ModalPageInput
@@ -282,6 +296,7 @@ export default function LibraryEditModal({ workbook, onClose }) {
               onChange={(e) => setGoalPages(e.target.value)}
               onKeyDown={(e) => handleKeyDown(e, goalPagesRef)}
               ref={goalPagesRef}
+              disabled={!isEditing}
             />
           </PagesInfoContainer>
         </ModalContent>
@@ -290,7 +305,9 @@ export default function LibraryEditModal({ workbook, onClose }) {
           <Bar data={data} options={options} />
         </div>
         <ModalButtonContainer>
-          <ModalButton onClick={handleUpdateWorkbook}>수정완료</ModalButton>
+          <ModalButton onClick={handleUpdateWorkbook}>
+            {isEditing ? '수정 완료' : '수정'}
+          </ModalButton>
           <ModalButton
             onClick={handleWorkBookDelete}
             style={{ backgroundColor: 'red' }}
