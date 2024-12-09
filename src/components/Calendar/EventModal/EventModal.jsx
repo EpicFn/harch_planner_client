@@ -1,14 +1,20 @@
 import {
-  Button,
   ButtonWrapper,
+  Circle,
+  DateDisplay,
   Input,
   ModalBackground,
   ModalContainer,
+  ModalInputBox,
+  SaveButton,
+  TextMemo,
 } from '@components/Calendar/EventModal/EventModal.style'
+import { formatDateToKorean } from '@utils/formatDateToKorean'
 import { useRef, useState } from 'react'
 
-export default function EventModal({ isOpen, onClose, onSave }) {
+export default function EventModal({ isOpen, onClose, onSave, selectedDate }) {
   const [title, setTitle] = useState('')
+  const [memo, setMemo] = useState('')
   const ButtonRef = useRef(null)
   const [shaking, setIsShaking] = useState('false')
 
@@ -37,18 +43,23 @@ export default function EventModal({ isOpen, onClose, onSave }) {
   return (
     <ModalBackground onClick={onClose}>
       <ModalContainer onClick={(e) => e.stopPropagation()} shaking={shaking}>
-        <h2>일정 추가</h2>
-        <Input
-          type="text"
-          placeholder="일정 제목"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          onKeyDown={handleKeyDown} // 키 입력을 감지하는 핸들러 추가
-        />
+        <ModalInputBox>
+          <Input
+            type="text"
+            placeholder="일정 추가"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            onKeyDown={handleKeyDown} // 키 입력을 감지하는 핸들러 추가
+          />
+          <Circle />
+        </ModalInputBox>
+
+        <DateDisplay>{formatDateToKorean(selectedDate)}</DateDisplay>
+        <TextMemo value={memo} readOnly />
         <ButtonWrapper>
-          <Button ref={ButtonRef} onClick={handleSave}>
+          <SaveButton ref={ButtonRef} onClick={handleSave}>
             저장
-          </Button>
+          </SaveButton>
         </ButtonWrapper>
       </ModalContainer>
     </ModalBackground>

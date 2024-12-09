@@ -37,7 +37,7 @@ export const ModalContainer = styled.div`
   padding: 20px;
   border-radius: 10px;
   width: 400px;
-  height: 200px;
+  height: 386px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 
   ${({ shaking }) =>
@@ -60,17 +60,37 @@ export const ModalContainer = styled.div`
   }
 `
 
+export const ModalInputBox = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 338px;
+  max-width: 338px;
+`
+
 export const Input = styled.input`
-  width: 80%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  width: 100%;
+  padding: 10px 0px;
+  border: none;
+  border-bottom: 1px solid black;
   transition: border-color 0.3s ease;
+  font-size: large;
 
   &:focus {
-    border-color: #6c63ff;
+    border-bottom: 2px solid #6c63ff;
     outline: none;
   }
+`
+
+export const Circle = styled.div`
+  position: absolute;
+  right: 0px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #6c63ff;
+  cursor: pointer;
 `
 
 export const ButtonWrapper = styled.div`
@@ -79,8 +99,9 @@ export const ButtonWrapper = styled.div`
   width: 100%;
 `
 
-export const Button = styled.button`
+export const SaveButton = styled.button`
   padding: 10px 20px;
+  margin-top: 5px;
   background-color: #007bff;
   color: white;
   border: none;
@@ -90,4 +111,33 @@ export const Button = styled.button`
   &:hover {
     background-color: #0056b3;
   }
+`
+
+export const TextMemo = styled.textarea`
+  width: 80%;
+  height: 189px;
+  margin-top: 10px;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: none;
+
+  &:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+`
+
+export const DateDisplay = styled.div`
+  width: 80%;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  margin: 10px 0;
+  padding: 8px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 `
