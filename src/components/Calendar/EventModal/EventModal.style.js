@@ -39,6 +39,7 @@ export const ModalContainer = styled.div`
   width: 400px;
   height: 386px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.3s ease-in-out;
 
   ${({ shaking }) =>
     shaking === 'true' &&
