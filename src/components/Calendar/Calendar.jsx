@@ -1,3 +1,4 @@
+import calendarAddEvent from '@apis/calendar/calendarAddEvent'
 import {
   CalendarContainer,
   CalendarIcon,
@@ -28,10 +29,15 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import FullCalendar from '@fullcalendar/react'
 import useCalendarEvents from '@hooks/useCalendarEvents'
+import useCalendarFetchEvents from '@hooks/useCalendarFetchEvents'
 import useContextMenu from '@hooks/useContextMenu'
+import calendarEventStore from '@stores/calendarEventStore'
 import { useEffect, useRef, useState } from 'react'
 
 export default function Calendar() {
+  const today = new Date()
+  const [currentYear, setCurrentYear] = useState(today.getFullYear())
+  const [currentMonth, setCurrentMonth] = useState(today.getMonth() + 1)
   const {
     events,
     addCalendarEvent,
@@ -41,6 +47,12 @@ export default function Calendar() {
     setIsFirstEventAdded,
   } = useCalendarEvents()
   const { contextMenu, openContextMenu, closeContextMenu } = useContextMenu()
+  const { calendarData, isLoading, isError, error } = useCalendarFetchEvents(
+    currentYear,
+    currentMonth,
+  )
+  const addEvent = calendarEventStore((state) => state.addEvent)
+
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isNotificationVisible, setIsNotificationVisible] = useState(false)
   const [selectedDate, setSelectedDate] = useState(null)
@@ -49,13 +61,11 @@ export default function Calendar() {
   const [editingEventId, setEditingEventId] = useState(null) // 수정할 이벤트의 ID
   const [newEventTitle, setNewEventTitle] = useState('') // 수정 중인 제목
 
+  console.log(events)
+
   //월간목표 상태관리
   const [monthGoalList, setMonthGoalList] = useState([])
   const [editingGoal, setEditingGoal] = useState({ index: null, text: '' })
-
-  const today = new Date()
-  const [currentYear, setCurrentYear] = useState(null)
-  const [currentMonth, setCurrentMonth] = useState(null)
 
   //캘린더 일자에 2개 넘어갈 경우 로직 상태
   const [isExpendeModalOpen, setIsExpendeModalOpen] = useState(false)
@@ -102,10 +112,41 @@ export default function Calendar() {
     setSelectedDate(null)
   }
 
-  const handleAddEventSave = (title) => {
+  const handleAddEventSave = async (title, memo) => {
     if (title && selectedDate) {
-      const eventId = Date.now().toString() // 고유한 ID 생성
-      addCalendarEvent({ id: eventId, title, date: selectedDate }) // ID 포함하여 이벤트 추가
+      try {
+        // 캘린더 데이터 가져오기
+        const year = selectedDate.slice(0, 4)
+        const month = selectedDate.slice(5, 7)
+
+        const calendarData = await fetchCalendarEvent(year, month)
+
+        // 현재 날짜의 기존 데이터 찾기
+        const existingData = calendarData.find(
+          (item) => item.date === selectedDate,
+        )
+
+        // 기존 데이터와 병합
+        const updatedTaskList = existingData
+          ? [
+              ...existingData.task_list,
+              { title: title.trim(), memo: memo.trim() },
+            ]
+          : [{ title: title.trim(), memo: memo.trim() }]
+
+        // 병합된 데이터 전송
+        const newEvent = {
+          date: selectedDate,
+          task_list: updatedTaskList,
+        }
+
+        await calendarAddEvent(newEvent)
+        addCalendarEvent(newEvent) // UI 업데이트
+
+        console.log('Event added successfully:', newEvent)
+      } catch (error) {
+        console.error('Error adding event:', error)
+      }
     }
     if (!isFirstEventAdded) {
       setIsFirstEventAdded(true) // 처음 추가된 이후로는 모달을 띄우지 않도록 상태 변경
@@ -216,6 +257,21 @@ export default function Calendar() {
       .fill(null)
       .map((_, i) => goalRefs.current[i] || null)
   }, [monthGoalList])
+
+  useEffect(() => {
+    if (calendarData) {
+      const formattedEvents = calendarData.flatMap((item) =>
+        item.task_list.map((task) => ({
+          id: `${item.date}-${task.title}`, // 고유 ID 생성
+          title: task.title,
+          date: item.date,
+          extendedProps: { memo: task.memo },
+        })),
+      )
+
+      formattedEvents.forEach((event) => addEvent(event))
+    }
+  }, [calendarData, addEvent])
 
   return (
     <>
@@ -372,6 +428,7 @@ export default function Calendar() {
           isOpen={isModalOpen}
           onClose={handleModalClose}
           onSave={handleAddEventSave}
+          selectedDate={selectedDate}
         />
 
         {contextMenu.visible && (
