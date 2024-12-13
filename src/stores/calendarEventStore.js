@@ -14,6 +14,10 @@ const calendarEventStore = create((set) => ({
     set((state) => ({
       events: state.events.filter((event) => event.id !== eventId), // ID 기준으로 삭제
     })),
+  clearEvents: () =>
+    set((state) => ({
+      events: [],
+    })),
 }))
 
 export default calendarEventStore

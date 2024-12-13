@@ -141,19 +141,11 @@ export default function Calendar() {
           task_list: updatedTaskList,
         }
 
-        const response = await calendarAddEvent(event)
+        // API 호출
+        await calendarAddEvent(event)
 
-        // 반환된 모든 task_list를 FullCalendar에 추가
-        response.task_list.forEach((task) => {
-          const newEvent = {
-            id: `${response.date}-${task.title}`, // 고유 ID 생성
-            title: task.title,
-            date: response.date,
-            extendedProps: { memo: task.memo },
-          }
-          addEvent(newEvent) // FullCalendar에 추가
-          queryClient.invalidateQueries(['calendarData'])
-        })
+        // React Query 데이터 갱신
+        queryClient.invalidateQueries(['calendarEvents'])
       } catch (error) {
         console.error('Error adding event:', error)
       }
@@ -264,13 +256,17 @@ export default function Calendar() {
     if (calendarData) {
       const formattedEvents = calendarData.flatMap((item) =>
         item.task_list.map((task) => ({
-          id: `${item.date}-${task.title}`, // 고유 ID 생성
+          id: `${item.date}-${task.title}-${Math.random()}`, // 고유 ID 생성
           title: task.title,
           date: item.date,
           extendedProps: { memo: task.memo },
         })),
       )
 
+      //tanstack-query를 통해 받아온 데이터로 갱신하기 전 기존 상태 이벤트 초기화
+      calendarEventStore.getState().clearEvents()
+
+      //이를 통해 서버 상태와 동기화
       formattedEvents.forEach((event) => addEvent(event))
     }
   }, [calendarData, addEvent])
