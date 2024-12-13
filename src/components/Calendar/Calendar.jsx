@@ -32,12 +32,15 @@ import useCalendarEvents from '@hooks/useCalendarEvents'
 import useCalendarFetchEvents from '@hooks/useCalendarFetchEvents'
 import useContextMenu from '@hooks/useContextMenu'
 import calendarEventStore from '@stores/calendarEventStore'
+import { useQueryClient } from '@tanstack/react-query'
 import { useEffect, useRef, useState } from 'react'
 
 export default function Calendar() {
+  const queryClient = useQueryClient()
   const today = new Date()
   const [currentYear, setCurrentYear] = useState(today.getFullYear())
   const [currentMonth, setCurrentMonth] = useState(today.getMonth() + 1)
+
   const {
     events,
     addCalendarEvent,
@@ -46,11 +49,13 @@ export default function Calendar() {
     isFirstEventAdded,
     setIsFirstEventAdded,
   } = useCalendarEvents()
+
   const { contextMenu, openContextMenu, closeContextMenu } = useContextMenu()
   const { calendarData, isLoading, isError, error } = useCalendarFetchEvents(
     currentYear,
     currentMonth,
   )
+
   const addEvent = calendarEventStore((state) => state.addEvent)
 
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -115,47 +120,44 @@ export default function Calendar() {
   const handleAddEventSave = async (title, memo) => {
     if (title && selectedDate) {
       try {
-        // 캘린더 데이터 가져오기
-        const year = selectedDate.slice(0, 4)
-        const month = selectedDate.slice(5, 7)
-
-        const calendarData = await fetchCalendarEvent(year, month)
-
-        // 현재 날짜의 기존 데이터 찾기
-        const existingData = calendarData.find(
-          (item) => item.date === selectedDate,
+        // 기존 날짜의 이벤트 가져오기
+        const existingEvents = events.filter(
+          (event) => event.date === selectedDate,
         )
 
-        // 기존 데이터와 병합
-        const updatedTaskList = existingData
-          ? [
-              ...existingData.task_list,
-              { title: title.trim(), memo: memo.trim() },
-            ]
-          : [{ title: title.trim(), memo: memo.trim() }]
+        const updatedTaskList = [
+          ...existingEvents.map((event) => ({
+            title: event.title,
+            memo: event.extendedProps.memo,
+          })),
+          {
+            title,
+            memo,
+          },
+        ]
 
-        // 병합된 데이터 전송
-        const newEvent = {
+        const event = {
           date: selectedDate,
           task_list: updatedTaskList,
         }
 
-        await calendarAddEvent(newEvent)
-        addCalendarEvent(newEvent) // UI 업데이트
+        const response = await calendarAddEvent(event)
 
-        console.log('Event added successfully:', newEvent)
+        // 반환된 모든 task_list를 FullCalendar에 추가
+        response.task_list.forEach((task) => {
+          const newEvent = {
+            id: `${response.date}-${task.title}`, // 고유 ID 생성
+            title: task.title,
+            date: response.date,
+            extendedProps: { memo: task.memo },
+          }
+          addEvent(newEvent) // FullCalendar에 추가
+          queryClient.invalidateQueries(['calendarData'])
+        })
       } catch (error) {
         console.error('Error adding event:', error)
       }
     }
-    if (!isFirstEventAdded) {
-      setIsFirstEventAdded(true) // 처음 추가된 이후로는 모달을 띄우지 않도록 상태 변경
-      setIsNotificationVisible(true)
-      setTimeout(() => {
-        setIsNotificationVisible(false)
-      }, 3000)
-    }
-    handleModalClose()
   }
 
   //수정 시 커서 맨끝으로 이동

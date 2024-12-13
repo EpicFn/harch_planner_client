@@ -20,8 +20,9 @@ export default function EventModal({ isOpen, onClose, onSave, selectedDate }) {
 
   const handleSave = () => {
     if (title.trim()) {
-      onSave(title)
+      onSave(title, memo)
       setTitle('')
+      setMemo('')
       onClose()
     } else {
       setIsShaking('true')
@@ -55,7 +56,7 @@ export default function EventModal({ isOpen, onClose, onSave, selectedDate }) {
         </ModalInputBox>
 
         <DateDisplay>{formatDateToKorean(selectedDate)}</DateDisplay>
-        <TextMemo value={memo} readOnly />
+        <TextMemo value={memo} onChange={(e) => setMemo(e.target.value)} />
         <ButtonWrapper>
           <SaveButton ref={ButtonRef} onClick={handleSave}>
             저장

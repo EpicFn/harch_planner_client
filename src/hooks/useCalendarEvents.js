@@ -1,4 +1,5 @@
 import calendarEventStore from '@stores/calendarEventStore'
+
 import { useState } from 'react'
 
 export default function useCalendarEvents() {
@@ -14,7 +15,15 @@ export default function useCalendarEvents() {
   //처음 등록하는지를 따지기위해 상태 설정
 
   const addCalendarEvent = (event) => {
-    addEvent(event)
+    const formattedEvent = {
+      id: Date.now().toString(), // 고유 ID 생성
+      title: event.task_list[0].title,
+      date: event.date,
+      extendedProps: {
+        memo: event.task_list[0].memo,
+      },
+    }
+    addEvent(formattedEvent)
     if (!isFirstEventAdded) {
       setIsFirstEventAdded(true)
     }

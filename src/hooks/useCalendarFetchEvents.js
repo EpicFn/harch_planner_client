@@ -10,7 +10,7 @@ export default function useCalendarFetchEvents(currentYear, currentMonth) {
   } = useQuery({
     queryKey: ['calendarEvents', currentYear, currentMonth],
     queryFn: () => fetchCalendarEvent(currentYear, currentMonth),
-    staleTime: 5 * 60 * 1000, // 데이터 신선도 유지 시간 (5분)
+    staleTime: 10 * 60 * 1000, // 데이터 신선도 유지 시간 (10분)
     cacheTime: 10 * 60 * 1000, // 캐시 유지 시간 (10분)
   })
 
