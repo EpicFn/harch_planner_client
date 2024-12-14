@@ -213,18 +213,17 @@ export default function Calendar() {
   useEffect(() => {
     if (calendarData) {
       const formattedEvents = calendarData.flatMap((item) =>
-        item.task_list.map((task) => ({
-          id: `${item.date}-${task.title}-${Math.random()}`, // 고유 ID 생성
+        item.task_list.map((task, index) => ({
+          // index를 사용해 등록 순서 지정
+          id: `${item.date}-${task.title}-${Math.random()}`,
           title: task.title,
           date: item.date,
-          extendedProps: { memo: task.memo },
+          extendedProps: { memo: task.memo, sortIndex: index },
         })),
       )
 
-      //tanstack-query를 통해 받아온 데이터로 갱신하기 전 기존 상태 이벤트 초기화
+      // 기존 이벤트 초기화 후 다시 추가
       calendarEventStore.getState().clearEvents()
-
-      //이를 통해 서버 상태와 동기화
       formattedEvents.forEach((event) => addEvent(event))
     }
   }, [calendarData, addEvent])
@@ -312,6 +311,7 @@ export default function Calendar() {
             plugins={[dayGridPlugin, interactionPlugin]}
             initialView="dayGridMonth"
             events={events}
+            eventOrder="sortIndex"
             locale="ko"
             headerToolbar={false}
             datesSet={handleMonthChange}
@@ -356,7 +356,6 @@ export default function Calendar() {
                 </EventContent>
               )
             }}
-            eventOrder={'id'}
             eventDidMount={(info) => {
               info.el.addEventListener('contextmenu', (e) => {
                 e.preventDefault()
