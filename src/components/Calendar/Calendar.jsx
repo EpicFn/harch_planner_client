@@ -146,13 +146,14 @@ export default function Calendar() {
         await calendarAddEvent(event)
 
         // React Query 데이터 갱신
+      } catch (error) {
+        console.error('Error adding event:', error)
+      } finally {
         queryClient.invalidateQueries([
           'calendarEvents',
           currentYear,
           currentMonth,
         ])
-      } catch (error) {
-        console.error('Error adding event:', error)
       }
     }
   }
@@ -243,12 +244,68 @@ export default function Calendar() {
     }
   }
 
-  ////캘린더 일정 삭제
-  const handleDeleteEvent = () => {
+  ////캘린더 일정 삭제 -> 점심 먹고 와서 고고고
+  const handleDeleteEvent = async () => {
     if (contextMenu.eventId) {
-      removeEvent(contextMenu.eventId)
+      const targetEvent = events.find(
+        (event) => event.id === contextMenu.eventId,
+      )
+
+      if (!targetEvent) {
+        console.error('Target event not found.')
+        alert('삭제하려는 이벤트를 찾을 수 없습니다.')
+        return
+      }
+
+      const formattedDate = format(new Date(targetEvent.date), 'yyyy-MM-dd')
+
+      try {
+        // React Query 캐시 업데이트
+        queryClient.setQueryData(
+          ['calendarEvents', currentYear, currentMonth],
+          (oldData) => {
+            if (!oldData) {
+              console.error(
+                'React Query 캐시에서 데이터를 가져오지 못했습니다.',
+              )
+              return []
+            }
+
+            // 업데이트된 데이터를 생성
+            const updatedDayData = oldData.map((day) => {
+              if (day.date === formattedDate) {
+                return {
+                  ...day,
+                  task_list: day.task_list.filter(
+                    (task) => task.title !== targetEvent.title,
+                  ),
+                }
+              }
+              return day
+            })
+
+            return updatedDayData
+          },
+        )
+
+        // 서버 요청: 업데이트된 데이터 전송
+        const updatedEventData = {
+          date: formattedDate,
+          task_list:
+            queryClient
+              .getQueryData(['calendarEvents', currentYear, currentMonth])
+              ?.find((day) => day.date === formattedDate)?.task_list || [],
+        }
+
+        await calendarAddEvent(updatedEventData)
+
+        console.log('Event successfully deleted.')
+        closeContextMenu()
+      } catch (error) {
+        console.error('Error deleting event:', error)
+        alert('이벤트 삭제 중 문제가 발생했습니다.')
+      }
     }
-    closeContextMenu()
   }
 
   //월간목표 추가
