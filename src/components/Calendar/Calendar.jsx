@@ -33,6 +33,7 @@ import useCalendarFetchEvents from '@hooks/useCalendarFetchEvents'
 import useContextMenu from '@hooks/useContextMenu'
 import calendarEventStore from '@stores/calendarEventStore'
 import { useQueryClient } from '@tanstack/react-query'
+import { format } from 'date-fns'
 import { useEffect, useRef, useState } from 'react'
 
 export default function Calendar() {
@@ -145,7 +146,11 @@ export default function Calendar() {
         await calendarAddEvent(event)
 
         // React Query 데이터 갱신
-        queryClient.invalidateQueries(['calendarEvents'])
+        queryClient.invalidateQueries([
+          'calendarEvents',
+          currentYear,
+          currentMonth,
+        ])
       } catch (error) {
         console.error('Error adding event:', error)
       }
@@ -162,7 +167,7 @@ export default function Calendar() {
     selection.addRange(range) // 새로 생성한 range를 추가하여 커서를 끝으로 이동
   }
 
-  //캘린더 일정 수정
+  //캘린더 일정 수정 로직
   const handleUpdateEvent = (eventId) => {
     setIsEditing(true) // 수정 모드로 전환
     setEditingEventId(eventId) // 수정할 이벤트 ID 저장
@@ -177,16 +182,65 @@ export default function Calendar() {
     }, 0)
   }
 
-  //수정되는거 저장
-  const handleSaveEditedEvent = (eventId) => {
-    const updatedEvent = {
-      id: eventId,
-      title: newEventTitle,
-      date: events.find((event) => event.id === eventId).date,
+  //수정 후 엔터 누르면 함수 발동
+  const handleSaveEditedEvent = async (eventId) => {
+    const targetEvent = events.find((event) => event.id === eventId)
+
+    const formattedDate = format(new Date(targetEvent.date), 'yyyy-MM-dd')
+
+    const cachedData = queryClient.getQueryData([
+      'calendarEvents',
+      currentYear,
+      currentMonth,
+    ])
+    if (!cachedData) {
+      //캐시 없을 경우 안전장치 세팅 해놓기!
+      console.error('React Query 캐시에서 데이터를 가져오지 못했습니다.')
+      return
     }
-    updateEvent(updatedEvent) // 수정된 이벤트 저장
-    setIsEditing(false) // 수정 모드 종료
-    setEditingEventId(null)
+    // 해당 날짜의 기존 일정 가져오기
+    const existingDayData = cachedData.find(
+      (day) => day.date === formattedDate,
+    ) || { task_list: [] }
+
+    // 수정된 일정 포함한 새로운 task_list 생성
+    const updatedTaskList = existingDayData.task_list.map((task) =>
+      task.title === targetEvent.title
+        ? { ...task, title: newEventTitle } // 제목 수정
+        : task,
+    )
+
+    const updatedEventData = {
+      date: formattedDate,
+      task_list: updatedTaskList,
+    }
+
+    console.log('Updating event:', updatedEventData)
+
+    try {
+      await calendarAddEvent(updatedEventData)
+
+      queryClient.setQueryData(
+        ['calendarEvents', currentYear, currentMonth],
+        (oldData) => {
+          //현재 달에 해당하는 캐시의 데이터가 없다면 updatedEventData로 갱신
+          if (!oldData) return [updatedEventData]
+
+          //기존 tanstack query의 데이터를 순회
+          return oldData.map((day) =>
+            day.date === formattedDate
+              ? { ...day, task_list: updatedTaskList }
+              : day,
+          )
+        },
+      )
+      // 수정 모드 종료
+      setIsEditing(false)
+      setEditingEventId(null)
+    } catch (error) {
+      console.error('Error updating event:', error)
+      alert('일정을 수정하는 중 문제가 발생했습니다.')
+    }
   }
 
   ////캘린더 일정 삭제
