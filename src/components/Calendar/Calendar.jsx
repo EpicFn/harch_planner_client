@@ -1,4 +1,3 @@
-import calendarAddEvent from '@apis/calendar/calendarAddEvent'
 import {
   CalendarContainer,
   CalendarIcon,
@@ -28,13 +27,13 @@ import ExpendedModal from '@components/Calendar/ExpendedModal/ExpendedModal'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import FullCalendar from '@fullcalendar/react'
+import useCalendarEventOperations from '@hooks/useCalendarEventOperations'
 import useCalendarEvents from '@hooks/useCalendarEvents'
 import useCalendarFetchEvents from '@hooks/useCalendarFetchEvents'
 import useContextMenu from '@hooks/useContextMenu'
 import calendarEventStore from '@stores/calendarEventStore'
 import { useQueryClient } from '@tanstack/react-query'
-import { format } from 'date-fns'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 export default function Calendar() {
   const queryClient = useQueryClient()
@@ -81,15 +80,15 @@ export default function Calendar() {
   const editableRef = useRef(null)
   const goalRefs = useRef([])
 
-  const handlePrevClick = () => {
+  const handlePrevClick = useCallback(() => {
     const calendarApi = calendarRef.current.getApi()
     calendarApi.prev()
-  }
+  }, [])
 
-  const handleNextClick = () => {
+  const handleNextClick = useCallback(() => {
     const calendarApi = calendarRef.current.getApi()
     calendarApi.next()
-  }
+  }, [])
 
   const handleYearChange = (newYear) => {
     setCurrentYear(newYear)
@@ -118,46 +117,6 @@ export default function Calendar() {
     setSelectedDate(null)
   }
 
-  const handleAddEventSave = async (title, memo) => {
-    if (title && selectedDate) {
-      try {
-        // 기존 날짜의 이벤트 가져오기
-        const existingEvents = events.filter(
-          (event) => event.date === selectedDate,
-        )
-
-        const updatedTaskList = [
-          ...existingEvents.map((event) => ({
-            title: event.title,
-            memo: event.extendedProps.memo,
-          })),
-          {
-            title,
-            memo,
-          },
-        ]
-
-        const event = {
-          date: selectedDate,
-          task_list: updatedTaskList,
-        }
-
-        // API 호출
-        await calendarAddEvent(event)
-
-        // React Query 데이터 갱신
-      } catch (error) {
-        console.error('Error adding event:', error)
-      } finally {
-        queryClient.invalidateQueries([
-          'calendarEvents',
-          currentYear,
-          currentMonth,
-        ])
-      }
-    }
-  }
-
   //수정 시 커서 맨끝으로 이동
   const moveCursorToEnd = (element) => {
     const range = document.createRange() // 새로운 range 생성
@@ -183,130 +142,18 @@ export default function Calendar() {
     }, 0)
   }
 
-  //수정 후 엔터 누르면 함수 발동
-  const handleSaveEditedEvent = async (eventId) => {
-    const targetEvent = events.find((event) => event.id === eventId)
-
-    const formattedDate = format(new Date(targetEvent.date), 'yyyy-MM-dd')
-
-    const cachedData = queryClient.getQueryData([
-      'calendarEvents',
+  // 커스텀 훅 사용
+  const { handleAddEventSave, handleSaveEditedEvent, handleDeleteEvent } =
+    useCalendarEventOperations({
+      events,
+      queryClient,
       currentYear,
       currentMonth,
-    ])
-    if (!cachedData) {
-      //캐시 없을 경우 안전장치 세팅 해놓기!
-      console.error('React Query 캐시에서 데이터를 가져오지 못했습니다.')
-      return
-    }
-    // 해당 날짜의 기존 일정 가져오기
-    const existingDayData = cachedData.find(
-      (day) => day.date === formattedDate,
-    ) || { task_list: [] }
-
-    // 수정된 일정 포함한 새로운 task_list 생성
-    const updatedTaskList = existingDayData.task_list.map((task) =>
-      task.title === targetEvent.title
-        ? { ...task, title: newEventTitle } // 제목 수정
-        : task,
-    )
-
-    const updatedEventData = {
-      date: formattedDate,
-      task_list: updatedTaskList,
-    }
-
-    console.log('Updating event:', updatedEventData)
-
-    try {
-      await calendarAddEvent(updatedEventData)
-
-      queryClient.setQueryData(
-        ['calendarEvents', currentYear, currentMonth],
-        (oldData) => {
-          //현재 달에 해당하는 캐시의 데이터가 없다면 updatedEventData로 갱신
-          if (!oldData) return [updatedEventData]
-
-          //기존 tanstack query의 데이터를 순회
-          return oldData.map((day) =>
-            day.date === formattedDate
-              ? { ...day, task_list: updatedTaskList }
-              : day,
-          )
-        },
-      )
-      // 수정 모드 종료
-      setIsEditing(false)
-      setEditingEventId(null)
-    } catch (error) {
-      console.error('Error updating event:', error)
-      alert('일정을 수정하는 중 문제가 발생했습니다.')
-    }
-  }
-
-  ////캘린더 일정 삭제 -> 점심 먹고 와서 고고고
-  const handleDeleteEvent = async () => {
-    if (contextMenu.eventId) {
-      const targetEvent = events.find(
-        (event) => event.id === contextMenu.eventId,
-      )
-
-      if (!targetEvent) {
-        console.error('Target event not found.')
-        alert('삭제하려는 이벤트를 찾을 수 없습니다.')
-        return
-      }
-
-      const formattedDate = format(new Date(targetEvent.date), 'yyyy-MM-dd')
-
-      try {
-        // React Query 캐시 업데이트
-        queryClient.setQueryData(
-          ['calendarEvents', currentYear, currentMonth],
-          (oldData) => {
-            if (!oldData) {
-              console.error(
-                'React Query 캐시에서 데이터를 가져오지 못했습니다.',
-              )
-              return []
-            }
-
-            // 업데이트된 데이터를 생성
-            const updatedDayData = oldData.map((day) => {
-              if (day.date === formattedDate) {
-                return {
-                  ...day,
-                  task_list: day.task_list.filter(
-                    (task) => task.title !== targetEvent.title,
-                  ),
-                }
-              }
-              return day
-            })
-
-            return updatedDayData
-          },
-        )
-
-        // 서버 요청: 업데이트된 데이터 전송
-        const updatedEventData = {
-          date: formattedDate,
-          task_list:
-            queryClient
-              .getQueryData(['calendarEvents', currentYear, currentMonth])
-              ?.find((day) => day.date === formattedDate)?.task_list || [],
-        }
-
-        await calendarAddEvent(updatedEventData)
-
-        console.log('Event successfully deleted.')
-        closeContextMenu()
-      } catch (error) {
-        console.error('Error deleting event:', error)
-        alert('이벤트 삭제 중 문제가 발생했습니다.')
-      }
-    }
-  }
+      closeContextMenu,
+      setIsEditing,
+      setEditingEventId,
+      newEventTitle,
+    })
 
   //월간목표 추가
   const handleAddMonthGoal = () => {
@@ -536,7 +383,9 @@ export default function Calendar() {
         <EventModal
           isOpen={isModalOpen}
           onClose={handleModalClose}
-          onSave={handleAddEventSave}
+          onSave={(title, memo) =>
+            handleAddEventSave(title, memo, selectedDate)
+          }
           selectedDate={selectedDate}
         />
 
@@ -549,7 +398,11 @@ export default function Calendar() {
             >
               수정
             </ContextMenuItem>
-            <ContextMenuItem onClick={handleDeleteEvent}>삭제</ContextMenuItem>
+            <ContextMenuItem
+              onClick={() => handleDeleteEvent(contextMenu.eventId)}
+            >
+              삭제
+            </ContextMenuItem>
           </ContextMenu>
         )}
       </Container>
