@@ -15,6 +15,8 @@ export default function useCalendarEventOperations({
   newEventTitle,
   isNotificationVisible,
   setIsNotificationVisible,
+  isEvenFirstAdded,
+  setIsEvenFirstAdded,
 }) {
   const handleAddEventSave = useCallback(
     async (title, memo, selectedDate) => {
@@ -42,8 +44,9 @@ export default function useCalendarEventOperations({
 
           await calendarAddEvent(eventData)
 
-          if (isNotificationVisible === false) {
+          if (isNotificationVisible === false && isEvenFirstAdded === false) {
             setIsNotificationVisible(true)
+            setIsEvenFirstAdded(true)
 
             setTimeout(() => {
               setIsNotificationVisible(false)

@@ -52,6 +52,7 @@ export default function Calendar() {
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isNotificationVisible, setIsNotificationVisible] = useState(false)
+  const [isEvenFirstAdded, setIsEvenFirstAdded] = useState(false)
   const [selectedDate, setSelectedDate] = useState(null)
 
   const [isEditing, setIsEditing] = useState(false) // 수정 모드 여부
@@ -147,6 +148,8 @@ export default function Calendar() {
       newEventTitle,
       isNotificationVisible,
       setIsNotificationVisible,
+      isEvenFirstAdded,
+      setIsEvenFirstAdded,
     })
 
   //월간목표 추가
@@ -244,7 +247,7 @@ export default function Calendar() {
                   </MonthArrowButton>
                 </MonthMoveBox>
               </SidebarHeader>
-              {isNotificationVisible && (
+              {isNotificationVisible && isEvenFirstAdded && (
                 <div
                   style={{
                     position: 'absolute',
