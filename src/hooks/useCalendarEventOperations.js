@@ -13,6 +13,8 @@ export default function useCalendarEventOperations({
   setIsEditing,
   setEditingEventId,
   newEventTitle,
+  isNotificationVisible,
+  setIsNotificationVisible,
 }) {
   const handleAddEventSave = useCallback(
     async (title, memo, selectedDate) => {
@@ -39,6 +41,14 @@ export default function useCalendarEventOperations({
           }
 
           await calendarAddEvent(eventData)
+
+          if (isNotificationVisible === false) {
+            setIsNotificationVisible(true)
+
+            setTimeout(() => {
+              setIsNotificationVisible(false)
+            }, 3000)
+          }
         } catch (error) {
           console.error('Error adding event:', error)
         } finally {

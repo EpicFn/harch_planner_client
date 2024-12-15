@@ -28,7 +28,6 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import FullCalendar from '@fullcalendar/react'
 import useCalendarEventOperations from '@hooks/useCalendarEventOperations'
-import useCalendarEvents from '@hooks/useCalendarEvents'
 import useCalendarFetchEvents from '@hooks/useCalendarFetchEvents'
 import useContextMenu from '@hooks/useContextMenu'
 import calendarEventStore from '@stores/calendarEventStore'
@@ -41,14 +40,7 @@ export default function Calendar() {
   const [currentYear, setCurrentYear] = useState(today.getFullYear())
   const [currentMonth, setCurrentMonth] = useState(today.getMonth() + 1)
 
-  const {
-    events,
-    addCalendarEvent,
-    removeEvent,
-    updateEvent,
-    isFirstEventAdded,
-    setIsFirstEventAdded,
-  } = useCalendarEvents()
+  const events = calendarEventStore((state) => state.events)
 
   const { contextMenu, openContextMenu, closeContextMenu } = useContextMenu()
   const { calendarData, isLoading, isError, error } = useCalendarFetchEvents(
@@ -153,6 +145,8 @@ export default function Calendar() {
       setIsEditing,
       setEditingEventId,
       newEventTitle,
+      isNotificationVisible,
+      setIsNotificationVisible,
     })
 
   //월간목표 추가
