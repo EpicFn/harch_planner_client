@@ -301,8 +301,8 @@ export const EventContent = styled.div`
   position: relative;
   display: block;
   width: 160px;
-  max-width: 160px;
-  border-radius: 4px;
+  min-width: 160px;
+  border-radius: 0px;
   height: 100%;
   line-height: 37px;
   min-height: 37px;
@@ -312,10 +312,20 @@ export const EventContent = styled.div`
   text-align: center; /* 가로 중앙 정렬 */
   outline: none;
   color: #505050;
+  background-color: #ffffff !important;
   font-size: 0.8rem;
-  background-color: #e5e5ec;
-  padding: 5px 10px;
+  padding: 5px 0px;
   box-sizing: border-box;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 8px;
+    height: 100%;
+    background-color: #007bff; /* 원하는 색상 */
+  }
 `
 //일정 추가 시에 태스크 2개가 넘어갈 경우 나오는 숫자
 export const MoreLinkStyled = styled.div`
@@ -334,8 +344,8 @@ export const MoreLinkStyled = styled.div`
 
 export const GlobalStyle = createGlobalStyle`
   .fc .fc-daygrid-event-harness {
-    display: flex;
-    justify-content: center;
+    width: calc(100% - 12px) !important; /* 양쪽 여백을 고려 */
+    margin: 0 auto;
   }
 
   .fc .fc-daygrid-day-top {
@@ -346,14 +356,14 @@ export const GlobalStyle = createGlobalStyle`
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #E5E5EC;
-    width: 100%;
+    background-color: #fff;
+    width: auto;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     height: 25px;
     box-sizing: border-box;
-    border-radius: 4px;
+    border-radius: 0px;
     margin: 0 auto;
     margin-bottom: 5px;
     font-size: 0.9rem;
