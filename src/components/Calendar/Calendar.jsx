@@ -73,6 +73,9 @@ export default function Calendar() {
   const editableRef = useRef(null)
   const goalRefs = useRef([])
 
+  const [eventColor, setEventColor] = useState('#0307FF')
+  const [showColorOption, setShowColorOption] = useState(false)
+
   const handlePrevClick = useCallback(() => {
     const calendarApi = calendarRef.current.getApi()
     calendarApi.prev()
@@ -196,6 +199,15 @@ export default function Calendar() {
     }
   }
 
+  const handleViewColor = () => {
+    setShowColorOption((prev) => !prev) // 색상 팔레트 표시/숨김 토글
+  }
+
+  const handleSelectColor = (color) => {
+    setEventColor(color) // 색상 업데이트
+    setShowColorOption(false) // 팔레트 숨기기
+  }
+
   useEffect(() => {
     const initialMonth = today.getMonth() + 1
     setCurrentMonth(initialMonth)
@@ -215,10 +227,14 @@ export default function Calendar() {
           id: `${item.date}-${task.title}-${Math.random()}`,
           title: task.title,
           date: item.date,
-          extendedProps: { memo: task.memo, sortIndex: index },
+          extendedProps: {
+            memo: task.memo,
+            sortIndex: index,
+            color: task.color || '#0307FF',
+          },
         })),
       )
-
+      console.log(formattedEvents)
       // 기존 이벤트 초기화 후 다시 추가
       calendarEventStore.getState().clearEvents()
       formattedEvents.forEach((event) => addEvent(event))
@@ -328,6 +344,7 @@ export default function Calendar() {
               return false
             }}
             eventContent={(info) => {
+              const color = info.event.extendedProps.color
               return (
                 <EventContent
                   key={info.event.id} // FullCalendar가 제공하는 고유 이벤트 ID 사용
@@ -339,6 +356,7 @@ export default function Calendar() {
                       ? editableRef
                       : null
                   }
+                  color={color}
                   suppressContentEditableWarning={true}
                   onInput={(e) => setNewEventTitle(e.currentTarget.textContent)}
                   onBlur={() => handleSaveEditedEvent(info.event.id)}
@@ -380,9 +398,13 @@ export default function Calendar() {
           isOpen={isModalOpen}
           onClose={handleModalClose}
           onSave={(title, memo) =>
-            handleAddEventSave(title, memo, selectedDate)
+            handleAddEventSave(title, memo, selectedDate, eventColor)
           }
           selectedDate={selectedDate}
+          onViewColor={handleViewColor}
+          onSelectColor={handleSelectColor}
+          eventColor={eventColor}
+          showColorOption={showColorOption}
         />
 
         {contextMenu.visible && (

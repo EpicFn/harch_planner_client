@@ -19,7 +19,7 @@ export default function useCalendarEventOperations({
   setIsEvenFirstAdded,
 }) {
   const handleAddEventSave = useCallback(
-    async (title, memo, selectedDate) => {
+    async (title, memo, selectedDate, eventColor) => {
       if (title && selectedDate) {
         try {
           const existingEvents = events.filter(
@@ -30,10 +30,12 @@ export default function useCalendarEventOperations({
             ...existingEvents.map((event) => ({
               title: event.title,
               memo: event.extendedProps.memo,
+              color: event.extendedProps.color || '#0307FF',
             })),
             {
               title,
               memo,
+              eventColor,
             },
           ]
 
@@ -41,6 +43,8 @@ export default function useCalendarEventOperations({
             date: selectedDate,
             task_list: updatedTaskList,
           }
+
+          console.log(eventData)
 
           await calendarAddEvent(eventData)
 

@@ -90,7 +90,7 @@ export const Circle = styled.div`
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background-color: #6c63ff;
+  background-color: ${(props) => props.color || '#6c63ff'};
   cursor: pointer;
 `
 

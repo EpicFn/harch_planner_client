@@ -324,7 +324,7 @@ export const EventContent = styled.div`
     top: 0;
     width: 8px;
     height: 100%;
-    background-color: #007bff; /* 원하는 색상 */
+    background-color: ${(props) => props.color || '#0307FF'}; /* 원하는 색상 */
   }
 `
 //일정 추가 시에 태스크 2개가 넘어갈 경우 나오는 숫자

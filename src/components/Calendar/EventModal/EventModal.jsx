@@ -1,3 +1,4 @@
+import ColorPalette from '@components/Calendar/ColorPallete/ColorPallete'
 import {
   ButtonWrapper,
   Circle,
@@ -10,11 +11,21 @@ import {
   TextMemo,
 } from '@components/Calendar/EventModal/EventModal.style'
 import { formatDateToKorean } from '@utils/formatDateToKorean'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
-export default function EventModal({ isOpen, onClose, onSave, selectedDate }) {
+export default function EventModal({
+  isOpen,
+  onClose,
+  onSave,
+  selectedDate,
+  onViewColor,
+  onSelectColor,
+  eventColor,
+  showColorOption,
+}) {
   const [title, setTitle] = useState('')
   const [memo, setMemo] = useState('')
+
   const ButtonRef = useRef(null)
   const [shaking, setIsShaking] = useState('false')
 
@@ -23,6 +34,7 @@ export default function EventModal({ isOpen, onClose, onSave, selectedDate }) {
       onSave(title, memo)
       setTitle('')
       setMemo('')
+      onSelectColor('#0307FF')
       onClose()
     } else {
       setIsShaking('true')
@@ -39,6 +51,12 @@ export default function EventModal({ isOpen, onClose, onSave, selectedDate }) {
     }
   }
 
+  useEffect(() => {
+    setTitle('')
+    setMemo('')
+    onSelectColor('#0307FF')
+  }, [isOpen])
+
   if (!isOpen) return null
 
   return (
@@ -52,7 +70,8 @@ export default function EventModal({ isOpen, onClose, onSave, selectedDate }) {
             onChange={(e) => setTitle(e.target.value)}
             onKeyDown={handleKeyDown} // 키 입력을 감지하는 핸들러 추가
           />
-          <Circle />
+          <Circle onClick={onViewColor} color={eventColor} />
+          {showColorOption && <ColorPalette onSelectColor={onSelectColor} />}
         </ModalInputBox>
 
         <DateDisplay>{formatDateToKorean(selectedDate)}</DateDisplay>
