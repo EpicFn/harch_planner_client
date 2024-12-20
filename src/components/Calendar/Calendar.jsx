@@ -30,6 +30,7 @@ import FullCalendar from '@fullcalendar/react'
 import useCalendarEventOperations from '@hooks/useCalendarEventOperations'
 import useCalendarFetchEvents from '@hooks/useCalendarFetchEvents'
 import useContextMenu from '@hooks/useContextMenu'
+import useMonthlyGoalOperations from '@hooks/useMonthlyGoalOperations'
 import calendarEventStore from '@stores/calendarEventStore'
 import { useQueryClient } from '@tanstack/react-query'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -138,7 +139,7 @@ export default function Calendar() {
     }, 0)
   }
 
-  // 커스텀 훅 사용
+  // 캘린더 로직 커스텀 훅
   const { handleAddEventSave, handleSaveEditedEvent, handleDeleteEvent } =
     useCalendarEventOperations({
       events,
@@ -155,49 +156,21 @@ export default function Calendar() {
       setIsEvenFirstAdded,
     })
 
-  //월간목표 추가
-  const handleAddMonthGoal = () => {
-    setMonthGoalList((prevGoals) => [...prevGoals, `목표를 입력해주세요`])
-  }
-
-  //월간목표 수정
-  const handleEditMonthGoal = (index) => {
-    const goalText = monthGoalList[index]
-    setEditingGoal({ index, text: goalText })
-    setTimeout(() => {
-      if (goalRefs.current[index]) {
-        goalRefs.current[index].focus() // 편집 모드에서 포커스 설정
-      }
-    }, 0)
-  }
-
-  const handleDeleteGoal = (e, index) => {
-    e.stopPropagation()
-    setMonthGoalList((prevGoals) => prevGoals.filter((_, i) => i !== index))
-  }
-
-  // 월간목표 저장
-  const handleSaveGoal = (index) => {
-    const currentRef = goalRefs.current[index]
-
-    if (currentRef && currentRef.textContent) {
-      console.log('Saving goal:', currentRef.textContent) // 디버깅을 위해 출력
-      const updatedGoals = [...monthGoalList]
-      updatedGoals[index] = currentRef.textContent // goalRefs에서 textContent 가져옴
-      setMonthGoalList(updatedGoals)
-      setEditingGoal({ index: null, text: '' }) // 편집 모드 종료
-    }
-  }
-
-  // 월간목표 텍스트 변경
-  const handleGoalTextChange = (index) => {
-    if (goalRefs.current[index]) {
-      setEditingGoal((prev) => ({
-        ...prev,
-        text: goalRefs.current[index].textContent, // ref에서 텍스트 가져오기
-      }))
-    }
-  }
+  // 월간목표 커스텀 훅
+  const {
+    handleAddMonthGoal,
+    handleEditMonthGoal,
+    handleSaveGoal,
+    handleDeleteGoal,
+    handleGoalTextChange,
+  } = useMonthlyGoalOperations({
+    currentYear,
+    currentMonth,
+    monthGoalList,
+    setMonthGoalList,
+    setEditingGoal,
+    goalRefs,
+  })
 
   const handleViewColor = () => {
     setShowColorOption((prev) => !prev) // 색상 팔레트 표시/숨김 토글
