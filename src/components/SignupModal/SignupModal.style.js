@@ -140,12 +140,15 @@ export const SignupButton = styled.button`
 `
 
 export const ErrorMessage = styled.div`
+  position: absolute;
   font-size: small;
   font-weight: bold;
   color: red;
   margin-top: 5px;
   display: flex;
   justify-content: start;
+  top: 32px;
+  left: 82px;
 `
 
 export const FormBottom = styled.div`
