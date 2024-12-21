@@ -110,14 +110,14 @@ export const Input = styled.input`
   }
 `
 
-export const SubmitButton = styled.button`
+export const LoginButton = styled.button`
   background-color: #8b3dff;
   color: white;
   border: none;
   padding: 10px;
   cursor: pointer;
   border-radius: 8px;
-  margin-top: 10px;
+  width: 70%;
 `
 export const ErrorMessage = styled.div`
   display: flex;
@@ -161,4 +161,20 @@ export const AltText = styled.span`
   position: absolute;
   font-size: 14px;
   color: white;
+`
+
+export const FormBottom = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: auto;
+  margin-top: 10px;
+`
+
+export const SignupText = styled.span`
+  line-height: 0.5;
+  font-size: small;
+  font-weight: bold;
+  cursor: pointer;
 `

@@ -7,6 +7,7 @@ import {
   CloseButton,
   ErrorMessage,
   Form,
+  FormBottom,
   FormContainer,
   FormGroup,
   IconImage,
@@ -14,14 +15,16 @@ import {
   ImageContainer,
   Input,
   Label,
+  LoginButton,
   ModalContainer,
   ModalOverlay,
   ProfileImage,
   ProfileImageContainer,
   ProfileImageWrapper,
-  SubmitButton,
+  SignupText,
   Title,
 } from '@components/LoginModal/LoginModal.style'
+import SignupModal from '@components/SignupModal/SignupModal'
 import loginModalStore from '@stores/modalStore'
 import useUserStore from '@stores/userStore'
 import { useQueryClient } from '@tanstack/react-query'
@@ -35,6 +38,8 @@ export default function LoginModal() {
   const [inputPasswordValue, setInputPasswordValue] = useState('')
   const user = useUserStore((state) => state.user)
   const [errorMessage, setErrorMessage] = useState('')
+
+  const [showSignupModal, setShowSignupModal] = useState(false)
 
   const navigate = useNavigate()
 
@@ -120,6 +125,10 @@ export default function LoginModal() {
     }
   }
 
+  const handleShowSignupModal = () => {
+    setShowSignupModal(true)
+  }
+
   useEffect(() => {
     if (user.id) {
       // user.id가 설정된 이후에 페이지 이동
@@ -131,48 +140,57 @@ export default function LoginModal() {
   if (!isModalOpen) return null
   return (
     <ModalOverlay>
-      <ModalContainer>
-        <FormContainer>
-          <CloseButton onClick={closeModal}>&times;</CloseButton>
-          <Title>스터디 플래너</Title>
-          <ProfileImageContainer>
-            <ProfileImageWrapper>
-              <ProfileImage src={user.profileImage} />
-              {!user.profileImage && <AltText>profile</AltText>}
-            </ProfileImageWrapper>
-          </ProfileImageContainer>
-          <IconWrapper>
-            <IconImage src={GoogleIcon} alt="Google"></IconImage>
-            <IconImage
-              src={NaverIcon}
-              alt="Naver"
-              onClick={handleNaverIconClick}
-            ></IconImage>
-            <IconImage src={KakaoIcon} alt="Kakao"></IconImage>
-          </IconWrapper>
-          <Form onSubmit={handleSubmit}>
-            <FormGroup>
-              <Label>이메일</Label>
-              <Input
-                type="text"
-                value={inputIdValue}
-                onChange={handleIdInputChange}
-              />
-            </FormGroup>
-            <FormGroup>
-              <Label>비밀번호</Label>
-              <Input
-                type="password"
-                value={inputPasswordValue}
-                onChange={handlePasswordInputChange}
-              />
-            </FormGroup>
-            {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-            <SubmitButton type="submit">로그인</SubmitButton>
-          </Form>
-        </FormContainer>
-        <ImageContainer />
-      </ModalContainer>
+      {showSignupModal === false ? (
+        <ModalContainer>
+          <FormContainer>
+            <CloseButton onClick={closeModal}>&times;</CloseButton>
+            <Title>스터디 플래너</Title>
+            <ProfileImageContainer>
+              <ProfileImageWrapper>
+                <ProfileImage src={user.profileImage} />
+                {!user.profileImage && <AltText>profile</AltText>}
+              </ProfileImageWrapper>
+            </ProfileImageContainer>
+            <IconWrapper>
+              <IconImage src={GoogleIcon} alt="Google"></IconImage>
+              <IconImage
+                src={NaverIcon}
+                alt="Naver"
+                onClick={handleNaverIconClick}
+              ></IconImage>
+              <IconImage src={KakaoIcon} alt="Kakao"></IconImage>
+            </IconWrapper>
+            <Form onSubmit={handleSubmit}>
+              <FormGroup>
+                <Label>이메일</Label>
+                <Input
+                  type="text"
+                  value={inputIdValue}
+                  onChange={handleIdInputChange}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label>비밀번호</Label>
+                <Input
+                  type="password"
+                  value={inputPasswordValue}
+                  onChange={handlePasswordInputChange}
+                />
+              </FormGroup>
+              {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+              <FormBottom>
+                <LoginButton type="submit">로그인</LoginButton>
+                <SignupText onClick={handleShowSignupModal}>
+                  회원가입
+                </SignupText>
+              </FormBottom>
+            </Form>
+          </FormContainer>
+          <ImageContainer />
+        </ModalContainer>
+      ) : (
+        <SignupModal />
+      )}
     </ModalOverlay>
   )
 }
