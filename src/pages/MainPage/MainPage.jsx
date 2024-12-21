@@ -1,7 +1,8 @@
 import logoutApi from '@apis/logout/logoutApi'
 import LoginModal from '@components/LoginModal/LoginModal'
 import MainHeader from '@components/MainHeader/MainHeader'
-import loginModalStore from '@stores/modalStore'
+import SignupModal from '@components/SignupModal/SignupModal'
+import ModalStore from '@stores/modalStore'
 import useUserStore from '@stores/userStore'
 import { useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
@@ -38,12 +39,15 @@ function preloadImages(imageArray, callback) {
 export default function MainPage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [isLoaded, setIsLoaded] = useState(false)
-  const openModal = loginModalStore((state) => state.openModal)
-  const isModalOpen = loginModalStore((state) => state.isModalOpen)
+  const openLoginModal = ModalStore((state) => state.openLoginModal)
+  const isLoginModalOpen = ModalStore((state) => state.isLoginModalOpen)
+  const isSignupModalOpen = ModalStore((state) => state.isSignupModalOpen)
   const user = useUserStore((state) => state.user)
   const login = useUserStore((state) => state.login)
 
   const queryClient = useQueryClient()
+
+  console.log('isLoginModalOpen 상태:', isLoginModalOpen)
 
   const logout = async () => {
     try {
@@ -64,10 +68,10 @@ export default function MainPage() {
     const storedUser = localStorage.getItem('user')
     if (storedUser) {
       login(JSON.parse(storedUser))
-    } else {
-      openModal()
+    } else if (!storedUser && !isLoginModalOpen) {
+      openLoginModal()
     }
-  }, [])
+  }, [login, isLoginModalOpen, openLoginModal])
 
   useEffect(() => {
     preloadImages(images, () => setIsLoaded(true)) // 프리로딩 완료되면 로딩 상태 업데이트
@@ -81,12 +85,6 @@ export default function MainPage() {
       return () => clearInterval(intervalId) // 메모리 누수 방지
     }
   }, [isLoaded])
-
-  useEffect(() => {
-    if (!user.id) {
-      openModal()
-    }
-  }, [user.id])
 
   if (!isLoaded) return null
 
@@ -102,9 +100,10 @@ export default function MainPage() {
         {user.id ? (
           <LoginButton onClick={logout}>로그아웃</LoginButton>
         ) : (
-          <LoginButton onClick={openModal}>로그인</LoginButton>
+          <LoginButton onClick={openLoginModal}>로그인</LoginButton>
         )}
-        {isModalOpen ? <LoginModal /> : null}
+        {isLoginModalOpen && !isSignupModalOpen && <LoginModal />}
+        {isSignupModalOpen && <SignupModal />}
       </MainContent>
     </MainPageContainer>
   )

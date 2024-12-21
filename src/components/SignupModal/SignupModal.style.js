@@ -55,6 +55,7 @@ export const Form = styled.form`
 `
 
 export const FormGroup = styled.div`
+  position: relative;
   display: flex;
   align-items: center; /* Label과 Input을 수평 정렬 */
   justify-content: space-between; /* Label과 Input 간의 간격 */
@@ -163,4 +164,22 @@ export const FormContainer = styled.div`
   height: 100%;
   box-sizing: border-box;
   color: black;
+`
+
+export const CertificationNumberInput = styled.input`
+  position: absolute;
+  padding: 8px 6px;
+  text-align: center;
+  width: 35%;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  right: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+
+  &:focus {
+    outline: none;
+    border-color: #8b3dff;
+  }
 `

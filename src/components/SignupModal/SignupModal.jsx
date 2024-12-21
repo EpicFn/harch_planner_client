@@ -1,4 +1,6 @@
+import { sendVerificationEmail } from '@apis/email/sendVerificationEmail'
 import {
+  CertificationNumberInput,
   CheckEmailButton,
   CloseButton,
   ErrorMessage,
@@ -13,20 +15,28 @@ import {
   SignupButton,
   Title,
 } from '@components/SignupModal/SignupModal.style.js'
-import loginModalStore from '@stores/modalStore'
+import ModalStore from '@stores/modalStore'
 import { useEffect, useState } from 'react'
 
 export default function SignupModal() {
-  const { isModalOpen, closeModal } = loginModalStore()
+  const {
+    isSignupModalOpen,
+    closeSignupModal,
+    openSignupModal,
+    closeLoginModal,
+  } = ModalStore()
   const [userInfo, setUserInfo] = useState({
     userId: '',
     userName: '',
     email: '',
     password: '',
   })
+  const [isVerificationFieldVisible, setIsVerificationFieldVisible] =
+    useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
   useEffect(() => {
-    if (isModalOpen) {
+    if (isSignupModalOpen) {
       setUserInfo({
         userId: '',
         userName: '',
@@ -34,7 +44,9 @@ export default function SignupModal() {
         password: '',
       })
     }
-  }, [isModalOpen])
+    setIsVerificationFieldVisible(false)
+    setErrorMessage('')
+  }, [isSignupModalOpen])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -44,8 +56,26 @@ export default function SignupModal() {
     }))
   }
 
-  if (!isModalOpen) {
-    return null // 모달이 열려 있지 않으면 렌더링하지 않음
+  const handleEmailVerification = async (userInfo) => {
+    if (!userInfo) {
+      setErrorMessage('이메일을 입력해주세요.')
+      return
+    }
+
+    setErrorMessage('')
+
+    try {
+      await sendVerificationEmail(userInfo)
+      setTimeout(() => {
+        setIsVerificationFieldVisible(true) // 인증번호 입력 필드 표시
+      }, 1500)
+    } catch (error) {
+      setErrorMessage('인증 이메일 전송에 실패했습니다.')
+    }
+  }
+
+  if (!isSignupModalOpen) {
+    return null // SignupModal이 열려 있지 않으면 렌더링하지 않음
   }
 
   return (
@@ -53,7 +83,7 @@ export default function SignupModal() {
       <ModalContainer>
         <FormHeader>
           <Title>회원가입</Title>
-          <CloseButton onClick={closeModal}>&times;</CloseButton>
+          <CloseButton onClick={closeSignupModal}>&times;</CloseButton>
         </FormHeader>
         <FormContainer>
           <Form>
@@ -85,14 +115,31 @@ export default function SignupModal() {
               <Label htmlFor="email">이메일</Label>
               <Input
                 id="email"
+                name="email"
                 type="email"
                 placeholder="이메일을 입력하세요"
                 value={userInfo.email}
                 onChange={handleChange}
               />
-              <CheckEmailButton>인증하기</CheckEmailButton>
-              <ErrorMessage></ErrorMessage>
+              <CheckEmailButton
+                type="button"
+                onClick={() => handleEmailVerification(userInfo.email)}
+              >
+                인증하기
+              </CheckEmailButton>
+              <ErrorMessage>{errorMessage}</ErrorMessage>
             </FormGroup>
+
+            {isVerificationFieldVisible && (
+              <FormGroup>
+                <CertificationNumberInput
+                  id="verificationCode"
+                  name="verificationCode"
+                  type="text"
+                  placeholder="인증번호를 입력하세요"
+                />
+              </FormGroup>
+            )}
 
             <FormGroup>
               <Label htmlFor="password">비밀번호</Label>

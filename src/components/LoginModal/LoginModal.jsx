@@ -25,14 +25,19 @@ import {
   Title,
 } from '@components/LoginModal/LoginModal.style'
 import SignupModal from '@components/SignupModal/SignupModal'
-import loginModalStore from '@stores/modalStore'
+import ModalStore from '@stores/modalStore'
 import useUserStore from '@stores/userStore'
 import { useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 export default function LoginModal() {
-  const { isModalOpen, closeModal } = loginModalStore()
+  const {
+    isLoginModalOpen,
+    closeLoginModal,
+    openSignupModal,
+    isSignupModalOpen,
+  } = ModalStore()
 
   const [inputIdValue, setInputIdValue] = useState('')
   const [inputPasswordValue, setInputPasswordValue] = useState('')
@@ -81,12 +86,12 @@ export default function LoginModal() {
   }
 
   useEffect(() => {
-    if (isModalOpen) {
+    if (isLoginModalOpen) {
       setInputIdValue('')
       setInputPasswordValue('')
       setErrorMessage('')
     }
-  }, [isModalOpen])
+  }, [isLoginModalOpen])
 
   const queryClient = useQueryClient()
 
@@ -118,7 +123,7 @@ export default function LoginModal() {
       //로컬스토리지에도 저장
       localStorage.setItem('user', JSON.stringify(responseData))
 
-      closeModal() // 로그인 성공 후 모달 닫기
+      closeLoginModal() // 로그인 성공 후 모달 닫기
       navigate('/dailyPlannerPage') // 페이지 이동
     } catch (error) {
       setErrorMessage(error.message || '로그인에 실패했습니다.')
@@ -126,24 +131,24 @@ export default function LoginModal() {
   }
 
   const handleShowSignupModal = () => {
-    setShowSignupModal(true)
+    openSignupModal()
   }
 
   useEffect(() => {
     if (user.id) {
       // user.id가 설정된 이후에 페이지 이동
-      closeModal()
+      closeLoginModal()
       navigate('/dailyPlannerPage')
     }
-  }, [user.id, navigate, closeModal])
+  }, [user.id, navigate, closeLoginModal])
 
-  if (!isModalOpen) return null
+  if (!isLoginModalOpen) return null
   return (
     <ModalOverlay>
-      {showSignupModal === false ? (
+      {isSignupModalOpen === false ? (
         <ModalContainer>
           <FormContainer>
-            <CloseButton onClick={closeModal}>&times;</CloseButton>
+            <CloseButton onClick={closeLoginModal}>&times;</CloseButton>
             <Title>스터디 플래너</Title>
             <ProfileImageContainer>
               <ProfileImageWrapper>
