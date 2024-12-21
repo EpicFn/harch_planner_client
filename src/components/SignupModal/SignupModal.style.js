@@ -147,7 +147,7 @@ export const ErrorMessage = styled.div`
   margin-top: 5px;
   display: flex;
   justify-content: start;
-  top: 32px;
+  top: 30px;
   left: 82px;
 `
 

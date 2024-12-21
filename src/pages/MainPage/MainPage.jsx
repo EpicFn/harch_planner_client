@@ -68,10 +68,8 @@ export default function MainPage() {
     const storedUser = localStorage.getItem('user')
     if (storedUser) {
       login(JSON.parse(storedUser))
-    } else if (!storedUser && !isLoginModalOpen) {
-      openLoginModal()
     }
-  }, [login, isLoginModalOpen, openLoginModal])
+  }, [login])
 
   useEffect(() => {
     preloadImages(images, () => setIsLoaded(true)) // 프리로딩 완료되면 로딩 상태 업데이트
