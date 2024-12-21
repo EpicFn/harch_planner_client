@@ -1,4 +1,19 @@
-import styled from 'styled-components'
+import { css, keyframes, styled } from 'styled-components'
+
+const shake = keyframes`
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-5px);
+  }
+`
 
 export const ModalOverlay = styled.div`
   position: fixed;
@@ -25,6 +40,12 @@ export const ModalContainer = styled.div`
   flex-direction: column;
   justify-content: space-between;
   box-sizing: border-box;
+
+  ${({ shaking }) =>
+    shaking === 'true' &&
+    css`
+      animation: ${shake} 0.4s ease-in-out;
+    `};
 `
 
 export const CloseButton = styled.button`
@@ -165,21 +186,29 @@ export const FormContainer = styled.div`
   box-sizing: border-box;
   color: black;
 `
+export const CertificationContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 20px;
+  width: 100%;
+`
 
 export const CertificationNumberInput = styled.input`
-  position: absolute;
   padding: 8px 6px;
   text-align: center;
   width: 35%;
   border: 1px solid #ddd;
   border-radius: 4px;
   box-sizing: border-box;
-  right: 10px;
-  margin-top: 5px;
-  margin-bottom: 10px;
 
   &:focus {
     outline: none;
     border-color: #8b3dff;
   }
+`
+export const SuccessIcon = styled.span`
+  color: green;
+  font-size: 1rem;
+  margin-left: 0.5rem;
 `
