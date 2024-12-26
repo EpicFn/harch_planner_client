@@ -157,9 +157,10 @@ export default function SignupModal() {
           <FormContainer>
             <Form onSubmit={handleSubmit}>
               <FormGroup>
-                <Label htmlFor="userid">아이디</Label>
+                <Label htmlFor="userId">아이디</Label>
                 <Input
-                  id="userid"
+                  id="userId"
+                  name="userId"
                   type="text"
                   placeholder="아이디를 입력하세요"
                   value={userInfo.userId}
@@ -169,9 +170,10 @@ export default function SignupModal() {
               </FormGroup>
 
               <FormGroup>
-                <Label htmlFor="username">이름</Label>
+                <Label htmlFor="userName">이름</Label>
                 <Input
-                  id="username"
+                  id="userName"
+                  name="userName"
                   type="text"
                   placeholder="이름을 입력하세요"
                   value={userInfo.userName}
@@ -228,6 +230,7 @@ export default function SignupModal() {
                 <Label htmlFor="password">비밀번호</Label>
                 <Input
                   id="password"
+                  name="password"
                   type="password"
                   value={userInfo.password}
                   placeholder="비밀번호를 입력하세요"
@@ -243,11 +246,15 @@ export default function SignupModal() {
       </ModalOverlay>
       <Snackbar
         open={snackbar.open}
-        autoHideDuration={4000}
+        autoHideDuration={3500}
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity}>
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbar.severity}
+          sx={{ fontWeight: 'bold' }}
+        >
           {snackbar.message}
         </Alert>
       </Snackbar>
