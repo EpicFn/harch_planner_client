@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { TimeTableWrapper, Table, TableRow, TableData, TimeSign, TimeSignWrapper } from './TimeTable.style';
+import { TimeTableWrapper, Table, TableRow, TableData, TimeSign, TimeSignWrapper } from './TimeTable.style'
 
 
 
@@ -21,40 +21,15 @@ const TimeTable = (selectedColor) => {
     const [cellData, setCellData] = useState(dummyInitialGrid);
 
 
-    // 드래그 상태 관리
+    // 셀 선택 상태 관리
     const [startCell, setStartCell] = useState(null);
     const [endCell, setEndCell] = useState(null);
-    const [isDragging, setIsDragging] = useState(false);
 
-
-    const handleMouseDown = (row, col) => {
-        //선택된 색이 없으면 리턴
-        if (!selectedColor.selectedColor) return;
-
-        setStartCell({ row, col });
-        setEndCell({ row, col });
-
-        setIsDragging(true);
-    };
-
-    const handleMouseEnter = (row, col) => {
-        if (isDragging) {
-            setEndCell({ row, col });
-        }
-    };
-
-    const handleMouseUp = () => {
-        setIsDragging(false);
-
-        if (startCell && endCell && selectedColor.selectedColor) {
+    useEffect(() => {
+        if (startCell && endCell) {
             const newCellData = [...cellData];
-            var { row: startRow, col: startCol } = startCell;
-            var { row: endRow, col: endCol } = endCell;
-
-            if (startRow > endRow) {
-                startRow, endRow = endRow, startRow;
-                startCol, endCol = endCol, startCol;
-            }
+            let { row: startRow, col: startCol } = startCell;
+            let { row: endRow, col: endCol } = endCell;
 
             if (startRow > endRow) {
                 [startRow, endRow] = [endRow, startRow];
@@ -76,12 +51,27 @@ const TimeTable = (selectedColor) => {
             newCellData[endRow][endCol] = selectedColor.selectedColor;
 
             setCellData(newCellData);
+            setStartCell(null);
+            setEndCell(null);
+        }
+    }, [endCell, startCell, cellData, selectedColor.selectedColor]);
 
+    const handleCellClick = (row, col) => {
+        // 선택된 색이 없으면 리턴
+        if (!selectedColor.selectedColor) return;
+
+        // startCell이 없는 경우 : startCell 선택
+        // 해당 셀을 startCell로 설정
+        if (!startCell) {
+            setStartCell({ row, col });
+            return;
         }
 
-        setStartCell(null);
-        setEndCell(null);
+        // startCell이 있는 경우 : endCell 선택
+        // endCell을 설정
+        setEndCell({ row, col });
     };
+
 
 
     return (
@@ -104,7 +94,6 @@ const TimeTable = (selectedColor) => {
                         {row.map((cell, colIndex) => {
                             let cellColor;
                             let selected = false; // 채워진 셀인지 여부
-                            let isDragged = false; //드래그 중인 셀인지 여부
                             if (cell == 1)
                                 cellColor = 'transparent';
                             else {
@@ -112,12 +101,11 @@ const TimeTable = (selectedColor) => {
                                 selected = true;
                             }
 
-                            if (startCell && endCell) {
-                                const { row: startRow, col: startCol } = startCell;
-                                const { row: endRow, col: endCol } = endCell;
-                                if ((rowIndex == startRow && rowIndex == endRow) || (colIndex == startCol && colIndex == endCol)) {
-                                    isDragged = true;
-                                }
+
+                            // 선택된 셀인 경우
+                            let isStartCell = false;
+                            if (startCell && startCell.row === rowIndex && startCell.col === colIndex) {
+                                isStartCell = true;
                             }
 
                             return (
@@ -125,10 +113,8 @@ const TimeTable = (selectedColor) => {
                                     key={colIndex}
                                     isselected={selected}
                                     color={cellColor}
-                                    isDraged={isDragged}
-                                    onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
-                                    onMouseEnter={() => handleMouseEnter(rowIndex, colIndex)}
-                                    onMouseUp={handleMouseUp}
+                                    isStartCell={isStartCell}
+                                    onClick={() => handleCellClick(rowIndex, colIndex)}
                                 >
 
                                 </TableData>

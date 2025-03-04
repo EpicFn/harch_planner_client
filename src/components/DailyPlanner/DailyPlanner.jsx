@@ -152,7 +152,6 @@ const DailyPlanner = () => {
     const [taskAchievementData, setTaskAchievementData] = useState(dummyTaskAchievementData);
 
     //timetable에서 선택된 색상
-    //나중에 category 자체를 관리하는 방식으로 변경해야 함
     const [selectedColor, setSelectedColor] = useState(null);
 
     //---------------------------------Event Handlers---------------------------------

@@ -22,19 +22,19 @@ export const Table = styled.table`
 `;
 
 export const TableRow = styled.tr`
-
+    margin : 10px;
 `;
 
 export const TableColumn = styled.div`
     display: flex;
     flex : 1;
     flex-direction: row;
-    width : 100%;
+
 `
 
 export const TableData = styled.td`
     border: 1px solid #e0e0e0;
-    border-color: ${({ isDragged }) => (isDragged ? 'gold' : '#e0e0e0')};
+    border :  ${({ isStartCell }) => (isStartCell ? '1px solid black' : '1px solid #e0e0e0')};
     background-color: ${({ isselected, color }) => (isselected ? color : 'transparent')};
 
 `;
