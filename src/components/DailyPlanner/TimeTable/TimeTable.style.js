@@ -15,6 +15,12 @@ export const TimeTableWrapper = styled.div`
 `;
 
 export const Table = styled.table`
+    display : flex;
+    flex-direction : column;
+
+    flex : 1;
+
+    
     border-collapse: collapse;
     width: 100%;
     height: 100%;
@@ -22,21 +28,26 @@ export const Table = styled.table`
 `;
 
 export const TableRow = styled.tr`
-    margin : 10px;
+    display: flex;
+    flex : 1;
+    flex-direction: row;
+
+
 `;
 
 export const TableColumn = styled.div`
     display: flex;
     flex : 1;
     flex-direction: row;
-
-`
+`;
 
 export const TableData = styled.td`
-    border: 1px solid #e0e0e0;
-    border :  ${({ isStartCell }) => (isStartCell ? '1px solid black' : '1px solid #e0e0e0')};
+    display: flex;
+    flex : 1;
+    flex-direction: row;
+    /* border :  ${({ isStartCell }) => (isStartCell ? '2px solid black' : '1px solid #e0e0e0')}; */    
+    box-shadow :  ${({ isStartCell }) => (isStartCell ? '0 0 0 1px black inset' : '0 0 0 1px #e0e0e0 inset')};
     background-color: ${({ isselected, color }) => (isselected ? color : 'transparent')};
-
 `;
 
 export const TimeSignWrapper = styled.div`
@@ -45,6 +56,7 @@ export const TimeSignWrapper = styled.div`
 
     border: 1px solid #e0e0e0;
 `;
+
 export const TimeSign = styled.div`
     color: var(--Font-04_Gray, #767676);
     font-family: Pretendard;
