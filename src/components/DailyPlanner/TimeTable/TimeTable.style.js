@@ -46,7 +46,7 @@ export const TableData = styled.td`
     flex : 1;
     flex-direction: row;
     /* border :  ${({ isStartCell }) => (isStartCell ? '2px solid black' : '1px solid #e0e0e0')}; */    
-    box-shadow :  ${({ isStartCell }) => (isStartCell ? '0 0 0 1px black inset' : '0 0 0 1px #e0e0e0 inset')};
+    box-shadow :  ${({ isStartCell }) => (isStartCell ? '0 0 0 2px grey inset' : '0 0 0 1px #e0e0e0 inset')};
     background-color: ${({ isselected, color }) => (isselected ? color : 'transparent')};
 `;
 

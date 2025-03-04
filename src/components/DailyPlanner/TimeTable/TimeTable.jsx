@@ -33,8 +33,6 @@ const TimeTable = (selectedColor) => {
 
             if (startRow > endRow) {
                 [startRow, endRow] = [endRow, startRow];
-            }
-            if (startCol > endCol) {
                 [startCol, endCol] = [endCol, startCol];
             }
 
