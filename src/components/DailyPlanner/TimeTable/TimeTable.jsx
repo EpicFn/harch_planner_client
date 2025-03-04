@@ -6,15 +6,7 @@ import { TimeTableWrapper, Table, TableRow, TableData, TimeSign, TimeSignWrapper
 
 const dummyInitialGrid = Array.from({ length: 24 }, () => Array(6).fill(1));
 
-// Set some cells 
-dummyInitialGrid[2][2] = '#f7d8d8';
-dummyInitialGrid[2][3] = '#f7d8d8';
-dummyInitialGrid[2][4] = '#f7d8d8';
-dummyInitialGrid[11][3] = '#FFFEE0';
-dummyInitialGrid[11][4] = '#FFFEE0';
-dummyInitialGrid[11][5] = '#FFFEE0';
-dummyInitialGrid[20][2] = '#E0F9FF';
-dummyInitialGrid[20][3] = '#E0F9FF';
+
 
 const TimeTable = (selectedColor) => {
 

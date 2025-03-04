@@ -15,7 +15,7 @@ import { useEffect, useState } from 'react';
 
 
 
-export default function TaskListByCategory({ category, tasks, setTasks, categoryColor, setSelectedColor, categoryColorIndex, selectedColorIndex, setSelectedColorIndex }) {
+export default function TaskListByCategory({ category, tasks, setTasks, categoryColor, semiCategoryColor, setSelectedColor, categoryColorIndex, selectedColorIndex, setSelectedColorIndex }) {
     //TaskItem 드래그 앤 드롭 관련 상태
     const [draggingIndex, setDraggingIndex] = useState(null);
     const [slidIndex, setSlidIndex] = useState(null);
@@ -107,7 +107,7 @@ export default function TaskListByCategory({ category, tasks, setTasks, category
                 isSelected={categoryColorIndex === selectedColorIndex}
                 onClick={handleCategoryBoxClick}
             >
-                <CategoryColorPoint color="red" />
+                <CategoryColorPoint color={semiCategoryColor} />
                 {category}
             </CategoryBox>
             <TaskItemList>

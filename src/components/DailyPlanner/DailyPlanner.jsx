@@ -1,3 +1,4 @@
+
 import {
     AchievementInfoContainer,
     Container,
@@ -36,7 +37,8 @@ import { useState, useEffect } from "react";
 const dummyTasksList = [
     {
         category: "국어",
-        color: '#FFE0E0',
+        color: 'rgba(236, 18, 18, 0.3)',
+        semiColor: 'rgba(236, 18, 18, 1)',
         tasks: [
             { contents: "나비효과 30p", sledding: "checked" },
             { contents: "매3비 6지문", sledding: "x" },
@@ -45,7 +47,8 @@ const dummyTasksList = [
     },
     {
         category: "수학",
-        color: "#FFFEE0",
+        color: "rgba(241, 234, 20, 0.3)",
+        semiColor: "rgba(241, 234, 20, 1)",
         tasks: [
             { contents: "쎈 10p", sledding: "none" },
             { contents: "블랙라벨 1챕터", sledding: "none" },
@@ -53,7 +56,8 @@ const dummyTasksList = [
     },
     {
         category: "영어",
-        color: "#E0F9FF",
+        color: "rgba(11, 194, 240, 0.3)",
+        semiColor: "rgba(11, 194, 240, 1)",
         tasks: [
             { contents: "단어 100개 암기", sledding: "none" },
             { contents: "영어 수특 1문단 풀이", sledding: "none" },
@@ -89,17 +93,17 @@ const dummyStudyTimeData = [
     {
         category: "국어",
         size: 30,
-        color: '#FFE0E0',
+        color: 'rgba(236, 18, 18, 0.3)',
     },
     {
         category: "수학",
         size: 60,
-        color: "#FFFEE0",
+        color: "rgba(241, 234, 20, 0.3)",
     },
     {
         category: "영어",
         size: 45,
-        color: "#E0F9FF",
+        color: "rgba(11, 194, 240, 0.3)",
     },
     {
         category: "과학",
@@ -230,6 +234,7 @@ const DailyPlanner = () => {
                                     setTasksList(newTasksList);
                                 }}
                                 categoryColor={tasksForCategory.color}
+                                semiCategoryColor={tasksForCategory.semiColor}
                                 categoryColorIndex={index}
                                 selectedColorIndex={selectedColorIndex}
                                 setSelectedColorIndex={setSelectedColorIndex}
