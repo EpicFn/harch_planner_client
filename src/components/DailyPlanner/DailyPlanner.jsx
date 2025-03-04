@@ -153,6 +153,7 @@ const DailyPlanner = () => {
 
     //timetable에서 선택된 색상
     const [selectedColor, setSelectedColor] = useState(null);
+    const [selectedColorIndex, setSelectedColorIndex] = useState(null); // 선택된 색상의 인덱스, -1이면 지우개
 
     //---------------------------------Event Handlers---------------------------------
 
@@ -229,6 +230,9 @@ const DailyPlanner = () => {
                                     setTasksList(newTasksList);
                                 }}
                                 categoryColor={tasksForCategory.color}
+                                categoryColorIndex={index}
+                                selectedColorIndex={selectedColorIndex}
+                                setSelectedColorIndex={setSelectedColorIndex}
                                 setSelectedColor={setSelectedColor}
                             />
                         ))}
@@ -258,7 +262,18 @@ const DailyPlanner = () => {
                 />
                 <EraserIcon
                     src="/src/assets/Eraser.svg"
-                    onClick={() => setSelectedColor(1)}
+                    isSelected={selectedColorIndex == -1}
+                    onClick={() => {
+                        if (selectedColorIndex == -1) {
+                            setSelectedColor(null);
+                            setSelectedColorIndex(null);
+                        }
+                        else {
+                            setSelectedColor(1);
+                            setSelectedColorIndex(-1);
+                        }
+
+                    }}
                 />
             </TimeTableContainer>
             <AchievementInfoContainer>

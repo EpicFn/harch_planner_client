@@ -136,6 +136,9 @@ export const CategoryBox = styled.div`
     background-color: ${props => props.bgColor || 'grey'};
     
     border-radius: 3px;    
+    border: ${props => props.isSelected ? '1px dashed black' : 'none'};
+    box-sizing: border-box;
+
 `
 
 export const CategoryColorPoint = styled.div`
@@ -424,7 +427,8 @@ export const EraserIcon = styled.img`
     border-top: 1px solid var(--Line-Regular_Color, #E5E5EC);
     border-right: 1px solid var(--Line-Regular_Color, #E5E5EC);
     border-bottom: 1px solid var(--Line-Regular_Color, #E5E5EC);
-    background: rgba(255, 255, 255, 0.50);
+
+    border: ${props => props.isSelected ? '1px dashed black' : '1px solid var(--Line-Regular_Color, #E5E5EC)'};
 `
 
 //----------------------------------------------
