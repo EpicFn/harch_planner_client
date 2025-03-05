@@ -1,4 +1,5 @@
 
+import CalendarModal from "./CalendarModal/CalendarModal";
 import {
     AchievementInfoContainer,
     Container,
@@ -159,6 +160,10 @@ const DailyPlanner = () => {
     const [selectedColor, setSelectedColor] = useState(null);
     const [selectedColorIndex, setSelectedColorIndex] = useState(null); // 선택된 색상의 인덱스, -1이면 지우개
 
+    //modal 창 상태 관리
+    const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
+
+
     //---------------------------------Event Handlers---------------------------------
 
     //TODO : 해당 workbook 페이지로 이동
@@ -203,6 +208,10 @@ const DailyPlanner = () => {
         setTaskInput("");
     };
 
+    const handleCalenderIconClick = () => {
+        setIsCalendarModalOpen(true);
+    }
+
 
 
 
@@ -212,7 +221,15 @@ const DailyPlanner = () => {
         <Container>
             <PlanContainer>
                 <DateInfoBox>
-                    <CalendarIcon src="/src/assets/CalendarDots.svg" />
+                    <CalendarIcon
+                        src="/src/assets/CalendarDots.svg"
+                        onClick={handleCalenderIconClick}
+                    />
+                    <CalendarModal
+                        isOpen={isCalendarModalOpen}
+                        onClose={() => setIsCalendarModalOpen(false)}
+                        children={'Calendar Modal'}
+                    />
                     <DateInfo>{formattedMonth}</DateInfo>
                     <DateInfo>{formattedDay}</DateInfo>
                     <DayOfWeek>{dayofweek}</DayOfWeek>
