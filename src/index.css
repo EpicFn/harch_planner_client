@@ -34,6 +34,43 @@ body.light-pink-theme {
   );
 }
 
+body.default-theme {
+  background-color: #f1f1f1;
+}
+
+body.dark-theme {
+  background: linear-gradient(180deg, #2a2a2a 0%, #3a3a3a 100%);
+}
+
+body.dark-theme div {
+  color: #d3d3d3; /* 메인 로고 및 텍스트를 선명하게 */
+  text-shadow: 0px 1px 1px rgba(0, 0, 0, 1);
+}
+
+body.green-theme {
+  background: linear-gradient(180deg, #6bc27b 0%, #2d8a43 100%);
+}
+
+body.blue-theme {
+  background: linear-gradient(180deg, #4a90e2 0%, #00509d 80%);
+}
+
+body.light-theme {
+  background: linear-gradient(180deg, #ffffff 0%, #e9ecef 100%);
+}
+
+body.gold-theme {
+  background: linear-gradient(180deg, #f4e8c1 0%, #d4af37 100%);
+}
+
+body.purple-theme {
+  background: linear-gradient(180deg, #a084ca 0%, #5e42a6 100%);
+}
+
+body.rose-gold-theme {
+  background: linear-gradient(180deg, #e7c1c1 0%, #c09690 100%);
+}
+
 a {
   font-weight: 500;
   color: #646cff;
