@@ -221,14 +221,14 @@ const DailyPlanner = () => {
         <Container>
             <PlanContainer>
                 <DateInfoBox>
-                    <CalendarIcon
-                        src="/src/assets/CalendarDots.svg"
-                        onClick={handleCalenderIconClick}
-                    />
                     <CalendarModal
                         isOpen={isCalendarModalOpen}
                         onClose={() => setIsCalendarModalOpen(false)}
                         children={'Calendar Modal'}
+                    />
+                    <CalendarIcon
+                        src="/src/assets/CalendarDots.svg"
+                        onClick={handleCalenderIconClick}
                     />
                     <DateInfo>{formattedMonth}</DateInfo>
                     <DateInfo>{formattedDay}</DateInfo>
