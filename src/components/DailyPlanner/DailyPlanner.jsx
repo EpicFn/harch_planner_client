@@ -132,12 +132,12 @@ const dummyTaskAchievementData = [
     }
 ]
 
-const DailyPlanner = () => {
+const DailyPlanner = (dateObj) => {
 
     //---------------------------------Variables---------------------------------
 
-    // 날짜 정보 가져오기
-    const today = new Date();
+    // 날짜 정보 포멧팅
+    const today = dateObj.dateObj;
     const month = today.getMonth() + 1; // Months are zero-indexed
     const day = today.getDate();
     const formattedMonth = `${month}월`;
@@ -212,6 +212,9 @@ const DailyPlanner = () => {
         setIsCalendarModalOpen(true);
     }
 
+    const handlePrevDateClick = () => {
+        console.log("prev date");
+    };
 
 
 
@@ -234,7 +237,10 @@ const DailyPlanner = () => {
                     <DateInfo>{formattedDay}</DateInfo>
                     <DayOfWeek>{dayofweek}</DayOfWeek>
                     <ArrowBox>
-                        <ArrowIcon src="/src/assets/ArrowLeft.svg" />
+                        <ArrowIcon
+                            src="/src/assets/ArrowLeft.svg"
+                            onClick={handlePrevDateClick}
+                        />
                         <ArrowIcon src="/src/assets/ArrowRight.svg" />
                     </ArrowBox>
                 </DateInfoBox>

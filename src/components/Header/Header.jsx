@@ -26,7 +26,7 @@ export default function Header({ onThemeChange, onContextMenu }) {
 
   return (
     <HeaderContainer>
-      <Logo src="src/assets/logo/Harch.png" onClick={() => navigate('/')} />
+      <Logo src="/src/assets/logo/Harch.png" onClick={() => navigate('/')} />
       <ThemeButtonContainer>
         <ThemeButton
           color="#C8EBBF"

@@ -16,6 +16,7 @@ function App() {
           <Route path="/" element={<MainPage />} />
           <Route path="/calendarPage" element={<CalendarPage />} />
           <Route path="/dailyPlannerPage" element={<DailyPlanner />} />
+          <Route path="/dailyPlannerPage/:date" element={<DailyPlanner />} />
           <Route path="/LibraryPage" element={<LibraryPage />} />
           <Route path="/RecordPage" element={<RecordPage />} />
           <Route path="/loading" element={<LoadingPage />} />
