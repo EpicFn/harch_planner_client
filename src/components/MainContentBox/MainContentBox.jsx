@@ -18,8 +18,9 @@ export default function MainContentBox({ content }) {
 
   const location = useLocation()
   const { theme, setTheme } = useThemeStore()
-  const [activeTab, setActiveTab] = useState(location.pathname)
+  const [activeTab, setActiveTab] = useState(location.pathname.split('/').slice(0, 2).join('/'))
   const [showPreferences, setShowPreferences] = useState(false)
+
 
   const login = useUserStore((state) => state.login)
   const logout = useUserStore((state) => state.logout)
@@ -64,7 +65,7 @@ export default function MainContentBox({ content }) {
     {
       label: 'Icon1',
       isIconTab: 'true',
-      icon: 'src/assets/Ellipse.png',
+      icon: '/src/assets/Ellipse.png',
     },
     { path: '/calendarPage', label: '달력', isIconTab: 'false' },
     { path: '/dailyPlannerPage', label: '일일 플래너', isIconTab: 'false' },
