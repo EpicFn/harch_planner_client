@@ -1,4 +1,5 @@
 
+
 import CalendarModal from "./CalendarModal/CalendarModal";
 import {
     AchievementInfoContainer,
@@ -32,6 +33,7 @@ import TimeTable from "./TimeTable/TimeTable";
 import WorkBookItem from "./WorkBookItem/WorkBookItem";
 
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 
 //tasks dummy data
@@ -148,6 +150,9 @@ const DailyPlanner = (dateObj) => {
     const taskInputPlaceholder = "할 일을 입력 후 Enter 키 혹은 입력 버튼을 눌러주세요.";
     const taskCategoryPlaceholder = "교재나 과목을 선택해 주세요.";
 
+    // Router
+    const navigate = useNavigate();
+
     //---------------------------------States---------------------------------
 
     const [tasksList, setTasksList] = useState(dummyTasksList);
@@ -213,10 +218,19 @@ const DailyPlanner = (dateObj) => {
     }
 
     const handlePrevDateClick = () => {
-        console.log("prev date");
+        const PrevDay = new Date(today);
+        PrevDay.setDate(today.getDate());
+        const formattedPrevDay = PrevDay.toISOString().split('T')[0];
+        navigate(`/dailyPlannerPage/${formattedPrevDay}`);
     };
 
 
+    const handleNextDateClick = () => {
+        const nextDay = new Date(today);
+        nextDay.setDate(today.getDate() + 2);
+        const formattedNextDay = nextDay.toISOString().split('T')[0];
+        navigate(`/dailyPlannerPage/${formattedNextDay}`);
+    };
 
     //---------------------------------Rendering---------------------------------
 
@@ -241,7 +255,10 @@ const DailyPlanner = (dateObj) => {
                             src="/src/assets/ArrowLeft.svg"
                             onClick={handlePrevDateClick}
                         />
-                        <ArrowIcon src="/src/assets/ArrowRight.svg" />
+                        <ArrowIcon
+                            src="/src/assets/ArrowRight.svg"
+                            onClick={handleNextDateClick}
+                        />
                     </ArrowBox>
                 </DateInfoBox>
                 <TaskInfoBox>
