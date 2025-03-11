@@ -5,7 +5,11 @@ import { useState } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
 
+import { useNavigate } from "react-router-dom";
+
 const CalendarModal = ({ isOpen, onClose, children }) => {
+
+    const navigate = useNavigate();
 
     // -----------------------------------------------------------------------------------------------
     // 날짜 초기화 로직
@@ -73,6 +77,13 @@ const CalendarModal = ({ isOpen, onClose, children }) => {
         );
     };
 
+    const handleDayClick = (date) => {
+        // 날짜 클릭 시 이벤트
+        const formattedDate = new Date(date.setDate(date.getDate() + 1)).toISOString().split('T')[0];
+        onClose();
+        navigate(`/dailyPlannerPage/${formattedDate}`);
+    };
+
 
     // -----------------------------------------------------------------------------------------------
     // 반환부
@@ -118,7 +129,13 @@ const CalendarModal = ({ isOpen, onClose, children }) => {
                                     if (date.getDate() == 1) thisMonthFlag = !thisMonthFlag;
 
                                     return (
-                                        <Day key={index} thisMonthFlag={thisMonthFlag}>{date.getDate()}</Day>
+                                        <Day
+                                            key={index}
+                                            thisMonthFlag={thisMonthFlag}
+                                            onClick={() => handleDayClick(date)}
+                                        >
+                                            {date.getDate()}
+                                        </Day>
                                     )
                                 })}
                             </Week>

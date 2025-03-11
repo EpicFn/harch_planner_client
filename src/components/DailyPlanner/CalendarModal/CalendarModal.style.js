@@ -65,6 +65,7 @@ export const Week = styled.div`
 `
 
 export const Day = styled.div`
+    cursor: pointer;
     border: none;
     display: flex;
     justify-content: center;
