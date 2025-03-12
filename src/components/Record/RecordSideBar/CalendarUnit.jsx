@@ -7,8 +7,12 @@ import {
     WeeksWrapper,
     Yoil,
     SelectedDay,
+    SelectedDayBack,
+    ArrowButtton,
 } from "./RecordCalendarUnit.style";
 import { useState } from "react";
+
+import { IoIosArrowDown } from "react-icons/io";
 
 const CalendarUnit = () => {
 
@@ -65,7 +69,7 @@ const CalendarUnit = () => {
     // -----------------------------------------------------------------------------------------------
 
     const [startDateOfRecord, setStartDay] = useState(currentDate);
-    const [endDateOfRecord, setEndDay] = useState(currentDate);
+    const [endDateOfRecord, setEndDay] = useState(null);
 
     var thisMonthFlag = false;
     var pointedDateFlag = false;
@@ -111,6 +115,12 @@ const CalendarUnit = () => {
         );
     };
 
+    const isDateInRange = (date, startDate, endDate) => {
+        if (!startDate || !endDate) return false;
+        return date >= startDate && date <= endDate;
+    };
+
+
 
     // -----------------------------------------------------------------------------------------------
     // 반환부
@@ -120,6 +130,9 @@ const CalendarUnit = () => {
         <UnitContainer>
             <CalendarNavigator>
                 <MonthAndYear>{`${year}.${month + 1 < 10 ? `0${month + 1}` : month + 1}`}</MonthAndYear>
+                <ArrowButtton >
+                    <IoIosArrowDown style={{ color: '#888888' }} />
+                </ArrowButtton>
             </CalendarNavigator>
             <Week>
                 {
@@ -136,12 +149,31 @@ const CalendarUnit = () => {
                             {week.map((date, index) => {
                                 if (date.getDate() == 1) thisMonthFlag = !thisMonthFlag;
 
-                                if (compareDate(date, startDateOfRecord) || compareDate(date, endDateOfRecord)) {
+                                if (compareDate(date, startDateOfRecord)) {
                                     return (
-                                        <Day
+                                        <SelectedDayBack
                                             key={index}
                                             thisMonthFlag={thisMonthFlag}
                                             onClick={() => handleDayClick(date)}
+                                            isStartPoint={endDateOfRecord !== null}
+                                        >
+                                            {date.getDate()}
+                                            < SelectedDay
+                                                key={index}
+                                                onClick={() => handleDayClick(date)}
+                                            >
+                                                {date.getDate()}
+                                            </SelectedDay>
+                                        </SelectedDayBack>
+                                    )
+                                }
+                                else if (compareDate(date, endDateOfRecord)) {
+                                    return (
+                                        <SelectedDayBack
+                                            key={index}
+                                            thisMonthFlag={thisMonthFlag}
+                                            onClick={() => handleDayClick(date)}
+                                            isEndPoint={true}
                                         >
                                             {date.getDate()}
                                             <SelectedDay
@@ -150,24 +182,28 @@ const CalendarUnit = () => {
                                             >
                                                 {date.getDate()}
                                             </SelectedDay>
+                                        </SelectedDayBack>
+                                    )
+                                }
+
+                                else {
+                                    return (
+                                        <Day
+                                            key={index}
+                                            thisMonthFlag={thisMonthFlag}
+                                            onClick={() => handleDayClick(date)}
+                                            isDateInRange={isDateInRange(date, startDateOfRecord, endDateOfRecord)}
+                                        >
+                                            {date.getDate()}
                                         </Day>
                                     )
                                 }
-                                return (
-                                    <Day
-                                        key={index}
-                                        thisMonthFlag={thisMonthFlag}
-                                        onClick={() => handleDayClick(date)}
-                                    >
-                                        {date.getDate()}
-                                    </Day>
-                                )
                             })}
                         </Week>
                     ))
                 }
-            </WeeksWrapper>
-        </UnitContainer>
+            </WeeksWrapper >
+        </UnitContainer >
     )
 };
 

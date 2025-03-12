@@ -15,6 +15,7 @@ export const UnitContainer = styled.div`
 
 export const CalendarNavigator = styled.div`
     display: flex;
+    flex-direction: row;
     justify-content: start;
     align-items: center;
     width: 100%;
@@ -27,26 +28,27 @@ export const MonthAndYear = styled.div`
 `
 
 export const ArrowButtton = styled.button`
+    display: flex;
+    justify-content: center;
     background-color: transparent;
     border: none;
     cursor: pointer;
     font-size: 20px;
     color: #000;
-    margin: 0 10px;
 `
 
 export const WeeksWrapper = styled.div`
     display: flex;
     flex-direction: column;
     width: 100%;
+    row-gap: 10px;
 `
 
 export const Week = styled.div`
     position: relative;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     width: 100%;
-    column-gap: 30px;
 `
 
 export const Day = styled.div`
@@ -55,10 +57,18 @@ export const Day = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;   
-    height: 50px;
+    height: 40px;
     font-size: 18px;
+    flex : 1;
     color : ${props => props.thisMonthFlag ? '#000' : '#e0e0e0'};
+    background-color: ${props => props.isDateInRange ? '#BCBCBC' : 'transparent'};
+`
+
+export const SelectedDayBack = styled(Day)`
+    background-image: ${props =>
+        props.isStartPoint ? 'linear-gradient(to left, #BCBCBC 50%, transparent 50%)' :
+            props.isEndPoint ? 'linear-gradient(to right, #BCBCBC 50%, transparent 50%)' :
+                'none'};
 `
 
 export const SelectedDay = styled(Day)`

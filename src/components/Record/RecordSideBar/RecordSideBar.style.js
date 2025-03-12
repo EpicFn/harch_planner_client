@@ -14,6 +14,7 @@ export const MultiValueBarContainer = styled.div`
     display : flex;
     flex-direction : column;
     flex : 4;
+    min-width : 300px;
     align-items : center;
     justify-content : center;
 `
