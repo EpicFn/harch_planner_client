@@ -1,5 +1,6 @@
 import MainContentBox from '@components/MainContentBox/MainContentBox'
 import { DailyPlannerContainer } from '@pages/Record/RecordPage.style'
+import Record from '@components/Record/Record'
 
 export default function RecordPage() {
   const dailyPlannerJSX = (
@@ -9,7 +10,7 @@ export default function RecordPage() {
   )
   return (
     <DailyPlannerContainer>
-      <MainContentBox content={dailyPlannerJSX} />
+      <MainContentBox content={<Record />} />
     </DailyPlannerContainer>
   )
 }
