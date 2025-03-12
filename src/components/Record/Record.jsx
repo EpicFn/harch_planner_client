@@ -1,6 +1,6 @@
 import { Container, SiderBarArea, ContentArea } from "./Record.style";
-import RecordMain from "./RecordMain";
-import RecordSiderBar from "./RecordSiderBar";
+import RecordMain from "./RecordMain/RecordMain";
+import RecordSiderBar from "./RecordSideBar/RecordSiderBar";
 
 export default function Record() {
 
