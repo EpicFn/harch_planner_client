@@ -42,6 +42,7 @@ export const WeeksWrapper = styled.div`
 `
 
 export const Week = styled.div`
+    position: relative;
     display: flex;
     justify-content: space-between;
     width: 100%;
@@ -54,12 +55,20 @@ export const Day = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
+    width: 100%;   
     height: 50px;
     font-size: 18px;
     color : ${props => props.thisMonthFlag ? '#000' : '#e0e0e0'};
-    
 `
+
+export const SelectedDay = styled(Day)`
+    position: absolute;    
+    width: 40px;
+    height: 40px;
+    color: white;
+    background-color: #7B7B7B;
+    border-radius: 50%;
+`;
 
 export const Yoil = styled.div`
     border: none;

@@ -6,13 +6,11 @@ import {
     Week,
     WeeksWrapper,
     Yoil,
+    SelectedDay,
 } from "./RecordCalendarUnit.style";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 const CalendarUnit = () => {
-
-    const navigate = useNavigate();
 
     // -----------------------------------------------------------------------------------------------
     // 날짜 초기화 로직
@@ -22,7 +20,7 @@ const CalendarUnit = () => {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
 
-    var thisMonthFlag = false;
+
 
     // 현재 달의 첫 날
     const firstDayOfMonth = new Date(year, month, 1);
@@ -63,28 +61,54 @@ const CalendarUnit = () => {
     };
 
     // -----------------------------------------------------------------------------------------------
+    // 변수 선언
+    // -----------------------------------------------------------------------------------------------
+
+    const [startDateOfRecord, setStartDay] = useState(currentDate);
+    const [endDateOfRecord, setEndDay] = useState(currentDate);
+
+    var thisMonthFlag = false;
+    var pointedDateFlag = false;
+
+    // -----------------------------------------------------------------------------------------------
     // event handler
     // -----------------------------------------------------------------------------------------------
 
-    const handlePrevMonth = () => {
-        // 이전 달로 이동
-        setCurrentDate(
-            new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1)
-        );
-    };
-
-    const handleNextMonth = () => {
-        // 다음 달로 이동
-        setCurrentDate(
-            new Date(currenDate.getFullYear(), currentDate.getMonth() + 1, 1)
-        );
-    };
 
     const handleDayClick = (date) => {
         // 날짜 클릭 시 이벤트
-        const formattedDate = new Date(date.setDate(date.getDate() + 1)).toISOString().split('T')[0];
+        const selectedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        if (startDateOfRecord === null) {
+            setStartDay(selectedDate);
+            setEndDay(selectedDate);
+        } else if (startDateOfRecord && endDateOfRecord === null) {
+            if (selectedDate < startDateOfRecord) {
+                setStartDay(selectedDate);
+                setEndDay(startDateOfRecord);
+            } else if (selectedDate > startDateOfRecord) {
+                setEndDay(selectedDate);
+            }
+        } else if (startDateOfRecord && endDateOfRecord) {
+            setStartDay(selectedDate);
+            setEndDay(null);
+        }
 
-        navigate(`/dailyPlannerPage/${formattedDate}`);
+    };
+
+    // -----------------------------------------------------------------------------------------------
+    // 함수 선언
+    // -----------------------------------------------------------------------------------------------
+
+    const compareDate = (date1, date2) => {
+
+        if (date1 === null || date2 === null) return false;
+
+
+        return (
+            date1.getFullYear() === date2.getFullYear() &&
+            date1.getMonth() === date2.getMonth() &&
+            date1.getDate() === date2.getDate()
+        );
     };
 
 
@@ -112,6 +136,23 @@ const CalendarUnit = () => {
                             {week.map((date, index) => {
                                 if (date.getDate() == 1) thisMonthFlag = !thisMonthFlag;
 
+                                if (compareDate(date, startDateOfRecord) || compareDate(date, endDateOfRecord)) {
+                                    return (
+                                        <Day
+                                            key={index}
+                                            thisMonthFlag={thisMonthFlag}
+                                            onClick={() => handleDayClick(date)}
+                                        >
+                                            {date.getDate()}
+                                            <SelectedDay
+                                                key={index}
+                                                onClick={() => handleDayClick(date)}
+                                            >
+                                                {date.getDate()}
+                                            </SelectedDay>
+                                        </Day>
+                                    )
+                                }
                                 return (
                                     <Day
                                         key={index}
