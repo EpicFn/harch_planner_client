@@ -11,6 +11,64 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --theme-color-light-green-start: #ffffe7;
+  --theme-color-light-green-end: #c8ebbf;
+  --theme-color-light-pink-start: #ffe8f7;
+  --theme-color-light-pink-end: #fffee7;
+}
+
+body.light-green-theme {
+  background: linear-gradient(
+    180deg,
+    var(--theme-color-light-green-start) 0%,
+    var(--theme-color-light-green-end) 100%
+  );
+}
+
+body.light-pink-theme {
+  background: linear-gradient(
+    180deg,
+    var(--theme-color-light-pink-start) 0%,
+    var(--theme-color-light-pink-end) 100%
+  );
+}
+
+body.default-theme {
+  background-color: #f1f1f1;
+}
+
+body.dark-theme {
+  background: linear-gradient(180deg, #2a2a2a 0%, #3a3a3a 100%);
+}
+
+body.dark-theme div {
+  color: #d3d3d3; /* 메인 로고 및 텍스트를 선명하게 */
+  text-shadow: 0px 1px 1px rgba(0, 0, 0, 1);
+}
+
+body.green-theme {
+  background: linear-gradient(180deg, #6bc27b 0%, #2d8a43 100%);
+}
+
+body.blue-theme {
+  background: linear-gradient(180deg, #4a90e2 0%, #00509d 80%);
+}
+
+body.light-theme {
+  background: linear-gradient(180deg, #ffffff 0%, #e9ecef 100%);
+}
+
+body.gold-theme {
+  background: linear-gradient(180deg, #f4e8c1 0%, #d4af37 100%);
+}
+
+body.purple-theme {
+  background: linear-gradient(180deg, #a084ca 0%, #5e42a6 100%);
+}
+
+body.rose-gold-theme {
+  background: linear-gradient(180deg, #e7c1c1 0%, #c09690 100%);
 }
 
 a {
@@ -25,25 +83,6 @@ a:hover {
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
 }
 
 @media (prefers-color-scheme: light) {
