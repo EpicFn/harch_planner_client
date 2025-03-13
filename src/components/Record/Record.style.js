@@ -13,4 +13,7 @@ export const SiderBarArea = styled.div`
 
 export const ContentArea = styled.div`
     flex : 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `;
